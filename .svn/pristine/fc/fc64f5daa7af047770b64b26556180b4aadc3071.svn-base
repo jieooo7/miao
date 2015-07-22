@@ -1,0 +1,38 @@
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="title_left_right">10dp</dimen>
+    <dimen name="title_top_bottom">10dp</dimen>
+
+
+    <!-- 下拉刷新字体 -->
+    <dimen name="picture_pull_to_refresh_loading_text_size">14dp</dimen>
+    <dimen name="picture_pull_to_refresh_last_update_time_text_size">10dp</dimen>
+    <dimen name="picture_pull_to_refresh_last_update_time_top_margin">6dp</dimen>
+    <dimen name="picture_pull_to_refresh_footer_height">40dp</dimen>
+
+    <!-- 14sp -->
+    <dimen name="txt_size_14">14sp</dimen>
+
+
+
+    <dimen name="pop_offset">40px</dimen>
+    <dimen name="qrcode_bottom">55dp</dimen>
+
+
+    <dimen name="text_image_size">60dp</dimen>
+    <dimen name="shop_size">13sp</dimen>
+    <dimen name="detail_size">12sp</dimen>
+    <dimen name="price_size">16sp</dimen>
+
+
+    <dimen name="dialog_text_size">14sp</dimen>
+    <dimen name="dialog_text_size_17">13sp</dimen>
+    <dimen name="dialog_text_size_15">12sp</dimen>
+
+    <dimen name="comment_10">10sp</dimen>
+    <dimen name="comment_20">20sp</dimen>
+
+
+</resources>

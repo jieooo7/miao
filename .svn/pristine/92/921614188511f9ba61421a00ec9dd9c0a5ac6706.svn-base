@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources
+xmlns:tools="http://schemas.android.com/tools"
+tools:ignore="MissingTranslation" >
+
+    <string name="me">我的</string>
+    <string name="me_info">我的信息</string>
+    <string name="index">首页</string>
+    <string name="the_name">惠喵</string>
+    <string name="back">返回</string>
+    <string name="login">登录</string>
+    <string name="regist">注册</string>
+    <string name="tel_email">手机号/邮箱</string>
+    <string name="input_passwd">输入登录密码</string>
+    <string name="forget_passwd">忘记密码?</string>
+    <string name="find_passwd">找回密码?</string>
+    <string name="co_login">合作网站联合登陆</string>
+    <string name="regist_tel">输入您的手机号码进行注册</string>
+    <string name="regist_tel_hint">请输入手机号码</string>
+    <string name="get_message">获取短信验证码</string>
+    <string name="had_send">已发送短信验证码至:</string>
+    <string name="send_code_hint">请填写验证码</string>
+    <string name="send_code_title">填写验证码</string>
+    <string name="send_again">重新发送验证码</string>
+    <string name="send_code_bind">发送验证码</string>
+    <string name="count">秒以后重新获取</string>
+    <string name="next">下一步</string>
+    <string name="passwd_limit">请设置密码,6-12个字符</string>
+    <string name="passwd_set">设置密码</string>
+    <string name="passwd_hint">请输入密码</string>
+    <string name="button_submit">完成注册</string>
+
+
+    <string name="push_set">推送设置</string>
+    <string name="message_center">消息中心</string>
+    <string name="Feedback">意见反馈</string>
+    <string name="help_center">帮助中心</string>
+    <string name="login_out">退出登录</string>
+
+
+    <string name="head_img">头像</string>
+    <string name="nick_name">昵称</string>
+    <string name="tel">手机号码</string>
+    <string name="email_address">邮箱地址</string>
+    <string name="adress">收货地址</string>
+
+
+
+
+    <string name="feedback_tips">有什么问题或建议,告诉小惠喵吧~~</string>
+    <string name="feedback_submit">提交</string>
+
+
+    <string name="push_rec">接收推送</string>
+    <string name="noti_low">降价提醒</string>
+    <string name="to_buy">前往购买</string>
+    <string name="share_app">分享app</string>
+    <string name="recom">神价推荐</string>
+    <string name="quiet_time">安静时段</string>
+    <string name="quiet_tip">22:00到7:00不接收推送</string>
+
+
+
+
+    <string name="new_message">新消息</string>
+    <string name="buy_list">欲购清单</string>
+    <string name="buy_list_enter">条\n欲购清单</string>
+    <string name="new_message_enter">条\n新消息</string>
+    <string name="all_buy">喵友们都在买</string>
+
+
+
+
+    <string name="want_buy">欲购清单</string>
+    <string name="i_want_buy">我想买</string>
+    <string name="index_want_buy">想买</string>
+    <string name="i_want_buy_u"><u>我想买</u></string>
+    <string name="i_want_buy_line">我想买____</string>
+    <string name="no_finish_list">暂无完成清单</string>
+    <string name="no_list_record">暂无清单记录</string>
+    <string name="my_want_buy">我的清单</string>
+    <string name="had_finish">已完成</string>
+    <string name="buy_tip">您的清单降价时,惠喵会告诉您</string>
+
+
+
+    <string name="welcom_to">欢迎来到惠喵</string>
+    <string name="please_login">请登录</string>
+    <string name="low_history">历史最低</string>
+    <string name="oringin_price">原价</string>
+    <string name="range">降幅</string>
+    <string name="discount">折扣</string>
+    <string name="other_shop">其他商城</string>
+
+
+
+    <string name="does_it_ok">主人,刚给您推荐的中意不?</string>
+    <string name="prefect">满意</string>
+    <string name="wait_for">继续观望</string>
+
+
+
+    <string name="select_ok">我选好了</string>
+    <string name="init_range">0~500元以上</string>
+    <string name="more_brand">更多品牌</string>
+    <string name="less_brand">收起品牌</string>
+    <string name="example_text">例如:手机</string>
+    <string name="you_want_buy">您想购买的商品</string>
+    <string name="like_brand">您青睐的品牌</string>
+    <string name="want_price_range">您接受的价格范围</string>
+    <string name="say_ok">不限制,口碑好就行</string>
+    <string name="want_coustem_brand">我要自行选择品牌</string>
+    <string name="only_cheap">不限制,划算就好</string>
+    <string name="want_custom_range">我要自行设置范围</string>
+
+
+    <string name="secreter">优惠小秘书</string>
+    <string name="dialog_first">主人主人~终于等到您来领养我了~我是您的优惠小秘书!么么哒</string>
+    <string name="dialog_second">您可以把想买的东西发给我,发现优惠时,我会通知您</string>
+    <string name="dialog_third">我想买划算的</string>
+    <string name="dialog_fou">收到主人的请求,小秘正在为您查找中...</string>
+    <string name="dialog_fif">报告主人,您想买的</string>
+    <string name="dialog_fir_last">有降价了</string>
+    <string name="dialog_six">不是很满意,小秘你继续帮我留意吧!</string>
+    <string name="no_dialog_six">告诉您个消息,别打我好不好:\n没有找到!!!</string>
+    <string name="no_help_dialog_six">但是我会帮您继续留意,等俺的好消息!您可以在购物清单里面管理您想买的商品!</string>
+    <string name="dialog_sev">遵命!当发现降价时,小秘一定会第一时间告诉您!</string>
+
+
+    <string name="click_success">签到成功, +10积分</string>
+    <string name="scan_title">扫一扫</string>
+    <string name="toast_login">正在登录</string>
+    <string name="click_fail">您今天已签到,明天再来吧~</string>
+    <string name="error_retry">:(出错了,请稍后再试</string>
+    <string name="bad_net">当前网络不可用\n请检查您的网络设置</string>
+
+
+
+    <string name="loginout_dialog">是否退出当前账号?</string>
+    <string name="register_dialog">点"返回"将中断注册,是否返回?</string>
+    <string name="submit_dialog">确认</string>
+    <string name="cancel_dialog">取消</string>
+    <string name="delete_list">删除清单</string>
+    <string name="no_nickname">未设置</string>
+    <string name="no_tel">未绑定</string>
+    <string name="defalt_level">Lv.0</string>
+    <string name="change_head_img">修改头像</string>
+    <string name="from_pic">从相册中选择</string>
+    <string name="from_camera">拍照</string>
+    <string name="nickname_hint">输入昵称(2-10个字符,中英文/数字/下划线)</string>
+    <string name="nickname_set">设置昵称</string>
+    <string name="nickname_not_pass">请填写正确的昵称</string>
+    <string name="bind_tel_no">绑定手机</string>
+    <string name="use_help">使用帮助</string>
+    <string name="i_known">我知道</string>
+    <string name="sex_select">请选择你的性别</string>
+    <string name="sex_boy">男生</string>
+    <string name="sex_girl">女生</string>
+
+</resources>

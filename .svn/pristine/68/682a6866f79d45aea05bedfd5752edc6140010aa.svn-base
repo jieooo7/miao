@@ -1,0 +1,139 @@
+package com.liuzhuni.lzn.core.index_new.adapter;
+
+import android.content.Context;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+
+import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
+import com.liuzhuni.lzn.R;
+import com.liuzhuni.lzn.core.index_new.model.PickModel;
+import com.liuzhuni.lzn.pinHeader.SectionedBaseAdapter;
+
+import java.util.List;
+
+/**
+ * Created by Andrew Lee on 2015/7/13.
+ * E-mail:jieooo7@163.com
+ * Date: 2015-07-13
+ * Time: 09:49
+ */
+public class PickAdapter extends SectionedBaseAdapter {
+
+
+    private List<PickModel> mList;
+    private ImageLoader mImageLoader;
+
+    public PickAdapter(List<PickModel> mList, ImageLoader mImageLoader) {
+        this.mList = mList;
+        this.mImageLoader = mImageLoader;
+    }
+
+
+
+    @Override
+    public Object getItem(int section, int position) {
+        return null;
+    }
+
+    @Override
+    public long getItemId(int section, int position) {
+        return 0;
+    }
+
+    @Override
+    public int getSectionCount() {
+        return 1;
+    }
+
+    @Override
+    public int getCountForSection(int section) {
+        return mList.size();
+    }
+
+    @Override
+    public View getItemView(int section, int position, View convertView, ViewGroup parent) {
+        RelativeLayout layout = null;
+//        if (convertView == null) {
+//            LayoutInflater inflator = (LayoutInflater) parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//            layout = (RelativeLayout) inflator.inflate(R.layout.fragment_finish_item, null);
+//        } else {
+//            layout = (RelativeLayout) convertView;
+//        }
+//        ((TextView) layout.findViewById(R.id.finish_item_tv)).setText(mList.get(position).getValue());
+//        return layout;
+
+
+        if (convertView == null) {
+            LayoutInflater inflator = (LayoutInflater) parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            layout = (RelativeLayout) inflator.inflate(R.layout.index_good_item, null);
+
+        }else{
+
+            layout = (RelativeLayout) convertView;
+        }
+
+        NetworkImageView  headIv = (NetworkImageView) layout.findViewById(R.id.index_item_img);
+        TextView timeTv = (TextView) layout.findViewById(R.id.index_item_time);
+        TextView mallTv = (TextView) layout.findViewById(R.id.index_item_mall);
+        TextView titleTv = (TextView) layout.findViewById(R.id.index_item_title);
+        TextView priceTv = (TextView) layout.findViewById(R.id.index_item_price);
+        TextView readTv = (TextView) layout.findViewById(R.id.index_item_read);
+        TextView reviewTv = (TextView) layout.findViewById(R.id.index_item_review);
+        TextView lowPriceTv = (TextView) layout.findViewById(R.id.index_item_shenjia);
+        TextView cheapTv = (TextView) layout.findViewById(R.id.index_item_cheap);
+        TextView globalTv = (TextView) layout.findViewById(R.id.index_item_global);
+        TextView slowTv = (TextView) layout.findViewById(R.id.index_item_slow);
+        ImageView expiredTv = (ImageView) layout.findViewById(R.id.index_item_expired);
+
+
+         timeTv.setText(mList.get(position).getTime());
+         mallTv.setText(mList.get(position).getMall());
+         titleTv.setText(mList.get(position).getTitle());
+         priceTv.setText(mList.get(position).getTitle1());
+
+         readTv.setText(mList.get(position).getRead() > 0 ? "" + mList.get(position).getRead() : "");
+
+         reviewTv.setText(mList.get(position).getReview() > 0 ? "" + mList.get(position).getReview() : "");
+
+         mallTv.setText(mList.get(position).getMall());
+
+
+//         headIv.setDefaultImageResId(R.drawable.my_touxiang);
+         headIv.setImageUrl(mList.get(position).getPic(), mImageLoader);
+//         headIv.setErrorImageResId(R.drawable.my_touxiang);
+
+         slowTv.setVisibility(mList.get(position).isShoumanwu() ? View.VISIBLE : View.GONE);
+         lowPriceTv.setVisibility(mList.get(position).isShenjia() ? View.VISIBLE : View.GONE);
+         cheapTv.setVisibility(mList.get(position).isBaicai() ? View.VISIBLE : View.GONE);
+         globalTv.setVisibility(mList.get(position).isQuanqiugou() ? View.VISIBLE : View.GONE);
+         expiredTv.setVisibility(mList.get(position).isExpired() ? View.VISIBLE : View.GONE);
+
+
+
+
+
+        return layout;
+
+    }
+
+    @Override
+    public View getSectionHeaderView(int section, View convertView, ViewGroup parent) {
+
+
+        RelativeLayout layout = null;
+        if (convertView == null) {
+            LayoutInflater inflator = (LayoutInflater) parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            layout = (RelativeLayout) inflator.inflate(R.layout.pin_title, null);
+        } else {
+            layout = (RelativeLayout) convertView;
+        }
+        return layout;
+    }
+
+
+}

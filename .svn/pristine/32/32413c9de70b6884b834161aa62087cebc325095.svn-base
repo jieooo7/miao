@@ -1,0 +1,15 @@
+推送 格式
+
+{"id":42,"ret":0,"data":[{"type":2,"content","报告主人,您想买的..."},{"type":3,"content","json格式商品信息"}],"msg":""}
+
+
+历史记录
+
+本地存储15条最新记录,超过 请求服务器 传参数 id=0  服务器返回 16-25条数据 以及pageIndex 和 totalpage
+
+{"ret":0,"data":[{"type":0,"content","04月20日 12:54"},{"type":1,"content","我想买划算的[手机]"},{"type":3,"content","json格式商品信息"}],"msg":""}
+
+
+到时 删除 system
+关闭 log
+混淆

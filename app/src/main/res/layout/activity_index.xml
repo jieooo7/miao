@@ -1,0 +1,131 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context="com.liuzhuni.lzn.core.index.IndexActivity">
+
+    <include
+        android:id="@+id/title"
+        layout="@layout/title_index" />
+
+    <RelativeLayout
+        android:id="@+id/index_rl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title"
+        android:paddingBottom="25dp"
+        android:paddingTop="25dp"
+
+        android:background="@color/key"
+        >
+        <ImageView
+            android:id="@+id/ring"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/yellow_ring"/>
+        <TextView
+            android:id="@+id/index_buy_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@id/ring"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            />
+        <LinearLayout
+            android:id="@+id/want_buy_ll"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_centerInParent="true"
+            android:gravity="center_horizontal"
+            >
+
+
+            <ImageView
+                android:id="@+id/index_want_buy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/woxiangmai"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:textColor="@color/index_yellow"
+                android:textSize="20sp"
+                android:text="@string/i_want_buy"
+                />
+        </LinearLayout>
+
+        <TextView
+
+            android:id="@+id/index_new_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/ring"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            />
+
+
+        </RelativeLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/index_rl"
+        android:orientation="vertical"
+        >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:background="@color/key"
+            />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/all_back"
+            android:text="@string/all_buy"
+            android:textSize="17sp"
+            android:textColor="@color/index_text"
+            android:drawableLeft="@drawable/home_ic_douzaimai"
+            android:drawablePadding="8dp"
+            android:paddingTop="18dp"
+            android:paddingLeft="12dp"
+            android:paddingBottom="10dp"
+            />
+        <include layout="@layout/line"/>
+
+        <com.liuzhuni.lzn.pulltorefresh.PullToRefreshListView
+            android:id="@+id/home_list_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:cacheColorHint="@color/transparent"
+            android:listSelector="@color/transparent"
+            android:divider="@color/line_below"
+            android:dividerHeight="1dp"
+            android:scrollbars="none"
+            />
+
+
+        </LinearLayout>
+
+    <ImageView
+        android:id="@+id/index_person_info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/home_ic_my_n"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="20dp"
+        />
+
+
+</RelativeLayout>

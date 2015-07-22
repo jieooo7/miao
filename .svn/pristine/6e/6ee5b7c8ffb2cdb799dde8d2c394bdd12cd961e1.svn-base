@@ -1,0 +1,33 @@
+USE [LZN]
+GO
+
+/****** Object:  Table [dbo].[App_PhoneCode]    Script Date: 05/12/2015 20:41:51 ******/
+SET ANSI_NULLS ON
+GO
+
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE TABLE [dbo].[App_PhoneCode](
+	[ID] [int] IDENTITY(1,1) NOT NULL,
+	[Type] [nvarchar](10) NULL,
+	[Phone] [nvarchar](20) NULL,
+	[Code] [nvarchar](10) NULL,
+	[Times] [int] NULL,
+	[Ip] [nvarchar](20) NULL,
+	[Status] [int] NULL,
+	[CreateDate] [datetime] NULL
+) ON [PRIMARY]
+
+GO
+
+ALTER TABLE [dbo].[App_PhoneCode] ADD  CONSTRAINT [DF_PhoneCode_Times]  DEFAULT ((0)) FOR [Times]
+GO
+
+ALTER TABLE [dbo].[App_PhoneCode] ADD  CONSTRAINT [DF_PhoneCode_Status]  DEFAULT ((0)) FOR [Status]
+GO
+
+ALTER TABLE [dbo].[App_PhoneCode] ADD  CONSTRAINT [DF_PhoneCode_CreateDate]  DEFAULT (getdate()) FOR [CreateDate]
+GO
+
+

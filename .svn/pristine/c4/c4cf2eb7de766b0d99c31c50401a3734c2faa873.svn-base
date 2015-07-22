@@ -1,0 +1,44 @@
+package com.liuzhuni.lzn.core.goods.ui;
+
+import android.content.Context;
+import android.util.AttributeSet;
+import android.view.View;
+import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
+
+import com.liuzhuni.lzn.utils.log.CommonLog;
+import com.liuzhuni.lzn.utils.log.LogFactory;
+
+/**
+ * Created by Andrew Lee on 2015/4/24.
+ * E-mail:jieooo7@163.com
+ * Date: 2015-04-24
+ * Time: 15:00
+ */
+public class LinearLayoutForListView extends LinearLayout {
+
+    private CommonLog log = LogFactory.createLog("linear");
+
+
+
+    public LinearLayoutForListView(Context context) {
+        super(context);
+    }
+
+    public LinearLayoutForListView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
+
+
+    public void bindLinearLayout(BaseAdapter adapter) {
+        int count = adapter.getCount();
+
+        this.removeAllViews();
+        for (int i = 0; i < count; i++) {
+            View v = adapter.getView(i, null, null);
+            log.i(""+i);
+            addView(v, i);
+        }
+    }
+
+}

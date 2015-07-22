@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="@drawable/loginout_dialog"
+    android:orientation="vertical"
+    >
+
+    <TextView
+        android:id="@+id/pic_text_title"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="14"
+        android:gravity="center_vertical"
+        android:textSize="20sp"
+        android:textColor="@color/key"
+        android:text="@string/change_head_img"
+        android:singleLine="true"
+        android:layout_marginLeft="22dp"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/regist_text"
+
+        />
+    <TextView
+        android:id="@+id/pic_text_one"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="11"
+        android:gravity="center_vertical"
+        android:textSize="18sp"
+        android:textColor="@color/me_info_text"
+        android:text="@string/from_pic"
+        android:layout_marginLeft="24dp"
+        />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:background="@color/regist_text"
+
+        />
+    <TextView
+        android:id="@+id/pic_text_two"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="11"
+        android:gravity="center_vertical"
+        android:textSize="18sp"
+        android:textColor="@color/me_info_text"
+        android:text="@string/from_camera"
+        android:layout_marginLeft="24dp"
+        />
+
+
+</LinearLayout>

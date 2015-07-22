@@ -1,0 +1,129 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.liuzhuni.lzn.core.index_new.AllNewsActivity">
+
+    <RelativeLayout
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/title_left_right"
+        android:paddingRight="@dimen/title_left_right"
+        android:paddingBottom="@dimen/title_top_bottom"
+        android:paddingTop="@dimen/title_top_bottom"
+        android:background="@color/red"
+        >
+
+
+
+        <TextView
+            android:id="@+id/title_middle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/all_news"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            android:background="@color/red"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/index_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/gray_back_color"
+        android:layout_alignParentBottom="true"
+        android:paddingRight="5dp"
+        android:paddingLeft="5dp"
+        android:paddingBottom="5dp"
+        android:paddingTop="5dp"
+        >
+        <TextView
+            android:id="@+id/index_select"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:drawableTop="@drawable/ic_home_n"
+            android:drawablePadding="2dp"
+            android:textColor="@color/gray_text_color"
+            android:textSize="12sp"
+            android:text="@string/good_select"
+            />
+        <TextView
+            android:id="@+id/index_people_say"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:drawableTop="@drawable/ic_publish_s"
+            android:drawablePadding="2dp"
+            android:textColor="@color/red"
+            android:textSize="12sp"
+            android:text="@string/all_join"
+            />
+        <TextView
+            android:id="@+id/index_person_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:drawableTop="@drawable/ic_my_n"
+            android:drawablePadding="2dp"
+            android:textColor="@color/gray_text_color"
+            android:textSize="12sp"
+            android:text="@string/about_me"
+            />
+
+
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/index_line_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/text_black"
+        android:layout_above="@id/index_bottom"
+        />
+
+
+    <FrameLayout
+
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/index_line_bottom"
+        android:layout_below="@id/title"
+        >
+    <com.liuzhuni.lzn.pulltorefresh.PullToRefreshGridView
+        android:id="@+id/grid_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/all_back"
+
+
+        >
+
+
+    </com.liuzhuni.lzn.pulltorefresh.PullToRefreshGridView>
+
+
+        <com.melnykov.fab.FloatingActionButton
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            android:layout_margin="16dp"
+            android:src="@drawable/ic_top"
+            fab:fab_shadow="false"
+            fab:fab_colorNormal="@color/transparent"
+            fab:fab_colorPressed="@color/transparent"
+            fab:fab_colorRipple="@color/transparent"
+            />
+    </FrameLayout>
+
+</RelativeLayout>

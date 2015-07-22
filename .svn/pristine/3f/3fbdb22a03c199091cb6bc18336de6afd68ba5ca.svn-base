@@ -1,0 +1,98 @@
+package com.liuzhuni.lzn.core.buylist.ui;
+
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.util.AttributeSet;
+import android.widget.ImageView;
+
+import com.liuzhuni.lzn.R;
+
+/**
+ * Created by Andrew Lee on 2015/5/9.
+ * E-mail:jieooo7@163.com
+ * Date: 2015-05-09
+ * Time: 16:25
+ */
+public class ThreePicView extends ImageView {
+
+    private Paint mPaint;
+
+    private int mType=0;
+    private final int ONE=0;
+    private final int TWO=1;
+    private final int THREE=2;
+
+    private Bitmap mPicOne;
+    private Bitmap mPicTwo;
+    private Bitmap mPicThree;
+    private Bitmap mBitmap;
+
+
+
+    public ThreePicView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        initView(context);
+    }
+
+
+    protected void initView(Context context) {
+        mPaint = new Paint();
+        mPaint.setColor(Color.WHITE);
+        mPicOne= BitmapFactory.decodeResource(context.getResources(),
+                R.drawable.my_setting_push_black);
+        mPicTwo= BitmapFactory.decodeResource(context.getResources(),
+                R.drawable.my_setting_push_border_n);
+        mPicThree= BitmapFactory.decodeResource(context.getResources(),
+                R.drawable.my_setting_push_border_s);
+        mBitmap=mPicOne;
+
+
+        startAnimate();
+
+
+
+    }
+
+    protected void startAnimate(){
+
+        this.postDelayed(new Runnable(){
+
+
+            @Override
+            public void run() {
+                switch (mType){
+                    case ONE:
+                        mType=TWO;
+                        mBitmap=mPicOne;
+                        break;
+                    case TWO:
+                        mType=THREE;
+                        mBitmap=mPicTwo;
+                        break;
+                    case THREE:
+
+                        mType=ONE;
+                        mBitmap=mPicThree;
+
+                        break;
+                }
+                invalidate();
+                startAnimate();
+            }
+
+        },200);
+
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        super.onDraw(canvas);
+        canvas.drawBitmap(mBitmap,0,0,mPaint);
+
+
+    }
+}

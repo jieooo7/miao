@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources>
+
+      <color name="result_view">#b0000000</color>
+      <color name="viewfinder_mask">#60000000</color>
+      <color name="possible_result_points">#c0ffff00</color>
+      <color name="white">@android:color/white</color>
+      <color name="transparent">@android:color/transparent</color>
+      <color name="key">#f55d62</color>
+      <color name="red">#f55d62</color>
+      <color name="text_black">#46454b</color>
+      <color name="text_gray">#cccccc</color>
+      <color name="co_login_color">#75737f</color>
+      <color name="button_unselect_back">#ff9a99</color>
+      <color name="regist_text">#999999</color>
+      <color name="me_info_text">#333333</color>
+      <color name="toast_back">#cc333333</color>
+      <color name="line_below">#d5d5d8</color>
+      <color name="message_circle">#dddddd</color>
+      <color name="all_back">#f7fafa</color>
+      <color name="index_text">#666666</color>
+      <color name="solid_color">#5e5d66</color>
+      <color name="buy_list_tip">#75737f</color>
+      <color name="index_yellow">#faeb7d</color>
+      <color name="shop_text">#b4b4b4</color>
+      <color name="siri_blue">#5390fb</color>
+      <color name="scan_blue">#65b9fe</color>
+      <color name="select_back">#f2f2f2</color>
+      <color name="boy">#009fdc</color>
+      <color name="girl">#ff6080</color>
+
+
+</resources>

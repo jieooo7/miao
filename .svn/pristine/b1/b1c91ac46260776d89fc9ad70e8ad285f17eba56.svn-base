@@ -1,0 +1,35 @@
+package com.liuzhuni.lzn.core.siri.model;
+
+import java.io.Serializable;
+
+/**
+ * Created by Andrew Lee on 2015/4/28.
+ * E-mail:jieooo7@163.com
+ * Date: 2015-04-28
+ * Time: 11:51
+ */
+public class SiriModel<T> implements Serializable{
+    private int type;
+    private T body;
+
+    public SiriModel(int type, T body) {
+        this.type = type;
+        this.body = body;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public T getBody() {
+        return body;
+    }
+
+    public void setBody(T body) {
+        this.body = body;
+    }
+}

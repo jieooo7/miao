@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/siri_head_iv"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/my_touxiang"
+        />
+
+    <LinearLayout
+        android:id="@+id/siri_left_buy_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/duihuakuang_bg_system"
+        android:layout_toRightOf="@id/siri_head_iv"
+        android:layout_marginRight="15dp"
+        android:layout_marginLeft="10dp"
+        android:orientation="vertical"
+        >
+
+
+        <TextView
+            android:id="@+id/siri_buy_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/me_info_text"
+            android:textSize="18sp"
+            />
+        <TextView
+            android:id="@+id/siri_buy_click"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/i_want_buy_u"
+            android:textColor="@color/siri_blue"
+            android:textSize="18sp"
+            android:autoLink="web"
+            />
+    </LinearLayout>
+
+
+
+
+</RelativeLayout>

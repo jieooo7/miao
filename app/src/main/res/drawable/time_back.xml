@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle" >
+
+    <!-- 填充色 -->
+    <solid android:color="@color/message_circle" />
+
+    <stroke
+        android:width="1dp"
+        android:color="@color/transparent"
+        />
+
+    <padding
+        android:bottom="3dp"
+        android:left="6dp"
+        android:right="6dp"
+        android:top="3dp" />
+
+    <corners
+        android:radius="45dp"
+        />
+
+</shape>

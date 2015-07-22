@@ -1,0 +1,93 @@
+package com.liuzhuni.lzn.core.login;
+
+import android.os.Handler;
+import android.widget.TextView;
+
+import com.liuzhuni.lzn.R;
+import com.liuzhuni.lzn.config.MessageWhat;
+import com.liuzhuni.lzn.utils.log.CommonLog;
+import com.liuzhuni.lzn.utils.log.LogFactory;
+
+/**
+ * Created by Andrew Lee on 2015/4/16.
+ * E-mail:jieooo7@163.com
+ * Date: 2015-04-16
+ * Time: 14:07
+ */
+public class ButtonThread extends Thread{
+
+    private CommonLog log= LogFactory.createLog("ButtonThread");
+
+    private TextView mSubmitTv;
+    private Threadable mInter;
+
+    private volatile boolean mQuit=false;
+    private boolean mIsSend;
+
+    public Handler mHandler=new Handler() {
+        public void handleMessage(android.os.Message msg){
+            switch (msg.what){
+                case MessageWhat.BUTTON_LOGIN_OK:
+                    mSubmitTv.setBackgroundResource(R.drawable.button_select_back);
+                    log.i("换色");
+                    break;
+                case MessageWhat.BUTTON_LOGIN_UN:
+                    mSubmitTv.setBackgroundResource(R.drawable.button_unselect_back);
+                    log.i("不换色");
+                    break;
+            }
+
+        }
+
+    };
+    public ButtonThread(TextView SubmitTv,Threadable inter){
+        this.mSubmitTv=SubmitTv;
+        this.mInter=inter;
+    }
+
+    public void stopThread(){
+        this.mQuit=true;
+
+    }
+
+    public boolean isSubmit(){
+
+           return mInter.isSubmit();
+
+    }
+
+
+    public void run() {
+        boolean isOk=true;
+//        mQuit=false;
+        while (!mQuit){
+            mIsSend=isSubmit();
+            if(mIsSend){
+                if(isOk){
+                    isOk=false;
+                    mHandler.sendEmptyMessage(MessageWhat.BUTTON_LOGIN_OK);
+                }
+
+            }else{
+                if(!isOk){
+                    isOk=true;
+
+                    mHandler.sendEmptyMessage(MessageWhat.BUTTON_LOGIN_UN);
+                }
+            }
+
+            try {
+                this.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+
+        }
+    }
+
+
+
+
+
+}

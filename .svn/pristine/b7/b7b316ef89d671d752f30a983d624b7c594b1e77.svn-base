@@ -1,0 +1,15 @@
+<resources>
+    <!-- Example customization of dimensions originally defined in res/values/dimens.xml
+         (such as screen margins) for screens with more than 820dp of available width. This
+         would include 7" and 10" devices in landscape (~960dp and ~1280dp respectively). -->
+    <dimen name="activity_horizontal_margin">64dp</dimen>
+
+    <dimen name="pop_offset">130px</dimen>
+    <dimen name="qrcode_bottom">100dp</dimen>
+
+
+    <dimen name="text_image_size">80dp</dimen>
+    <dimen name="shop_size">15sp</dimen>
+    <dimen name="detail_size">15sp</dimen>
+    <dimen name="price_size">22sp</dimen>
+</resources>

@@ -1,0 +1,471 @@
+package com.liuzhuni.lzn.core.select;
+
+import android.content.Intent;
+import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.google.gson.reflect.TypeToken;
+import com.lidroid.xutils.ViewUtils;
+import com.lidroid.xutils.view.annotation.ViewInject;
+import com.lidroid.xutils.view.annotation.event.OnClick;
+import com.liuzhuni.lzn.R;
+import com.liuzhuni.lzn.base.Base2Activity;
+import com.liuzhuni.lzn.config.UrlConfig;
+import com.liuzhuni.lzn.core.goods.GoodsActivity;
+import com.liuzhuni.lzn.core.goods.ui.ListViewForScrollView;
+import com.liuzhuni.lzn.core.login.ButtonThread;
+import com.liuzhuni.lzn.core.login.Threadable;
+import com.liuzhuni.lzn.core.model.BaseListModel;
+import com.liuzhuni.lzn.core.select.adapter.BrandAdapter;
+import com.liuzhuni.lzn.core.select.model.BrandModel;
+import com.liuzhuni.lzn.core.select.model.SelectGoodsModel;
+import com.liuzhuni.lzn.core.select.ui.CleanableEditText;
+import com.liuzhuni.lzn.core.select.ui.RangeSeekBar;
+import com.liuzhuni.lzn.core.siri.TextSiriActivity;
+import com.liuzhuni.lzn.example.qr_codescan.MipcaActivityCapture;
+import com.liuzhuni.lzn.volley.ApiParams;
+import com.liuzhuni.lzn.volley.GsonBaseRequest;
+
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+public class SelectActivity extends Base2Activity {
+
+    @ViewInject(R.id.title_left)
+    private TextView mBackTv;
+    @ViewInject(R.id.title_right_iv)
+    private ImageView mRightIv;
+    @ViewInject(R.id.title_middle)
+    private TextView mMiddleTv;
+    @ViewInject(R.id.want_bu_clean_et)
+    private CleanableEditText mInputEt;
+    @ViewInject(R.id.select_ok_submit)
+    private TextView mSubmitTv;
+    @ViewInject(R.id.select_tag)
+    private TextView mTagTv;
+    @ViewInject(R.id.no_brand_iv)
+    private ImageView mNoBrandIv;
+    @ViewInject(R.id.select_brand_iv)
+    private ImageView mSelectBrandIv;
+    @ViewInject(R.id.just_cheap_iv)
+    private ImageView mJustCheapIv;
+    @ViewInject(R.id.set_range_iv)
+    private ImageView mSetRangeIv;
+
+
+    private boolean mIsBrand = true;
+    private boolean mIsPrice = true;
+    private boolean mIsLessBrand = true;
+
+    private String mKey="";
+    private String mBrand="";
+    private String mPrice="";
+
+
+
+    @ViewInject(R.id.brand_select_lv)
+    private LinearLayout mBrandLv;
+    @ViewInject(R.id.range_price_lv)
+    private LinearLayout mRangeLv;
+    @ViewInject(R.id.brand_list)
+    private ListViewForScrollView mBrandList;
+    @ViewInject(R.id.want_buy_sv)
+    private ScrollView mScrollView;
+
+    @ViewInject(R.id.more_brand_tv)
+    private TextView mMoreBrandTv;
+    @ViewInject(R.id.less_brand_tv)
+    private TextView mLessBrandTv;
+    @ViewInject(R.id.range_show_tv)
+    private TextView mRangeShowTv;
+    @ViewInject(R.id.seek_bar)
+    private RangeSeekBar<Integer> mSeekBar;
+
+    private BrandAdapter mAdapter;
+    private List<BrandModel> mList=null;
+
+
+
+    private Drawable mDrawableSelect;
+    private Drawable mDrawableUnSelect;
+    private ButtonThread mThread = null;
+    private final static int SCANNIN_GREQUEST_CODE = 2;
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_select);
+        initData();
+        findViewById();
+        initUI();
+        setListener();
+    }
+
+    @Override
+    protected void initData() {
+        mList = new ArrayList<BrandModel>();
+        mDrawableSelect = getResources().getDrawable(R.drawable.woxiangmai_option_true);
+        mDrawableUnSelect = getResources().getDrawable(R.drawable.woxiangmai_option_false);
+
+
+    }
+
+    @Override
+    protected void findViewById() {
+        ViewUtils.inject(this);
+
+    }
+
+    protected void startThread() {
+        mThread = new ButtonThread(mSubmitTv, new Threadable() {
+            @Override
+            public boolean isSubmit() {
+                return SelectActivity.this.isSubmit();
+            }
+        });
+        mThread.start();
+
+    }
+
+    @Override
+    protected void initUI() {
+
+        mMiddleTv.setText(getResources().getText(R.string.i_want_buy));
+        mRightIv.setImageDrawable(getResources().getDrawable(R.drawable.ic_saoyisao));
+        mScrollView.scrollTo(0, 0);
+//        mAdapter = new BrandAdapter(this, mList);
+//        mBrandList.setAdapter(mAdapter);
+
+    }
+
+    @Override
+    protected void setListener() {
+
+    }
+
+
+    protected boolean isSubmit() {
+        String text = mInputEt.getText().toString().trim();
+
+        return text.length() > 0;
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (mThread == null) {
+            startThread();
+        }
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mThread.stopThread();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
+
+    @OnClick(R.id.title_left)
+    public void back(View v) {
+
+        finish();
+    }
+
+    @OnClick(R.id.more_brand_tv)
+    public void moreBrand(View v) {
+
+        if (mIsLessBrand) {
+            mIsLessBrand = !mIsLessBrand;
+            mMoreBrandTv.setVisibility(View.GONE);
+            mLessBrandTv.setVisibility(View.VISIBLE);
+            String text = mInputEt.getText().toString().trim();
+            String urlCode="";
+            try {
+                urlCode=URLEncoder.encode(text,"UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            pullBrandData(urlCode, 1);
+        }
+
+    }
+
+    @OnClick(R.id.less_brand_tv)
+    public void lessBrand(View v) {
+        if (!mIsLessBrand) {
+            mIsLessBrand = !mIsLessBrand;
+            mMoreBrandTv.setVisibility(View.VISIBLE);
+            mLessBrandTv.setVisibility(View.GONE);
+            //list操作
+            String text = mInputEt.getText().toString().trim();
+            String urlCode="";
+            try {
+                urlCode=URLEncoder.encode(text,"UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            pullBrandData(urlCode, 0);
+
+        }
+
+
+    }
+
+    @OnClick(R.id.title_right_iv)
+    public void qrCode(View v) {
+        //扫描条码
+        Intent intent = new Intent();
+        intent.setClass(SelectActivity.this, MipcaActivityCapture.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivityForResult(intent, SCANNIN_GREQUEST_CODE);
+
+
+    }
+
+    @OnClick(R.id.select_ok_submit)
+    public void submit(View v) {
+
+        //提交
+        StringBuffer sb=new StringBuffer();
+        if(!mList.isEmpty()){
+            for(BrandModel brand:mList){
+                if(brand.isSelect()){
+                    sb.append(brand.getBrand());
+                    sb.append(",");
+                }
+
+            }
+
+        }
+        if (!mList.isEmpty()){//至于点击自选品牌时 才进行操作 防止崩溃
+            sb.deleteCharAt(sb.lastIndexOf(","));
+        }
+        mBrand=sb.toString();
+        String text = mInputEt.getText().toString().trim();
+        mKey=text;
+        if (text.length() > 0) {
+
+            pullSubmitData(mKey,mBrand,mPrice);
+
+
+        }
+
+    }
+
+
+    protected synchronized void pullSubmitData(final String key,final String brand,final String price){
+        executeRequest(new GsonBaseRequest<BaseListModel<SelectGoodsModel>>(Request.Method.POST, UrlConfig.SELECT_SUBMIT,new TypeToken<BaseListModel<SelectGoodsModel>>(){}.getType(),responseSubmitListener(),errorListener()){
+
+            protected Map<String, String> getParams() {
+                return new ApiParams().with("key", key).with("brands", brand).with("price", price);
+            }
+
+        });
+    }
+
+    private Response.Listener<BaseListModel<SelectGoodsModel>> responseSubmitListener() {
+        return new Response.Listener<BaseListModel<SelectGoodsModel>>(){
+            @Override
+            public void onResponse(BaseListModel<SelectGoodsModel> goodsModel) {
+                if(goodsModel.getRet()==0 && goodsModel.getData()!=null){
+                    Bundle bundle=new Bundle();
+                    bundle.putSerializable("list",goodsModel);
+                    bundle.putString("key",mKey);
+                    Intent intent=new Intent(SelectActivity.this, TextSiriActivity.class);
+                    intent.putExtras(bundle);
+                    setResult(RESULT_OK, intent);
+                    finish();
+
+                }else{
+                    Intent intent=new Intent(SelectActivity.this, TextSiriActivity.class);
+                    setResult(RESULT_CANCELED, intent);
+                    finish();
+
+                }
+
+            }
+        };
+
+    }
+
+
+    @OnClick(R.id.no_brand_iv)
+    public void noBrand(View v) {
+        //点击不限制品牌 图标
+        if (!mIsBrand) {
+            mIsBrand = !mIsBrand;
+            mNoBrandIv.setImageDrawable(mDrawableSelect);
+            mSelectBrandIv.setImageDrawable(mDrawableUnSelect);
+            mBrandLv.setVisibility(View.GONE);
+        }
+    }
+
+    @OnClick(R.id.select_brand_iv)
+    public void selectBrand(View v) {
+        //点击自选品牌 图标
+        if(!isSubmit()){
+            return;
+        }
+        if (mIsBrand) {
+            mIsBrand = !mIsBrand;
+            mNoBrandIv.setImageDrawable(mDrawableUnSelect);
+            mSelectBrandIv.setImageDrawable(mDrawableSelect);
+            //初始化 品牌列表
+            initBrand();
+            mBrandLv.setVisibility(View.VISIBLE);
+
+        }
+    }
+
+    @OnClick(R.id.just_cheap_iv)
+    public void justCheap(View v) {
+        //点击不限制价格 图标
+        if (!mIsPrice) {
+            mIsPrice = !mIsPrice;
+            mJustCheapIv.setImageDrawable(mDrawableSelect);
+            mSetRangeIv.setImageDrawable(mDrawableUnSelect);
+
+            mRangeLv.setVisibility(View.GONE);
+
+
+        }
+    }
+
+    @OnClick(R.id.set_range_iv)
+    public void setRange(View v) {
+        //点击自选价格 图标
+        if(!isSubmit()){
+            return;
+        }
+        if (mIsPrice) {
+            mIsPrice = !mIsPrice;
+
+//            mScrollView.scrollTo(0,mScrollView.getMeasuredHeight());
+
+
+            mSetRangeIv.setImageDrawable(mDrawableSelect);
+
+            mJustCheapIv.setImageDrawable(mDrawableUnSelect);
+            mRangeLv.setVisibility(View.VISIBLE);
+            mScrollView.post(new Runnable() {
+                public void run() {
+                    mScrollView.fullScroll(ScrollView.FOCUS_DOWN);
+                }
+            });
+            //初始化 滑块
+            initRange();
+        }
+    }
+
+
+    protected void initBrand() {
+        //操作list
+        String text = mInputEt.getText().toString().trim();
+        String urlCode="";
+        try {
+            urlCode=URLEncoder.encode(text,"UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        pullBrandData(urlCode,0);
+
+    }
+
+    protected void initRange() {
+//        mSeekBar.setRangeValues(0,50);
+        mSeekBar.setSelectedMinValue(0);
+        mSeekBar.setSelectedMaxValue(50);
+
+        mSeekBar.setOnRangeSeekBarChangeListener(new RangeSeekBar.OnRangeSeekBarChangeListener<Integer>() {
+            @Override
+            public void onRangeSeekBarValuesChanged(RangeSeekBar<?> bar, Integer minValue, Integer maxValue) {
+                int min = minValue * 10;
+                int max = maxValue * 10;
+                StringBuffer sb=new StringBuffer();
+                sb.append(min);
+                sb.append(",");
+                sb.append(max);
+                mPrice=sb.toString();
+
+                if (max > 500) {
+
+                    mRangeShowTv.setText(min + "~"  + "500元以上");
+                } else {
+
+                    mRangeShowTv.setText(min + "~" + max + "元");
+                }
+
+            }
+        });
+
+    }
+
+    protected synchronized void pullBrandData(final String key,final int type){
+        executeRequest(new GsonBaseRequest<BaseListModel<BrandModel>>(Request.Method.GET, UrlConfig.GET_BRAND+"?key="+key+"&t="+type,new TypeToken<BaseListModel<BrandModel>>(){}.getType(),responseBrandListener(),errorListener()){
+
+        });
+    }
+
+    private Response.Listener<BaseListModel<BrandModel>> responseBrandListener() {
+        return new Response.Listener<BaseListModel<BrandModel>>(){
+            @Override
+            public void onResponse(BaseListModel<BrandModel> brandBuyListModel) {
+
+                if(brandBuyListModel.getRet()==0){
+                    mList=brandBuyListModel.getData();
+                    mAdapter = new BrandAdapter(SelectActivity.this, mList);
+                    mBrandList.setAdapter(mAdapter);
+                    mAdapter.notifyDataSetChanged();
+                }}
+        };
+
+    }
+
+
+
+
+
+
+
+
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case SCANNIN_GREQUEST_CODE:
+                if(resultCode == RESULT_OK){
+                    Bundle bundle = data.getExtras();
+//                    ToastUtil.customShow(this, bundle.getString("result"));
+                    Intent intent = new Intent(this, GoodsActivity.class);
+                    Bundle goodsBundle = new Bundle();
+                    goodsBundle.putString("code",bundle.getString("result"));
+                    intent.putExtras(goodsBundle);
+                    startActivity(intent);
+                }
+                break;
+        }
+    }
+
+
+}

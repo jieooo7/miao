@@ -1,0 +1,355 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:rsb="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/all_back"
+    tools:context="com.liuzhuni.lzn.core.select.SelectActivity">
+
+
+    <include
+        android:id="@+id/title"
+        layout="@layout/title_image" />
+
+    <FrameLayout
+        android:id="@+id/select_frame"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginTop="15dp"
+        android:background="@color/all_back"
+        >
+        <TextView
+            android:id="@+id/select_ok_submit"
+            style="@style/button_style"
+            android:layout_marginBottom="30dp"
+            android:layout_marginLeft="50dp"
+            android:layout_marginRight="50dp"
+            android:text="@string/select_ok" />
+
+    </FrameLayout>
+
+    <ScrollView
+        android:id="@+id/want_buy_sv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/title"
+        android:layout_above="@id/select_frame"
+
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:drawableLeft="@drawable/woxiangmai_ic_title"
+                android:drawablePadding="5dp"
+                android:text="@string/you_want_buy"
+                android:textColor="@color/regist_text"
+                android:textSize="18sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@color/white"
+                android:orientation="horizontal"
+                android:padding="12dp"
+                android:paddingBottom="12dp"
+                android:paddingLeft="12dp"
+                android:paddingTop="12dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/i_want_buy"
+                    android:textColor="@color/me_info_text"
+                    android:textSize="17sp" />
+
+                <com.liuzhuni.lzn.core.select.ui.CleanableEditText
+
+                    android:id="@+id/want_bu_clean_et"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_weight="1"
+                    android:background="@null"
+                    android:drawableRight="@drawable/btn_delete"
+                    android:hint="@string/example_text"
+                    android:textColor="@color/key"
+                    android:singleLine="true"
+                    android:textColorHint="@color/text_gray"
+                    android:textSize="16sp" />
+
+
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="15dp"
+                android:drawableLeft="@drawable/woxiangmai_ic_title"
+                android:drawablePadding="5dp"
+                android:text="@string/like_brand"
+                android:textColor="@color/regist_text"
+                android:textSize="18sp" />
+
+            <RelativeLayout
+                android:id="@+id/select_rl_one"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@color/white"
+                android:padding="12dp"
+                android:paddingBottom="12dp"
+                android:paddingLeft="12dp"
+                android:paddingTop="12dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:text="@string/say_ok"
+                    android:textColor="@color/me_info_text"
+                    android:textSize="17sp" />
+
+                <ImageView
+                    android:id="@+id/no_brand_iv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/woxiangmai_option_true" />
+
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/select_rl_two"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:background="@color/white"
+                android:padding="12dp"
+                android:paddingBottom="12dp"
+                android:paddingLeft="12dp"
+                android:paddingTop="12dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:text="@string/want_coustem_brand"
+                    android:textColor="@color/me_info_text"
+                    android:textSize="17sp" />
+
+                <ImageView
+                    android:id="@+id/select_brand_iv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:src="@drawable/woxiangmai_option_false" />
+
+
+            </RelativeLayout>
+            <!-- 品牌选择 此处占位-->
+            <LinearLayout
+                android:id="@+id/brand_select_lv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:padding="12dp"
+                android:paddingBottom="12dp"
+                android:paddingLeft="12dp"
+                android:paddingTop="12dp"
+                android:visibility="gone">
+
+                <com.liuzhuni.lzn.core.goods.ui.ListViewForScrollView
+                    android:id="@+id/brand_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:cacheColorHint="@color/transparent"
+                    android:divider="@color/line_below"
+                    android:dividerHeight="1px"
+                    android:listSelector="@color/transparent"
+                    android:scrollbars="none">
+
+
+                </com.liuzhuni.lzn.core.goods.ui.ListViewForScrollView>
+
+                <TextView
+                    android:id="@+id/more_brand_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:drawableLeft="@drawable/woxiangmai_pinpai_gengduo"
+                    android:drawablePadding="5dp"
+                    android:text="@string/more_brand"
+                    android:textColor="@color/regist_text"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/less_brand_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:drawableLeft="@drawable/woxiangmai_pinpai_shouqi"
+                    android:drawablePadding="5dp"
+                    android:text="@string/less_brand"
+                    android:textColor="@color/regist_text"
+                    android:textSize="18sp"
+                    android:visibility="gone" />
+
+
+            </LinearLayout>
+
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginTop="15dp"
+                android:drawableLeft="@drawable/woxiangmai_ic_title"
+                android:drawablePadding="5dp"
+                android:text="@string/want_price_range"
+                android:textColor="@color/regist_text"
+                android:textSize="18sp" />
+
+            <RelativeLayout
+                android:id="@+id/select_rl_three"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@color/white"
+                android:padding="12dp"
+                android:paddingBottom="12dp"
+                android:paddingLeft="12dp"
+                android:paddingTop="12dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:text="@string/only_cheap"
+                    android:textColor="@color/me_info_text"
+                    android:textSize="17sp" />
+
+                <ImageView
+                    android:id="@+id/just_cheap_iv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:src="@drawable/woxiangmai_option_true" />
+
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/select_rl_four"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="1dp"
+                android:background="@color/white"
+                android:padding="12dp"
+                android:paddingBottom="12dp"
+                android:paddingLeft="12dp"
+                android:paddingTop="12dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:text="@string/want_custom_range"
+                    android:textColor="@color/me_info_text"
+                    android:textSize="17sp" />
+
+                <ImageView
+                    android:id="@+id/set_range_iv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:src="@drawable/woxiangmai_option_false" />
+
+                <!---->
+
+
+            </RelativeLayout>
+
+            <!-- seekbar 代码中添加设置 此处占位-->
+            <LinearLayout
+                android:id="@+id/range_price_lv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:padding="12dp"
+                android:paddingBottom="12dp"
+                android:paddingLeft="12dp"
+                android:paddingTop="12dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/range_show_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/init_range"
+                    android:textColor="@color/key"
+                    android:textSize="14sp" />
+
+                <com.liuzhuni.lzn.core.select.ui.RangeSeekBar
+                    android:id="@+id/seek_bar"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="-12dp"
+                    rsb:absoluteMaxValue="51"
+                    rsb:absoluteMinValue="0" />
+
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/select_tag"
+                android:layout_width="match_parent"
+                android:layout_height="30dp"
+                android:background="@color/transparent"
+                />
+
+
+
+
+
+        </LinearLayout>
+
+    </ScrollView>
+
+
+
+
+
+</RelativeLayout>

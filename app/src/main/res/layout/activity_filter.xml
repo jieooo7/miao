@@ -1,0 +1,40 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.liuzhuni.lzn.core.index_new.FilterActivity">
+
+    <include
+        android:id="@+id/title"
+        layout="@layout/title" />
+
+    <TextView
+        android:id="@+id/tips"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/title"
+        android:textSize="16sp"
+        android:textColor="@color/regist_text"
+        android:text="@string/filter_tips"
+        android:gravity="center"
+        android:paddingTop="15dp"
+        android:paddingBottom="25dp"
+        />
+
+    <GridView
+        android:id="@+id/filter_grid_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/tips"
+        android:scrollbars="none"
+        android:numColumns="3"
+        android:horizontalSpacing="7dp"
+        android:verticalSpacing="14dp"
+        android:layout_marginLeft="15dp"
+        android:cacheColorHint="@color/transparent"
+        android:listSelector="@color/transparent"
+        android:layout_marginRight="15dp"
+        />
+
+
+
+</RelativeLayout>

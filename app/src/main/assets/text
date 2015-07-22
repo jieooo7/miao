@@ -1,0 +1,6 @@
+   public static final int TIME = 0; 时间
+    public static final int RIGHT_TEXT = 1; 用户说的
+    public static final int LEFT_TEXT = 2;  系统说的
+    public static final int RIGHT_GOODS = 3; 商品
+    public static final int RIGHT_DIALOG = 4; 对话框
+    public static final int RIGHT_TEXT_CLICK = 5; 我想买(点击)

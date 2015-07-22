@@ -1,0 +1,55 @@
+package com.liuzhuni.lzn.db;
+
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
+
+import com.liuzhuni.lzn.config.AppManager;
+import com.liuzhuni.lzn.utils.PreferencesUtils;
+
+public class DataBaseHelper extends SQLiteOpenHelper {
+
+	private final static String DBNAME="goods_"+ PreferencesUtils.getValueFromSPMap(AppManager.getAppManager().currentActivity(), PreferencesUtils.Keys.AUTH, "", PreferencesUtils.Keys.USERINFO).hashCode() +".db";
+	private final static int DBVERSION=1;
+
+    public DataBaseHelper(Context context, String name) {
+        super(context, name,null,DBVERSION);
+    }
+//	public DataBaseHelper(Context context, String name) {
+//		super(context, DBNAME, null,DBVERSION);
+//		// TODO Auto-generated constructor stub
+//	}
+
+	@Override
+	public void onCreate(SQLiteDatabase db) {
+		// TODO Auto-generated method stub
+		db.execSQL("CREATE TABLE IF NOT EXISTS goods_record"+"(id INTEGER PRIMARY KEY AUTOINCREMENT,type INTEGER,body TEXT,dt DATETIME DEFAULT (datetime('now','localtime')))");
+		db.execSQL("CREATE TABLE IF NOT EXISTS goods_temp_one"+"(id INTEGER PRIMARY KEY,type INTEGER,body TEXT)");
+		db.execSQL("CREATE TABLE IF NOT EXISTS goods_temp_two"+"(id INTEGER PRIMARY KEY,type INTEGER,body TEXT)");
+		db.execSQL("CREATE TABLE IF NOT EXISTS goods_temp_time"+"(id INTEGER PRIMARY KEY,type INTEGER,body TEXT)");
+        Cursor c = db.rawQuery("SELECT * FROM goods_temp_one", null);
+        if(c.getCount()<=0){
+            db.execSQL(
+                    "INSERT INTO goods_temp_one VALUES(?, ?, ?)",
+                    new Object[] {1,7,""});
+            db.execSQL(
+                    "INSERT INTO goods_temp_two VALUES(?, ?, ?)",
+                    new Object[] {1,7,""});
+            db.execSQL(
+                    "INSERT INTO goods_temp_time VALUES(?, ?, ?)",
+                    new Object[] {1,7,""});
+        }
+        c.close();
+
+	}
+
+	@Override
+	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+		// TODO Auto-generated method stub
+		
+		db.execSQL("ALTER TABLE test ADD COLUMN other STRING");
+
+	}
+
+}

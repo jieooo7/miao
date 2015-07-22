@@ -1,0 +1,46 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.liuzhuni.lzn.core.regist.PasswdSetActivity">
+
+    <include
+        android:id="@+id/title"
+        layout="@layout/title" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:layout_marginTop="27dp"
+        android:layout_below="@id/title"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/passwd_limit"
+            android:layout_gravity="left"
+            android:paddingLeft="8dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:textColor="@color/regist_text"
+            android:textSize="18sp" />
+        <com.liuzhuni.lzn.core.login.ui.DoubleRightView
+            android:id="@+id/passwd_set_et"
+            style="@style/wrap_text"
+            android:maxLength="12"
+            android:hint="@string/passwd_hint"
+             />
+
+
+        <TextView
+            android:id="@+id/passwd_set_tv"
+            style="@style/button_style"
+            android:layout_marginTop="30dp"
+            android:text="@string/button_submit" />
+
+    </LinearLayout>
+
+</RelativeLayout>

@@ -1,0 +1,489 @@
+package com.liuzhuni.lzn.core.siri;
+
+import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
+import android.os.Bundle;
+import android.os.Handler;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.toolbox.ImageLoader;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+import com.lidroid.xutils.ViewUtils;
+import com.lidroid.xutils.view.annotation.ViewInject;
+import com.lidroid.xutils.view.annotation.event.OnClick;
+import com.liuzhuni.lzn.R;
+import com.liuzhuni.lzn.base.Base2Activity;
+import com.liuzhuni.lzn.config.MessageWhat;
+import com.liuzhuni.lzn.config.UrlConfig;
+import com.liuzhuni.lzn.core.buylist.BuyActivity;
+import com.liuzhuni.lzn.core.goods.GoodsActivity;
+import com.liuzhuni.lzn.core.model.BaseListModel;
+import com.liuzhuni.lzn.core.select.SelectActivity;
+import com.liuzhuni.lzn.core.select.model.SelectGoodsModel;
+import com.liuzhuni.lzn.core.siri.adapter.SiriAdapter;
+import com.liuzhuni.lzn.core.siri.model.GoodsListModel;
+import com.liuzhuni.lzn.core.siri.model.SiriModel;
+import com.liuzhuni.lzn.db.DataBaseHelper;
+import com.liuzhuni.lzn.db.DatabaseOperate;
+import com.liuzhuni.lzn.db.DbModel;
+import com.liuzhuni.lzn.example.qr_codescan.MipcaActivityCapture;
+import com.liuzhuni.lzn.pulltorefresh.PullToRefreshBase;
+import com.liuzhuni.lzn.pulltorefresh.PullToRefreshListView;
+import com.liuzhuni.lzn.utils.ToastUtil;
+import com.liuzhuni.lzn.volley.GsonBaseRequest;
+import com.liuzhuni.lzn.volley.RequestManager;
+
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+public class TextSiriActivity extends Base2Activity {
+
+    @ViewInject(R.id.title_left)
+    private TextView mBackTv;
+    @ViewInject(R.id.title_right_iv)
+    private ImageView mRightIv;
+    @ViewInject(R.id.title_middle)
+    private TextView mMiddleTv;
+    @ViewInject(R.id.siri_buy_list)
+    private TextView mWantBuyTv;
+
+
+    @ViewInject(R.id.siri_i_want_buy)
+    private TextView mBuyTv;
+    @ViewInject(R.id.siri_list)
+    private PullToRefreshListView mPullList;
+    private ListView mListView;
+
+
+    private SQLiteDatabase db;
+    private DataBaseHelper helper;
+
+    private SimpleDateFormat mDateFormat = new SimpleDateFormat("HH:mm");
+    private String mTime;
+
+
+    private int mTotal = 1;
+    private int mIndex = 0;
+    /**
+     * 退出线程状态量
+     */
+    private boolean mIsExit = false;
+
+    private boolean mIsInit = true;
+
+    private boolean mIsHistory = false;
+
+    private boolean mIsLoacl = true;
+
+
+    private SiriAdapter mAdapter;
+    private ImageLoader mImageLoader;
+    private List<SiriModel> mList;
+    private List<SiriModel> mCurrentList = new ArrayList<SiriModel>();
+    ;
+    private Handler mHandler = new Handler() {
+        public void handleMessage(android.os.Message msg) {
+            switch (msg.what) {
+                case MessageWhat.SIRI_DELAY:
+                    mAdapter.notifyDataSetChanged();
+                    mListView.setSelection(mList.size() - 1);
+
+                    break;
+            }
+
+        }
+
+    };
+
+    private Thread mThread = new Thread(new Runnable() {//不操作mlist则 不会使用线程  添加控制即可
+        @Override
+        public void run() {
+
+            int position = 0;
+
+            while (!mIsExit) {
+
+                try {
+                    mThread.sleep(DELAY);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                if (position < mList.size() && mList.get(position) != null) {
+//                    mCurrentList.add(mList.get(position));
+                    addList(mList.get(position));
+                    position++;
+                    mHandler.sendEmptyMessage(MessageWhat.SIRI_DELAY);
+                }
+            }
+        }
+    });
+    /**
+     * 获取对应ID
+     */
+    public static int sId = 0;
+    private String mPush = "";
+
+    /**
+     * 延时time
+     */
+
+    public static final int DELAY = 1200;
+
+    public static final int REQUEST_CODE = 1;
+    private final static int SCANNIN_GREQUEST_CODE = 2;
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_text_siri);
+        initData();
+        findViewById();
+        initUI();
+        setListener();
+//        listview.setSelection(listview.getAdapter().getCount()-1); 滑动到最后
+    }
+
+    @Override
+    protected void initData() {
+        mImageLoader = RequestManager.getImageLoader();
+
+
+        if (getIntent() != null) {
+            if (getIntent().getExtras() != null) {
+
+                if (getIntent().getExtras().getBoolean("ispush", false)) {
+                    mIsInit = false;
+                }
+                sId = getIntent().getExtras().getInt("id");
+                mPush = getIntent().getExtras().getString("body");
+            }
+        }
+
+        helper = new DataBaseHelper(this);
+        db = helper.getWritableDatabase();
+        mList = new ArrayList<SiriModel>();
+
+//        mIsInit=false;
+        //此处初始化判断
+        if (mIsInit) {
+            mList.add(new SiriModel<String>(SiriAdapter.LEFT_TEXT, getResources().getString(R.string.dialog_first)));
+            mList.add(new SiriModel<String>(SiriAdapter.RIGHT_TEXT_CLICK, getResources().getString(R.string.dialog_second)));
+        } else {//push传值
+            List<DbModel> pushList = new Gson().fromJson(mPush, new TypeToken<ArrayList<DbModel>>() {
+            }.getType());
+
+            for (DbModel dbModel : pushList) {
+                if (dbModel.getType() == 2 || dbModel.getType() == 0) {
+                    mList.add(new SiriModel<String>(dbModel.getType(), dbModel.getBody()));
+                }
+                if (dbModel.getType() == 3) {
+                    ArrayList<SelectGoodsModel> goodsList = new Gson().fromJson(dbModel.getBody(), new TypeToken<ArrayList<SelectGoodsModel>>() {
+                    }.getType());
+
+                    mList.add(new SiriModel<GoodsListModel>(SiriAdapter.RIGHT_GOODS, new GoodsListModel(goodsList)));
+                }
+
+            }
+            DatabaseOperate.insert(db, sId, pushList);
+            mList.add(new SiriModel(SiriAdapter.RIGHT_DIALOG, true));
+        }
+        mThread.start();
+        mAdapter = new SiriAdapter(mCurrentList, mList, this, mImageLoader);//mlist 实际掌控 在adapter中有操作  mCurrentlist用于模拟
+
+    }
+
+    @Override
+    protected void findViewById() {
+
+        ViewUtils.inject(this);
+
+    }
+
+    @Override
+    protected void initUI() {
+
+        mPullList.setPullLoadEnabled(true);
+        mPullList.setScrollLoadEnabled(true);
+        mListView = mPullList.getRefreshableView();
+        mListView.setCacheColorHint(Color.TRANSPARENT);
+        mListView.setDivider(getResources().getDrawable(R.drawable.trans));
+        mListView.setDividerHeight(3);
+        mListView.setSelector(getResources().getDrawable(R.drawable.trans));
+
+        mMiddleTv.setText(getResources().getText(R.string.secreter));
+        mRightIv.setImageDrawable(getResources().getDrawable(R.drawable.ic_saoyisao));
+        mListView.setAdapter(mAdapter);
+
+    }
+
+    @Override
+    protected void setListener() {
+
+        mPullList.setOnRefreshListener(new PullToRefreshListView.OnRefreshListener<ListView>() {
+
+            @Override
+            public void onPullDownToRefresh(
+                    PullToRefreshBase<ListView> refreshView) {
+                // TODO Auto-generated method stub
+                mIsHistory = true;
+                Date date = new Date();
+                mTime = mDateFormat.format(date);
+                if (mIsLoacl) {
+                    List<DbModel> dbList = DatabaseOperate.getDb(db);
+                    fromDb(dbList);
+                    mPullList.onPullDownRefreshComplete();
+//					// 上拉刷新完成
+                    mPullList.onPullUpRefreshComplete();
+                    mIsLoacl = false;
+                } else {
+
+                    if (mIndex < mTotal) {
+                        //网络请求
+                        pullHistoryData(mIndex);
+
+                    } else {
+
+                        // 设置是否有更多的数据
+                        ToastUtil.show(TextSiriActivity.this, getResources().getText(R.string.no_more_error));
+//                    mPullList.setHasMoreData(false);
+                    }
+
+                    // 下拉加载完成
+                    mPullList.onPullDownRefreshComplete();
+//					// 上拉刷新完成
+                    mPullList.onPullUpRefreshComplete();
+                }
+
+
+            }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+
+                mIsHistory = false;
+                mPullList.onPullDownRefreshComplete();
+//					// 上拉刷新完成
+                mPullList.onPullUpRefreshComplete();
+            }
+        });
+
+    }
+
+    protected synchronized void addList(SiriModel model){
+
+        mCurrentList.add(model);
+
+
+    }
+    protected synchronized void addListAll(List<SiriModel> list){
+
+        mCurrentList.addAll(0,list);
+
+
+    }
+
+
+    protected synchronized void pullHistoryData(final int id) {
+        executeRequest(new GsonBaseRequest<BaseListModel<DbModel>>(Request.Method.GET, UrlConfig.GET_HISTORY + id, new TypeToken<BaseListModel<DbModel>>() {
+        }.getType(), responseHisListener(), errorListener()) {
+        });
+    }
+
+    private Response.Listener<BaseListModel<DbModel>> responseHisListener() {
+        return new Response.Listener<BaseListModel<DbModel>>() {
+            @Override
+            public void onResponse(BaseListModel<DbModel> historyModel) {
+
+                if (historyModel.getRet() == 0) {
+                    mTotal = historyModel.getTotalpage();
+                    mIndex++;
+                    if (historyModel.getData() != null) {
+                        fromDb(historyModel.getData());
+                        mPullList.setLastUpdatedLabel(mTime);//设置最后刷新时间
+                        Date date = new Date();
+                        mTime = mDateFormat.format(date);
+
+                    }
+
+                } else {
+                    mIndex = mTotal;
+                }
+                mPullList.onPullDownRefreshComplete();
+                // 上拉刷新完成
+                mPullList.onPullUpRefreshComplete();
+            }
+        };
+
+    }
+
+    protected void fromDb(List<DbModel> dbList) {
+
+        List<SiriModel> tempList = new ArrayList<SiriModel>();
+        if (dbList != null) {
+            for (DbModel dbModel : dbList) {
+                if (dbModel.getType() != 7) {
+                    if (dbModel.getType() == 1 || dbModel.getType() == 0) {
+                        tempList.add(new SiriModel<String>(dbModel.getType(), dbModel.getBody()));
+                    }
+                    if (dbModel.getType() == SiriAdapter.RIGHT_GOODS) {
+                        ArrayList<SelectGoodsModel> goodsList = new Gson().fromJson(dbModel.getBody(), new TypeToken<ArrayList<SelectGoodsModel>>() {
+                        }.getType());
+                        tempList.add(new SiriModel<GoodsListModel>(SiriAdapter.RIGHT_GOODS, new GoodsListModel(goodsList)));
+
+                    }
+
+
+                }
+
+            }
+//            mCurrentList.addAll(0, tempList);
+            addListAll(tempList);
+            mAdapter.notifyDataSetChanged();
+            mListView.setSelection(0);
+
+        }
+
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mIsExit = true;
+        db.close();
+    }
+
+    @OnClick(R.id.title_left)
+    public void back(View v) {
+
+        finish();
+    }
+
+    @OnClick(R.id.title_right_iv)
+    public void qrCode(View v) {
+        //扫描条码
+
+        Intent intent = new Intent();
+        intent.setClass(TextSiriActivity.this, MipcaActivityCapture.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivityForResult(intent, SCANNIN_GREQUEST_CODE);
+
+
+    }
+
+    @OnClick(R.id.siri_buy_list)
+    public void wantBuyList(View v) {
+        //悦购清单
+        Intent intent = new Intent(TextSiriActivity.this, BuyActivity.class);
+        startActivity(intent);
+
+
+    }
+
+    @OnClick(R.id.siri_i_want_buy)
+    public void wantBuy(View v) {
+        //我想买
+        Intent intent = new Intent(TextSiriActivity.this, SelectActivity.class);
+        startActivityForResult(intent, REQUEST_CODE);
+
+    }
+
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        //此处操作
+
+        switch (requestCode) {
+
+            case REQUEST_CODE:
+
+                if (resultCode == RESULT_OK) {
+                    mList.add(new SiriModel<String>(SiriAdapter.RIGHT_TEXT, getResources().getString(R.string.dialog_third) + "[" + data.getExtras().getString("key") + "]"));
+                    mList.add(new SiriModel<String>(SiriAdapter.LEFT_TEXT, getResources().getString(R.string.dialog_fou)));
+                    BaseListModel<SelectGoodsModel> baseModel = (BaseListModel<SelectGoodsModel>) data.getExtras().getSerializable("list");
+                    sId = baseModel.getId();
+                    ArrayList<SelectGoodsModel> list = (ArrayList<SelectGoodsModel>) ((BaseListModel<SelectGoodsModel>) data.getExtras().getSerializable("list")).getData();
+                    List<DbModel> dbList = new ArrayList<DbModel>();
+
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("MM:dd HH:mm");
+                    Date date = new Date();
+                    dbList.add(new DbModel(SiriAdapter.TIME, dateFormat.format(date)));
+                    dbList.add(new DbModel(SiriAdapter.RIGHT_TEXT, getResources().getString(R.string.dialog_third) + "[" + data.getExtras().getString("key") + "]"));
+                    dbList.add(new DbModel(SiriAdapter.RIGHT_GOODS, new Gson().toJson(list)));
+                    mList.add(new SiriModel<GoodsListModel>(SiriAdapter.RIGHT_GOODS, new GoodsListModel(list)));
+                    DatabaseOperate.insert(db, sId, dbList);
+                    mList.add(new SiriModel(SiriAdapter.RIGHT_DIALOG, true));
+                } else if (resultCode == 1024) {
+                    mList.add(new SiriModel<String>(SiriAdapter.LEFT_TEXT, TextSiriActivity.this.getResources().getString(R.string.no_dialog_six)));
+                    mList.add(new SiriModel<String>(SiriAdapter.LEFT_TEXT, TextSiriActivity.this.getResources().getString(R.string.no_help_dialog_six)));
+                }
+
+
+                break;
+
+
+            case SCANNIN_GREQUEST_CODE:
+                if (resultCode == RESULT_OK) {
+                    Bundle bundle = data.getExtras();
+//                    ToastUtil.customShow(this, bundle.getString("result"));
+                    Intent intent = new Intent(this, GoodsActivity.class);
+                    Bundle goodsBundle = new Bundle();
+                    goodsBundle.putString("code", bundle.getString("result"));
+                    goodsBundle.putString("mall", "");
+                    goodsBundle.putBoolean("isCode", true);
+                    intent.putExtras(goodsBundle);
+                    startActivity(intent);
+                }
+
+
+                break;
+        }
+
+
+    }
+
+    public class GoClick implements View.OnClickListener {//没有使用
+
+
+        @Override
+        public void onClick(View v) {
+            mList.add(new SiriModel<String>(SiriAdapter.RIGHT_TEXT, TextSiriActivity.this.getResources().getString(R.string.dialog_six)));
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mAdapter.notifyDataSetChanged();
+                }
+            }, DELAY);
+            mList.add(new SiriModel<String>(SiriAdapter.LEFT_TEXT, TextSiriActivity.this.getResources().getString(R.string.dialog_sev)));
+//            mListView.setAdapter(mAdapter);
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    mAdapter.notifyDataSetChanged();
+                }
+            }, DELAY);
+        }
+    }
+
+    public class OkClick implements View.OnClickListener {//没有使用
+
+
+        @Override
+        public void onClick(View v) {
+//            网络请求
+        }
+    }
+
+
+}

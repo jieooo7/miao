@@ -1,0 +1,188 @@
+package com.liuzhuni.lzn.core.buylist.fragment;
+
+import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.google.gson.reflect.TypeToken;
+import com.liuzhuni.lzn.R;
+import com.liuzhuni.lzn.base.BaseFragment;
+import com.liuzhuni.lzn.config.UrlConfig;
+import com.liuzhuni.lzn.core.buylist.adapter.ListAdapter;
+import com.liuzhuni.lzn.core.buylist.model.BuyListModel;
+import com.liuzhuni.lzn.core.model.BaseListModel;
+import com.liuzhuni.lzn.core.model.BaseModel;
+import com.liuzhuni.lzn.core.personInfo.ui.PicDialog;
+import com.liuzhuni.lzn.volley.GsonBaseRequest;
+import com.liuzhuni.lzn.volley.GsonRequest;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Created by Andrew Lee on 2015/4/23.
+ * E-mail:jieooo7@163.com
+ * Date: 2015-04-23
+ * Time: 11:23
+ */
+public class FragmentList extends BaseFragment {
+
+    private List<BuyListModel> mList;
+    private List<BuyListModel> mCurrentList;
+    private ListView mListView;
+
+    private PicDialog mDialog;
+    private ListAdapter mAdapter;
+    private TextView mNoContent;
+
+    private int mTotal=1;
+    private int mIndex=0;
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_list,
+                container, false);
+        mNoContent=(TextView)view.findViewById(R.id.list_no_content);
+
+        initData(view);
+        longClick();
+
+
+        return view;
+    }
+
+    protected void initData(View view){
+
+        mList=new ArrayList<BuyListModel>();
+
+
+        mListView = (ListView) view.findViewById(R.id.fragment_buy_list);
+        mAdapter = new ListAdapter(getActivity(), mList);
+        mListView.setAdapter(mAdapter);
+
+        if(mIndex<mTotal){
+            pullData(mIndex,0);
+        }
+
+
+
+
+    }
+
+    protected synchronized void pullData(final int id,final int type){
+        executeRequest(new GsonBaseRequest<BaseListModel<BuyListModel>>(Request.Method.GET, UrlConfig.WANT_BUY+id+"?t="+type,new TypeToken<BaseListModel<BuyListModel>>(){}.getType(),responseListener(),errorListener()){
+
+        });
+    }
+
+    private Response.Listener<BaseListModel<BuyListModel>> responseListener() {
+        return new Response.Listener<BaseListModel<BuyListModel>>(){
+            @Override
+            public void onResponse(BaseListModel<BuyListModel> indexBuyListModel) {
+
+                if(indexBuyListModel.getRet()==0){
+                    mTotal=indexBuyListModel.getTotalpage();
+                    mIndex=indexBuyListModel.getPageIndex();
+                if(indexBuyListModel.getData()!=null){
+                    mCurrentList=indexBuyListModel.getData();
+                    mList.addAll(0,mCurrentList);
+                    if(mList.size()<1){
+                        mNoContent.setVisibility(View.VISIBLE);
+                    }else {
+                        mNoContent.setVisibility(View.GONE);
+                    }
+                    mAdapter.notifyDataSetChanged();
+
+                }
+
+            }
+
+                if(mList.size()<1){
+
+                    mNoContent.setVisibility(View.VISIBLE);
+
+                }else {
+                    mNoContent.setVisibility(View.GONE);
+                }
+            }
+        };
+
+    }
+    protected synchronized void pullDelData(final int id){
+        executeRequest(new GsonRequest<BaseModel>(Request.Method.POST, UrlConfig.DELETE_BUY_ITEM+id,BaseModel.class,responseDelListener(),errorListener()){
+
+        });
+    }
+
+    private Response.Listener<BaseModel> responseDelListener() {
+        return new Response.Listener<BaseModel>(){
+            @Override
+            public void onResponse(BaseModel delListModel) {
+
+                if(delListModel.getRet()==0){
+
+
+            }}
+        };
+
+    }
+
+    protected void longClick(){
+
+        mListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+
+                Object obj = mListView.getItemAtPosition(position);
+                if(obj instanceof BuyListModel){
+                    final int delId=((BuyListModel) obj).getId();
+                    mDialog=new PicDialog(getActivity(),((BuyListModel) obj).getValue(),getString(R.string.delete_list),getString(R.string.cancel_dialog));
+                    mDialog.mItemOne.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mList.remove(position);
+                            mDialog.dismiss();
+                            if(mList.size()<1){
+
+                                mNoContent.setVisibility(View.VISIBLE);
+
+                            }else {
+                                mNoContent.setVisibility(View.GONE);
+                            }
+                            mAdapter.notifyDataSetChanged();
+
+                            pullDelData(delId);
+                        }
+                    });
+
+                    mDialog.mItemTwo.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mDialog.dismiss();
+                        }
+                    });
+
+
+                    mDialog.show();
+
+
+                }
+
+
+
+                return true;
+            }
+        });
+
+    }
+
+
+
+}

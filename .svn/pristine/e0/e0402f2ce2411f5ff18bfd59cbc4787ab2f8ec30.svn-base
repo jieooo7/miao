@@ -1,0 +1,61 @@
+package com.liuzhuni.lzn.core.personInfo.model;
+
+import java.io.Serializable;
+
+/**
+ * Created by Andrew Lee on 2015/4/18.
+ * E-mail:jieooo7@163.com
+ * Date: 2015-04-18
+ * Time: 14:43
+ */
+public class MessageModel implements Serializable{
+    private String Year;
+    private String Month;
+    private String message;
+    private boolean isRead;
+
+    public MessageModel(String mYear, String mMonthDay, String mMessage, boolean mIsReaded) {
+        this.Year = mYear;
+        this.Month = mMonthDay;
+        this.message = mMessage;
+        this.isRead = mIsReaded;
+    }
+    public MessageModel(String mYear, String mMonthDay, String mMessage) {
+        this.Year = mYear;
+        this.Month = mMonthDay;
+        this.message = mMessage;
+        this.isRead = true;
+    }
+
+    public String getYear() {
+        return Year;
+    }
+
+    public void setYear(String year) {
+        this.Year = year;
+    }
+
+    public String getMonth() {
+        return Month;
+    }
+
+    public void setMonth(String month) {
+        this.Month = month;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public boolean isRead() {
+        return isRead;
+    }
+
+    public void setRead(boolean read) {
+        this.isRead = read;
+    }
+}

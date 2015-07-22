@@ -1,0 +1,108 @@
+package com.liuzhuni.lzn.db;
+
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Created by Andrew Lee on 2015/5/30.
+ * E-mail:jieooo7@163.com
+ * Date: 2015-05-30
+ * Time: 17:40
+ */
+public class DatabaseOperate {
+
+    public static void insert(SQLiteDatabase db,int id,List<DbModel> listNew){
+        delete(db);
+        Cursor c = db.rawQuery("SELECT * FROM goods_temp_one", null);
+        Cursor time = db.rawQuery("SELECT * FROM goods_temp_time", null);
+        Cursor cc = db.rawQuery("SELECT * FROM goods_temp_two", null);
+        int count=c.getCount();
+        int oldId=0;
+        List<DbModel> lists=new ArrayList<DbModel>();
+        if(count>0){
+            oldId=c.getInt(c.getColumnIndex("id"));
+            while (time.moveToNext()) {
+                lists.add(new DbModel(time.getInt(time.getColumnIndex("type")),time.getString(time.getColumnIndex("body"))));
+
+            }
+            while (c.moveToNext()) {
+                lists.add(new DbModel(c.getInt(c.getColumnIndex("type")),c.getString(c.getColumnIndex("body"))));
+
+            }
+            while (cc.moveToNext()) {
+                lists.add(new DbModel(cc.getInt(cc.getColumnIndex("type")),c.getString(cc.getColumnIndex("body"))));
+
+            }
+
+            db.beginTransaction(); // 事务处理
+            try {
+                for (DbModel list : lists) {
+                    db.execSQL(
+                            "INSERT INTO goods_record VALUES(null, ?, ?)",
+                            new Object[] { list.getType(), list.getBody() });
+                }
+                updateTemp(db,oldId,id,listNew);
+                db.setTransactionSuccessful(); // 成功
+            } finally {
+                db.endTransaction(); // 结束事务
+            }
+        }else{
+
+        }
+
+        c.close();
+        cc.close();
+
+    }
+
+
+    public static void delete(SQLiteDatabase db){
+        Cursor c = db.rawQuery("SELECT id FROM goods_record", null);
+        int count=c.getCount();
+
+        if(count>15){
+            int limit=count-15;
+            Cursor cc = db.rawQuery("SELECT id FROM goods_record ORDER BY id ASC limit"+limit, null);
+            while(cc.moveToNext()){
+                db.execSQL("DELETE FROM goods_record WHERE id="+cc.getInt(cc.getColumnIndex("id")));
+            }
+            cc.close();
+        }
+        c.close();
+
+    }
+
+    public static List<DbModel> getDb(SQLiteDatabase db){
+        Cursor c = db.rawQuery("SELECT * FROM goods_record", null);
+        List<DbModel> list=new ArrayList<DbModel>();
+        while (c.moveToNext()) {
+            list.add(new DbModel(c.getInt(c.getColumnIndex("type")),c.getString(c.getColumnIndex("body"))));
+
+        }
+
+        c.close();
+
+        return list;
+    }
+
+    public static void updateTemp(SQLiteDatabase db,int oldId,int id,List<DbModel> lists){
+        Cursor c = db.rawQuery("SELECT * FROM goods_temp_one", null);
+        if(c.getCount()<=0){
+            db.execSQL(
+                    "INSERT INTO goods_temp_one VALUES(?, ?, ?)",
+                    new Object[] {1,0,""});
+            db.execSQL(
+                    "INSERT INTO goods_temp_two VALUES(?, ?, ?)",
+                    new Object[] {1,0,""});
+        }else{
+            db.execSQL("UPDATE goods_temp_time SET id = "+id+",type="+lists.get(0).getType()+",body="+lists.get(0).getBody()+"where id ="+ oldId);
+            db.execSQL("UPDATE goods_temp_one SET id = "+id+",type="+lists.get(1).getType()+",body="+lists.get(1).getBody()+"where id ="+ oldId);
+            db.execSQL("UPDATE goods_temp_two SET id = "+id+",type="+lists.get(2).getType()+",body="+lists.get(2).getBody()+"where id ="+ oldId);
+        }
+
+        c.close();
+    }
+}
