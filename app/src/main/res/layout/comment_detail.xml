@@ -1,16 +1,27 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:paddingTop="3dp"
+    android:paddingBottom="2dp"
+    android:layout_marginBottom="3dp"
     >
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/line_below"
+        android:layout_alignParentBottom="true"
+        />
 
         <com.android.volley.toolbox.NetworkImageView
             android:id="@+id/user_head"
             android:layout_width="38dp"
             android:layout_height="38dp"
-            android:background="@color/red"
             />
 
     <TextView
+        android:id="@+id/floor"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/user_head"
@@ -19,7 +30,7 @@
         android:gravity="center"
         android:layout_marginTop="2dp"
         android:textColor="@color/comment_light"
-        android:text="10楼"
+        android:paddingBottom="2dp"
         />
 
 
@@ -29,6 +40,7 @@
         android:orientation="vertical"
         android:layout_toRightOf="@id/user_head"
         android:layout_marginLeft="8dp"
+        android:paddingBottom="2dp"
         >
 
         <LinearLayout
@@ -37,20 +49,20 @@
             android:orientation="horizontal"
             >
             <TextView
+                android:id="@+id/user_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="14sp"
                 android:textColor="@color/filter_text"
-                android:text="吉克斯勒"
                 />
             <TextView
+                android:id="@+id/the_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textSize="14sp"
                 android:gravity="right"
                 android:textColor="@color/filter_text"
-                android:text="20分钟前"
                 />
 
 
@@ -58,6 +70,7 @@
 
 
         <com.liuzhuni.lzn.core.comment.ui.CommentLinearLayout
+            android:id="@+id/linear"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -68,12 +81,12 @@
 
 
         <TextView
+            android:id="@+id/content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
             android:textSize="19sp"
             android:textColor="@color/html_text"
-            android:text="20分钟前"
             />
 
 

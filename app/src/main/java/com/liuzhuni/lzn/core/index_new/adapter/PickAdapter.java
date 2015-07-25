@@ -151,7 +151,7 @@ public class PickAdapter extends BaseAdapter implements PinnedSectionListView.Pi
                 normalHolder.readTv.setText(mList.get(position).getRead() > 0 ? "" + mList.get(position).getRead() : "");
 
                 normalHolder.reviewTv.setText(mList.get(position).getReview() > 0 ? "" + mList.get(position).getReview() : "");
-
+//
                 normalHolder.mallTv.setText(mList.get(position).getMall());
 
 

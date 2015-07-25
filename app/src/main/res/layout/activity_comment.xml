@@ -39,6 +39,7 @@
             android:textSize="22sp"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
+            android:text="@string/title_comment"
             />
 
         <TextView
@@ -110,7 +111,7 @@
         android:layout_marginRight="16dp"
         android:listSelector="@color/transparent"
         android:divider="@color/index_text"
-        android:dividerHeight="1px"
+        android:dividerHeight="0dp"
         android:layout_marginTop="2dp"
         android:layout_marginBottom="2dp"
         />

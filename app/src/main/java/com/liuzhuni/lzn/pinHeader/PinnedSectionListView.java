@@ -44,6 +44,10 @@ public class PinnedSectionListView extends XListViewNew {
         boolean isItemViewTypePinned(int viewType);
     }
 
+    public interface HideFab {
+        public void hideFab();
+    }
+
     /** Wrapper class for pinned section view and its position in the list. */
     static class PinnedSection {
         public View view;
@@ -52,6 +56,8 @@ public class PinnedSectionListView extends XListViewNew {
     }
 
     //-- class fields
+
+    private HideFab mHideFab;
 
     // fields used for handling touch events
     private final Rect mTouchRect = new Rect();
@@ -77,6 +83,12 @@ public class PinnedSectionListView extends XListViewNew {
     /** Pinned view Y-translation. We use it to stick pinned view to the next section. */
     int mTranslateY;
 
+
+    public void setHideFab(HideFab hideFab){
+
+        mHideFab=hideFab;
+    }
+
     /** Scroll listener which does the magic */
     private final OnScrollListener mOnScrollListener = new OnScrollListener() {
 
@@ -93,6 +105,10 @@ public class PinnedSectionListView extends XListViewNew {
                 mDelegateOnScrollListener.onScroll(view, firstVisibleItem, visibleItemCount, totalItemCount);
             }
 
+
+
+
+
             // get expected adapter or fail fast
             ListAdapter adapter = getAdapter();
             if (adapter == null || visibleItemCount == 0) return; // nothing to do
@@ -104,6 +120,7 @@ public class PinnedSectionListView extends XListViewNew {
                 View sectionView = getChildAt(0);
                 if (sectionView.getTop() == getPaddingTop()) { // view sticks to the top, no need for pinned shadow
                     destroyPinnedShadow();
+                    mHideFab.hideFab();
                 } else { // section doesn't stick to the top, make sure we have a pinned shadow
                     ensureShadowForPosition(firstVisibleItem, firstVisibleItem, visibleItemCount);
                 }
@@ -114,6 +131,7 @@ public class PinnedSectionListView extends XListViewNew {
                     ensureShadowForPosition(sectionPosition, firstVisibleItem, visibleItemCount);
                 } else { // there is no section for the first visible item, destroy shadow
                     destroyPinnedShadow();
+                    mHideFab.hideFab();
                 }
             }
         };

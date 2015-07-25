@@ -36,7 +36,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:textSize="12sp"
-                android:textColor="@color/regist_text"
+                android:textColor="@color/news_text"
                 />
             <TextView
                 android:id="@+id/news_item_time"
@@ -45,7 +45,7 @@
                 android:textSize="12sp"
                 android:layout_weight="1"
                 android:gravity="right"
-                android:textColor="@color/regist_text"
+                android:textColor="@color/news_text"
                 />
 
 
@@ -85,7 +85,7 @@
         android:layout_marginTop="5dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:textSize="15sp"
+        android:textSize="14sp"
         android:textColor="@color/key"
         />
 

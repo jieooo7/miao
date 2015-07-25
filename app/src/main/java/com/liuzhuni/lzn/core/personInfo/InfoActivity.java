@@ -179,6 +179,8 @@ public class InfoActivity extends Base2Activity {
     @Override
     protected void initUI() {
 
+        mBackTv.setVisibility(View.GONE);
+
     }
 
     @Override
@@ -187,12 +189,14 @@ public class InfoActivity extends Base2Activity {
     }
 
 
-    @OnClick(R.id.title_left)
-    public void toIndex(View v){
-
-        //返回主页面
-        finish();
-    }
+//    @OnClick(R.id.title_left)
+//    public void toIndex(View v){
+//
+//        //返回主页面
+//        Intent intent = new Intent(this, IndexNewActivity.class);
+//        startActivity(intent);
+//        finish();
+//    }
     @OnClick(R.id.title_right_iv)
     public void toSign(View v){
 

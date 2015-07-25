@@ -37,6 +37,7 @@ public class PreferencesUtils {
         public static final String IS_DIALOG = "is_dialog";
 
         public static final String FILTER = "filter";
+        public static final String TAG = "tag";
 
 
 

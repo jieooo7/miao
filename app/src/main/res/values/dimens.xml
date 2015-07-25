@@ -31,8 +31,8 @@
     <dimen name="dialog_text_size_17">13sp</dimen>
     <dimen name="dialog_text_size_15">12sp</dimen>
 
-    <dimen name="comment_10">10sp</dimen>
-    <dimen name="comment_20">18sp</dimen>
+    <dimen name="comment_10">10dp</dimen>
+    <dimen name="comment_20">18dp</dimen>
 
 
 </resources>

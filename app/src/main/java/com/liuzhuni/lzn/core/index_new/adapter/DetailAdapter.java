@@ -6,8 +6,6 @@ import android.graphics.Typeface;
 import android.os.Handler;
 import android.text.SpannableString;
 import android.text.Spanned;
-import android.text.style.AbsoluteSizeSpan;
-import android.text.style.BackgroundColorSpan;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.URLSpan;
 import android.view.LayoutInflater;
@@ -99,6 +97,7 @@ public class DetailAdapter extends BaseAdapter{
                             R.layout.detail_text_item, null);
                     textHolder=new ViewHolderText();
                     textHolder.textTv=(TextView)convertView.findViewById(R.id.detail_item_tv);
+                    textHolder.headTv=(TextView)convertView.findViewById(R.id.detail_head);
                     convertView.setTag(textHolder);
 
                     break;
@@ -142,7 +141,7 @@ public class DetailAdapter extends BaseAdapter{
 //                SpannableString image=new SpannableString(mContext.getText(R.string.good_good));
 //
                 Typeface iconfont = Typeface.createFromAsset(mContext.getAssets(), "iconfont.ttf");
-                textHolder.textTv.setTypeface(iconfont);
+                textHolder.headTv.setTypeface(iconfont);
 ////                Drawable drawable = mContext.getResources().getDrawable(R.drawable.detail_ic_praise);
 ////                drawable.setBounds(0, -8, textHolder.textTv.getLineHeight()+3, textHolder.textTv.getLineHeight()+3);
 //                image.setSpan(new BackgroundColorSpan(Color.argb(0xff, 0xcc, 0xcc, 0xcc)),0, image.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);  //设置背景色为青色
@@ -151,26 +150,31 @@ public class DetailAdapter extends BaseAdapter{
 //                textHolder.textTv.setText(image);
 
 
-                SpannableString msp;
+                String msp;
 
                 if(isPick){
 
-                    msp =new SpannableString(mContext.getText(R.string.good_good));
+                    msp =""+mContext.getText(R.string.good_good);
                 }else{
-                    msp =new SpannableString(mContext.getText(R.string.good_news));
+                    msp =""+mContext.getText(R.string.good_news);
 
                 }
-                msp.setSpan(new AbsoluteSizeSpan(18,true), 0, msp.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                msp.setSpan(new BackgroundColorSpan(Color.argb(0xff, 0xcc, 0xcc, 0xcc)), 0, msp.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                msp.setSpan(new ForegroundColorSpan(Color.argb(0xff, 0xff, 0xff, 0xff)), 0, msp.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//                msp.setSpan(new AbsoluteSizeSpan(18,true), 0, msp.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//                msp.setSpan(new BackgroundColorSpan(Color.argb(0xff, 0xcc, 0xcc, 0xcc)), 0, msp.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//                msp.setSpan(new ForegroundColorSpan(Color.argb(0xff, 0xff, 0xff, 0xff)), 0, msp.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 if(position==0){
 //                    textHolder.textTv.setText("\n");
-                    textHolder.textTv.setText(msp);
+                    textHolder.headTv.setText(msp);
                 }
 
 //                SpannableString html=new SpannableString(new HtmlSpanner().fromHtml(mList.get(position).getData()));
 ////                html.setSpan(new BackgroundColorSpan(Color.argb(0xff, 0xcc, 0xcc, 0xcc)), 0, msp.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 //                html.setSpan(new BackgroundColorSpan(Color.argb(0xff, 0xff, 0xff, 0xff)), 0, html.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                String tran="我 "+msp;
+                SpannableString trans=new SpannableString(tran);
+                trans.setSpan(new ForegroundColorSpan(Color.argb(0x00, 0x00, 0x00, 0x00)), 0, tran.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                textHolder.textTv.setText(trans);
                 textHolder.textTv.append(new HtmlSpanner().fromHtml(mList.get(position).getData()));
 
                 textHolder.textTv.setMovementMethod(LinkMovementMethodExt.getInstance(handler, URLSpan.class));
@@ -191,6 +195,7 @@ public class DetailAdapter extends BaseAdapter{
 
     static class ViewHolderText {
         TextView textTv;
+        TextView headTv;
 
     }
     static class ViewHolderImage {

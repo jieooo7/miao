@@ -10,22 +10,22 @@ import java.io.Serializable;
  */
 public class ReplyModel implements Serializable{
 
-    private String userNick;
+    private String usernick;
     private String text;
 
 
     public ReplyModel(String userNick, String text) {
-        this.userNick = userNick;
+        this.usernick = userNick;
         this.text = text;
     }
 
 
     public String getUserNick() {
-        return userNick;
+        return usernick;
     }
 
     public void setUserNick(String userNick) {
-        this.userNick = userNick;
+        this.usernick = userNick;
     }
 
     public String getText() {

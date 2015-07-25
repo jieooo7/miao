@@ -26,6 +26,7 @@ public class DetailModel implements Serializable{
     private boolean shoumanwu=false;
 
     private String url;
+    private String shareurl;
     private String name;
 
     private List<DetailContentModel> content;
@@ -39,6 +40,15 @@ public class DetailModel implements Serializable{
         this.mall = mall;
         this.url = url;
         this.name = name;
+    }
+
+
+    public String getShareurl() {
+        return shareurl;
+    }
+
+    public void setShareurl(String shareurl) {
+        this.shareurl = shareurl;
     }
 
     public int getId() {

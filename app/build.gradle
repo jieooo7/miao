@@ -53,10 +53,10 @@ android {
         //EoeMarket{}
         //Store91{}
         //NDuo{}
-//        store360{}
+        store360{}
 //        baidu{}
 //        xiaomi{}
-        qq{}
+//        qq{}
 //        wandoujia{}
 //        meizu{}
 //        tongbu{}

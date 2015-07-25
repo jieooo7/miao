@@ -77,7 +77,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 
 public class IndexNewActivity extends Base2Activity implements
-        StickyLayout.OnGiveUpTouchEventListener,XListViewNew.IXListViewListener {
+        StickyLayout.OnGiveUpTouchEventListener,XListViewNew.IXListViewListener,PinnedSectionListView.HideFab {
 
     private CommonLog log = LogFactory.createLog("index");
 
@@ -208,6 +208,8 @@ public class IndexNewActivity extends Base2Activity implements
         mAdapter = new PickAdapter(this,mList,mImageLoader);
         mTouchSlop = ViewConfiguration.get(this).getScaledTouchSlop();
 
+        mTag= PreferencesUtils.getValueFromSPMap(this,PreferencesUtils.Keys.TAG,"");
+
 
 
     }
@@ -240,6 +242,7 @@ public class IndexNewActivity extends Base2Activity implements
         pinListView.setPullRefreshEnable(true);
         pinListView.setXListViewListener(this);
         pinListView.setAdapter(mAdapter);
+        pinListView.setHideFab(this);
         pullData(0,"","back");
 
         Date date = new Date();
@@ -722,9 +725,6 @@ public class IndexNewActivity extends Base2Activity implements
 
 //        event.getY()>stickyLayout.getOriginHeight()
 
-        if(pinListView.getFirstVisiblePosition() == 2){
-            fab.hide();
-        }
         if (pinListView.getFirstVisiblePosition() == 0){
             View view0=pinListView.getChildAt(0);
             int height=view0.getMeasuredHeight();
@@ -744,8 +744,8 @@ public class IndexNewActivity extends Base2Activity implements
             public void run() {
                 isRefresh=true;
 
-                if(mList.size()>=1){
-                    pullData(mList.get(0).getId(),null,"back");
+                if(mList.size()>=2){
+                    pullData(mList.get(1).getId(),"","back");
                 }else{
                     pullData(0,"","back");
                 }
@@ -764,7 +764,7 @@ public class IndexNewActivity extends Base2Activity implements
             public void run() {
 
                 isRefresh=false;
-                if(mList.size()>=1) {
+                if(mList.size()>=2) {
                     pullData(mList.get(mList.size() - 1).getId(), "", "forward");
                 }else{
                     pullData(0,"","back");
@@ -773,6 +773,11 @@ public class IndexNewActivity extends Base2Activity implements
             }
         },200);
 
+    }
+
+    @Override
+    public void hideFab() {
+        fab.hide();
     }
 
 

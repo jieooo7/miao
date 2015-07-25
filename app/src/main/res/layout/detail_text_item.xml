@@ -11,6 +11,17 @@
         android:textColor="@color/html_text"
         android:lineSpacingMultiplier="1.3"
         />
+    <TextView
+        android:id="@+id/detail_head"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="19sp"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:background="@color/text_gray"
+        android:paddingTop="3dp"
+        android:paddingBottom="2dp"
+        />
 
 
 </RelativeLayout>

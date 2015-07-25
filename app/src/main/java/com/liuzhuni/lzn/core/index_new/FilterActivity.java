@@ -151,6 +151,7 @@ public class FilterActivity extends Base2Activity {
         PreferencesUtils.putValueToSPMap(this,PreferencesUtils.Keys.FILTER,new Gson().toJson(mList));
 
         mTag=sb.toString();
+        PreferencesUtils.putValueToSPMap(this,PreferencesUtils.Keys.TAG,mTag);
         Intent intent = new Intent();
         Bundle bundle = new Bundle();
         bundle.putString("tag", mTag);

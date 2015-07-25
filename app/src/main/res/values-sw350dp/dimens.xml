@@ -19,7 +19,7 @@
     <dimen name="dialog_text_size_17">17sp</dimen>
     <dimen name="dialog_text_size_15">15sp</dimen>
 
-    <dimen name="comment_10">15sp</dimen>
-    <dimen name="comment_20">23sp</dimen>
+    <dimen name="comment_10">15dp</dimen>
+    <dimen name="comment_20">23dp</dimen>
 
 </resources>

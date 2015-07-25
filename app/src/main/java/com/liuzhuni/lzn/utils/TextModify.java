@@ -27,7 +27,8 @@ public class TextModify {
     public boolean isEmail(String email){
 
 //        Pattern p = Pattern.compile("^(\\w+[-|\\.]?)+\\w@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$");
-        Pattern p = Pattern.compile("([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$");
+        Pattern p = Pattern.compile("^[\\.a-zA-Z0-9_-]+@([a-zA-Z0-9_-]+\\.)+[a-zA-Z]{2,3}$");
+//        Pattern p = Pattern.compile("([a-z0-9A-Z]+[-|\\.]?)+[a-z0-9A-Z]@([a-z0-9A-Z]+(-[a-z0-9A-Z]+)?\\.)+[a-zA-Z]{2,}$");
         Matcher m = p.matcher(email);
 
         return m.matches();

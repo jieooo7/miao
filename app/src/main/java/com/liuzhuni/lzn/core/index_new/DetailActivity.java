@@ -33,6 +33,7 @@ import com.liuzhuni.lzn.R;
 import com.liuzhuni.lzn.base.Base2Activity;
 import com.liuzhuni.lzn.config.MessageWhat;
 import com.liuzhuni.lzn.config.UrlConfig;
+import com.liuzhuni.lzn.core.comment.CommentActivity;
 import com.liuzhuni.lzn.core.goods.ToBuyActivity;
 import com.liuzhuni.lzn.core.goods.ui.ListViewForScrollView;
 import com.liuzhuni.lzn.core.index_new.adapter.DetailAdapter;
@@ -132,7 +133,7 @@ public class DetailActivity extends Base2Activity {
                         Bundle bundle = new Bundle();
 
                         bundle.putString("url",((URLSpan) span).getURL());
-                        bundle.putString("title","");
+                        bundle.putString("title", "");
                         intent.putExtras(bundle);
                         startActivity(intent);
 
@@ -221,6 +222,24 @@ public class DetailActivity extends Base2Activity {
 
         //分享
         shareShow();
+    }
+
+    @OnClick(R.id.detail_edit)
+    public void edit(View v) {
+
+    }
+    @OnClick(R.id.comment_rl)
+    public void comment(View v) {
+
+        Intent intent = new Intent();
+        intent.setClass(this, CommentActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("id", "" + mId);
+        bundle.putString("url",mUrl);
+        bundle.putBoolean("isSelect", mIsFromSelect);
+        intent.putExtras(bundle);
+        startActivity(intent);
+
     }
     @OnClick(R.id.detail_buy)
     public void buy(View v) {
@@ -353,7 +372,7 @@ public class DetailActivity extends Base2Activity {
 
                     mAdapter.notifyDataSetChanged();
 
-                    link=mUrl;
+                    link=model.getShareurl();
                     img_link=model.getPic();
                     title=model.getTitle();
                     content=model.getTitle()+model.getTitle1();
