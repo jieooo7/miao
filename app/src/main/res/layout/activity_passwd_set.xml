@@ -39,7 +39,7 @@
             android:id="@+id/passwd_set_tv"
             style="@style/button_style"
             android:layout_marginTop="30dp"
-            android:text="@string/button_submit" />
+            android:text="@string/passwd_set" />
 
     </LinearLayout>
 

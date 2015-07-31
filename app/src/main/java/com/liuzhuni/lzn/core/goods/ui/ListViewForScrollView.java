@@ -28,6 +28,11 @@ public class ListViewForScrollView extends ListView {
                 MeasureSpec.AT_MOST);
         super.onMeasure(widthMeasureSpec, expandSpec);
     }
+
+
+
+
+
     /*
     *sv = (ScrollView) findViewById(R.id.act_solution_4_sv);
 sv.smoothScrollTo(0, 0);

@@ -83,12 +83,14 @@ public class CommentAdapter extends BaseAdapter{
 
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        viewHolder.floorTv.setText(mList.size()-position+"楼");
+        viewHolder.floorTv.setText(mList.get(position).getOrderNum()+"楼");
         viewHolder.nameTv.setText(mList.get(position).getUserNick());
         viewHolder.timeTv.setText(mList.get(position).getCreateTime());
         viewHolder.contentTv.setText(mList.get(position).getText());
         if(mList.get(position).getComment()!=null){
             viewHolder.linear.bindLinearLayout(new ReplyAdapter(mList.get(position).getComment(),mContext));
+        }else{
+            mList.get(position).setComment(null);
         }
         viewHolder.headIv.setImageUrl(mList.get(position).getUserPic(), mImageLoader);
 

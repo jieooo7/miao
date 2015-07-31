@@ -146,7 +146,12 @@ public class ThreePicView extends ImageView {
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
 
-        setMeasuredDimension(65, 20);
+        int wid=MeasureSpec.makeMeasureSpec(66,
+                MeasureSpec.AT_MOST);
+        int height=MeasureSpec.makeMeasureSpec(22,
+                MeasureSpec.AT_MOST);
+
+        setMeasuredDimension(wid, height);
     }
 
 

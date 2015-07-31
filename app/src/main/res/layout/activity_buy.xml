@@ -1,9 +1,14 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/all_back"
-    android:orientation="vertical"
     tools:context="com.liuzhuni.lzn.core.buylist.BuyActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/all_back"
+        android:orientation="vertical"
+        >
 
     <include
         android:id="@+id/title"
@@ -53,4 +58,21 @@
 
 
 
+
 </LinearLayout>
+
+
+    <ImageView
+        android:id="@+id/img"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerInside"
+        android:layout_centerVertical="true"
+        android:paddingRight="10dp"
+        android:paddingLeft="10dp"
+        android:src="@drawable/press_del"
+        android:background="@color/toast_back"
+        android:visibility="gone"
+        />
+
+    </RelativeLayout>

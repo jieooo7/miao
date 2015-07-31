@@ -3,6 +3,7 @@ package com.liuzhuni.lzn.core.buylist.fragment;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,6 +53,8 @@ public class FragmentFinish extends BaseFragment {
 
     private SimpleDateFormat mDateFormat = new SimpleDateFormat("HH:mm");
     private String mTime;
+
+    private Handler handler=new Handler();
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -192,7 +195,12 @@ public class FragmentFinish extends BaseFragment {
                             mTime=mDateFormat.format(date);
                         }
                         mList.addAll(mCurrentList);
-                        mAdapter.notifyDataSetChanged();
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                mAdapter.notifyDataSetChanged();
+                            }
+                        });
 
                     }
                 }

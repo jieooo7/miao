@@ -14,6 +14,7 @@ import android.view.MotionEvent;
 import android.view.SoundEffectConstants;
 import android.view.View;
 import android.view.ViewConfiguration;
+import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityEvent;
 import android.widget.AbsListView;
 import android.widget.HeaderViewListAdapter;
@@ -206,9 +207,9 @@ public class PinnedSectionListView extends XListViewNew {
         View pinnedView = getAdapter().getView(position, pinnedShadow.view, PinnedSectionListView.this);
 
         // read layout parameters
-        LayoutParams layoutParams = (LayoutParams) pinnedView.getLayoutParams();
+        ViewGroup.LayoutParams layoutParams = (ViewGroup.LayoutParams) pinnedView.getLayoutParams();
         if (layoutParams == null) {
-            layoutParams = (LayoutParams) generateDefaultLayoutParams();
+            layoutParams = (ViewGroup.LayoutParams) generateDefaultLayoutParams();
             pinnedView.setLayoutParams(layoutParams);
         }
 

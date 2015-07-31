@@ -28,6 +28,7 @@ public class PreferencesUtils {
          */
         public static final String IS_LOGIN = "is_login";
         public static final String IS_FIRST = "is_first";
+        public static final String IS_GUIDE_F = "is_guide_f";
         public static final String PUSH_SET = "push_set";
         public static final String PUSH_LOW_NOTIFY = "push_low_notify";
         public static final String PUSH_RECOM = "push_recom";

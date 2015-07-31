@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.lidroid.xutils.ViewUtils;
@@ -12,9 +13,11 @@ import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
 import com.liuzhuni.lzn.R;
 import com.liuzhuni.lzn.base.BaseFragActivity;
+import com.liuzhuni.lzn.config.Check;
 import com.liuzhuni.lzn.core.buylist.fragment.FragmentFinish;
 import com.liuzhuni.lzn.core.buylist.fragment.FragmentList;
 import com.liuzhuni.lzn.core.select.SelectActivity;
+import com.liuzhuni.lzn.utils.PreferencesUtils;
 
 public class BuyActivity extends BaseFragActivity {
 
@@ -29,11 +32,19 @@ public class BuyActivity extends BaseFragActivity {
     @ViewInject(R.id.buy_had_finish)
     private TextView mFinishTv;
 
+    @ViewInject(R.id.img)
+    private ImageView imageView;
+
+
+
 
     private FragmentTransaction mTransaction;
     private boolean mIsBuy=true;
     private FragmentList mFragList;
     private FragmentFinish mFragFinish;
+
+
+
 
 
 
@@ -45,6 +56,8 @@ public class BuyActivity extends BaseFragActivity {
         findViewById();
         initUI();
         setListener();
+
+
     }
 
     @Override
@@ -64,12 +77,18 @@ public class BuyActivity extends BaseFragActivity {
 
     }
 
+
+
     @Override
     protected void initUI() {
 
         mBackTv.setText(getText(R.string.i_want_back));
         mMiddleTv.setText(getResources().getString(R.string.my_want_buy));
         mRightTv.setText(getResources().getString(R.string.i_want_buy));
+
+        if (!Check.isGuideFirst(this)) {
+            imageView.setVisibility(View.VISIBLE);
+        }
 
 
 
@@ -88,6 +107,12 @@ public class BuyActivity extends BaseFragActivity {
     public void back(View v){
 
         finish();
+    }
+    @OnClick(R.id.img)
+    public void gone(View v){
+        PreferencesUtils.putBooleanToSPMap(BuyActivity.this, PreferencesUtils.Keys.IS_GUIDE_F, true);
+        imageView.setVisibility(View.GONE);
+
     }
     @OnClick(R.id.title_right)
     public void buy(View v){
@@ -171,6 +196,7 @@ public class BuyActivity extends BaseFragActivity {
 //        mTransaction.commit();
 
     }
+
 
 
 }

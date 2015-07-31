@@ -35,7 +35,7 @@ public class GsonRequest<T> extends Request<T> {
 	private final Listener<T> mListener;
     private final static String IMEI=((TelephonyManager)AppManager.getAppManager().currentActivity().getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
     private final static String CLIENT="0";
-    private final static String VERSION="1";
+    private final static String VERSION="3";
     private String mUrl="";
     private String customKey=new GetInfo().getKey(AppManager.getAppManager().currentActivity());
 //    private static final Map<String, String> mMap=new HashMap<String, String>();

@@ -16,7 +16,7 @@ import com.liuzhuni.lzn.R;
 import com.liuzhuni.lzn.base.Base2Activity;
 import com.liuzhuni.lzn.config.AppManager;
 import com.liuzhuni.lzn.config.UrlConfig;
-import com.liuzhuni.lzn.core.index.IndexActivity;
+import com.liuzhuni.lzn.core.index_new.MainActivity;
 import com.liuzhuni.lzn.core.login.ButtonThread;
 import com.liuzhuni.lzn.core.login.Threadable;
 import com.liuzhuni.lzn.core.login.model.LoginModel;
@@ -97,8 +97,16 @@ public class PasswdSetActivity extends Base2Activity {
 
 
         mBackTv.setText(getResources().getText(R.string.back));
-        mMiddleTv.setText(getResources().getString(R.string.passwd_set));
+//        mMiddleTv.setText(getResources().getString(R.string.passwd_set));
         mRightTv.setVisibility(View.GONE);
+
+        if(mIsRegister){
+            mSubmitTv.setText(getResources().getString(R.string.passwd_set));
+            mMiddleTv.setText(getResources().getString(R.string.passwd_set));
+        }else{
+            mSubmitTv.setText(getResources().getString(R.string.button_submit));
+            mMiddleTv.setText(getResources().getString(R.string.button_submit));
+        }
 
     }
 
@@ -185,7 +193,7 @@ public class PasswdSetActivity extends Base2Activity {
                         pullSexData();
                     }
 
-                    Intent intent = new Intent(PasswdSetActivity.this, IndexActivity.class);
+                    Intent intent = new Intent(PasswdSetActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();
                     AppManager.getAppManager().finishActivity(RegistActivity.class);

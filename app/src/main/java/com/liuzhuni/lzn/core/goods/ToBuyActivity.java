@@ -66,7 +66,7 @@ public class ToBuyActivity extends Base2Activity {
 
         if(getIntent()!=null){
             if( getIntent().getExtras()!=null){
-                mUrl=getIntent().getExtras().getString("url");
+                mUrl=getIntent().getExtras().getString("url","http://www.m.liuzhuni.com/");
                 mTitle=getIntent().getExtras().getString("title","");
             }
         }

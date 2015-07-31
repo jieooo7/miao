@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -74,6 +75,8 @@ public class DetailInfoActivity extends Base2Activity {
 
     private PicDialog mDialog;
 
+    private int mWidth;
+
     private static final int PHOTO_REQUEST_CAMERA = 1;// 拍照
     private static final int PHOTO_REQUEST_GALLERY = 2;// 从相册中选择
     private static final int PHOTO_REQUEST_CUT = 3;// 结果
@@ -118,6 +121,10 @@ public class DetailInfoActivity extends Base2Activity {
     protected void initData() {
 
         mImageLoader = RequestManager.getImageLoader();
+
+                DisplayMetrics dm = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+        mWidth = dm.widthPixels-50;
 
     }
 
@@ -339,8 +346,8 @@ public class DetailInfoActivity extends Base2Activity {
         intent.setDataAndType(uri, "image/*");
         intent.putExtra("crop", "true");
         // 裁剪框的比例，1：1
-        intent.putExtra("aspectX", 1);
-        intent.putExtra("aspectY", 1);
+        intent.putExtra("aspectX", 2);
+        intent.putExtra("aspectY", 2);
         // 裁剪后输出图片的尺寸大小
         intent.putExtra("outputX", 350);
         intent.putExtra("outputY", 350);

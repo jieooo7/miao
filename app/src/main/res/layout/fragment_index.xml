@@ -1,0 +1,153 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.liuzhuni.lzn.core.index_new.IndexNewActivity">
+
+
+
+    <com.liuzhuni.lzn.pinHeader.StickyLayout
+        android:id="@+id/sticky_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:id="@+id/sticky_header"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:background="#78A524"
+            android:orientation="vertical" >
+
+            <RelativeLayout
+                android:id="@+id/index_rl"
+                android:layout_width="match_parent"
+                android:layout_height="150dp"
+                android:layout_below="@id/title"
+                android:paddingBottom="25dp"
+                android:paddingTop="25dp"
+                android:background="@color/key"
+                >
+                <ImageView
+                    android:id="@+id/ring"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/yellow_ring"/>
+                <TextView
+                    android:id="@+id/index_buy_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@id/ring"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    />
+                <LinearLayout
+                    android:id="@+id/want_buy_ll"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_centerInParent="true"
+                    android:gravity="center_horizontal"
+                    >
+
+
+                    <ImageView
+                        android:id="@+id/index_want_buy"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/woxiangmai"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:textColor="@color/index_yellow"
+                        android:textSize="20sp"
+                        android:text="@string/i_want_buy"
+                        />
+                </LinearLayout>
+
+                <TextView
+
+                    android:id="@+id/index_new_message"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@id/ring"
+                    android:gravity="center"
+                    android:textColor="@color/white"
+                    android:textSize="20sp"
+                    />
+
+
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/sticky_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical" >
+
+
+
+
+            <FrameLayout
+
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <!--
+                                <com.liuzhuni.lzn.pulltorefresh.PullToRefreshPinListView
+                                    android:id="@+id/expandablelist"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent">
+
+                                </com.liuzhuni.lzn.pulltorefresh.PullToRefreshPinListView>
+                -->
+
+                <com.liuzhuni.lzn.pinHeader.PinnedSectionListView
+                    android:id="@+id/expandablelist"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:cacheColorHint="@null"
+                    android:listSelector="@color/transparent"
+                    android:divider="@color/line_below"
+                    android:dividerHeight="1px"
+                    android:scrollbars="none">
+                </com.liuzhuni.lzn.pinHeader.PinnedSectionListView>
+
+                <com.melnykov.fab.FloatingActionButton
+                    android:id="@+id/fab"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|right"
+                    android:layout_margin="16dp"
+                    android:src="@drawable/ic_top"
+                    fab:fab_shadow="false"
+                    fab:fab_colorNormal="@color/transparent"
+                    fab:fab_colorPressed="@color/transparent"
+                    fab:fab_colorRipple="@color/transparent"
+                    />
+            </FrameLayout>
+            <!--
+                        <com.liuzhuni.lzn.pinHeader.PinnedHeaderListView
+                            android:id="@+id/expandablelist"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:cacheColorHint="@null"
+                            android:listSelector="@color/transparent"
+                            android:divider="@color/line_below"
+                            android:dividerHeight="1px"
+                            android:scrollbars="none">
+                        </com.liuzhuni.lzn.pinHeader.PinnedHeaderListView>
+                        -->
+        </LinearLayout>
+    </com.liuzhuni.lzn.pinHeader.StickyLayout>
+
+
+
+</RelativeLayout>

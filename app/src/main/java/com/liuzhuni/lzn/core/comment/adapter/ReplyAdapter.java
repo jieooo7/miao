@@ -66,14 +66,20 @@ public class ReplyAdapter extends BaseAdapter {
 
             viewHolder = (ViewHolder) convertView.getTag();
         }
-        viewHolder.NumTv.setText(position+1+"");
-        SpannableString name=new SpannableString(mList.get(position).getUserNick() + " : ");
-        name.setSpan(new ForegroundColorSpan(Color.argb(0xFF, 0x80, 0x80, 0x80)), 0, name.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+        if(mList!=null&&mList.size()>0){
 
-        viewHolder.ReplyTv.setText(name);
-        viewHolder.ReplyTv.append(mList.get(position).getText());
+            viewHolder.NumTv.setText(position+1+"");
+            SpannableString name=new SpannableString(mList.get(position).getUserNick() + " : ");
+            name.setSpan(new ForegroundColorSpan(Color.argb(0xFF, 0x80, 0x80, 0x80)), 0, name.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-        return convertView;
+            viewHolder.ReplyTv.setText(name);
+            viewHolder.ReplyTv.append(mList.get(position).getText());
+            return convertView;
+        }else{
+
+            return null;
+        }
+
 
     }
 

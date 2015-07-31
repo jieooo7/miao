@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.liuzhuni.lzn"
-    android:versionCode="2"
-    android:versionName="version 1.2.1" >
+    android:versionCode="3"
+    android:versionName="version 1.2.3" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -92,9 +92,6 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name=".core.regist.RegistActivity"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".core.personInfo.InfoActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".core.regist.SendCodeActivity"
@@ -260,11 +257,6 @@
             android:name=".core.guide.GuideActivity"
             android:screenOrientation="portrait" >
         </activity>
-        <activity
-            android:name=".core.index.IndexActivity"
-            android:launchMode="singleTop"
-            android:screenOrientation="portrait" >
-        </activity>
 
         <service
             android:name="com.umeng.update.net.DownloadingService"
@@ -285,14 +277,6 @@
             android:value="UMENG_CHANNEL_VALUE" />
 
         <activity
-            android:name=".core.index_new.IndexNewActivity"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
-            android:name=".core.index_new.AllNewsActivity"
-            android:screenOrientation="portrait" >
-        </activity>
-        <activity
             android:name=".core.index_new.FilterActivity"
             android:screenOrientation="portrait" >
         </activity>
@@ -302,6 +286,10 @@
         </activity>
         <activity
             android:name=".core.comment.CommentActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".core.index_new.MainActivity"
             android:screenOrientation="portrait" >
         </activity>
     </application>

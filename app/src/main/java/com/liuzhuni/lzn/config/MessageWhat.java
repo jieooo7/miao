@@ -18,4 +18,5 @@ public class MessageWhat {
     public final static int START_UP=1009;
     public final static int BRAND=1010;
     public final static int LINK=1011;
+    public final static int SHOW_GUIDE=1012;
 }

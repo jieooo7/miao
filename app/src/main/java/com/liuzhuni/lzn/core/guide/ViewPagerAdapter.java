@@ -10,7 +10,7 @@ import android.view.View.OnClickListener;
 import android.widget.ImageView;
 
 import com.liuzhuni.lzn.R;
-import com.liuzhuni.lzn.core.index_new.IndexNewActivity;
+import com.liuzhuni.lzn.core.index_new.MainActivity;
 import com.liuzhuni.lzn.utils.PreferencesUtils;
 
 import java.util.List;
@@ -76,7 +76,7 @@ public class ViewPagerAdapter extends PagerAdapter {
 
 	private void goHome() {
 		// 跳转
-        activity.startActivity(new Intent(activity, IndexNewActivity.class));
+        activity.startActivity(new Intent(activity, MainActivity.class));
 		activity.finish();
 	}
 

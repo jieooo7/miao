@@ -18,6 +18,9 @@ public class Check {
     public static boolean isNotFirst(Context context) {
         return PreferencesUtils.getBooleanFromSPMap(context, PreferencesUtils.Keys.IS_FIRST);
     }
+    public static boolean isGuideFirst(Context context) {
+        return PreferencesUtils.getBooleanFromSPMap(context, PreferencesUtils.Keys.IS_GUIDE_F);
+    }
     public static boolean isSendClientId(Context context) {
         return !PreferencesUtils.getBooleanFromSPMap(context, PreferencesUtils.Keys.IS_SEND_CLIENTID,PreferencesUtils.Keys.USERINFO);
     }

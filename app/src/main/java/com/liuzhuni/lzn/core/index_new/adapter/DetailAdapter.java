@@ -88,8 +88,9 @@ public class DetailAdapter extends BaseAdapter{
 
         ViewHolderText textHolder = null;
         ViewHolderImage imageHolder = null;
+        int type=getItemViewType(position);
         if(convertView==null){
-            switch (getItemViewType(position)){
+            switch (type){
 
                 case TEXT:
 
@@ -119,7 +120,7 @@ public class DetailAdapter extends BaseAdapter{
 
         }else{
 
-            switch (getItemViewType(position)) {
+            switch (type) {
 
                 case TEXT:
 
@@ -135,7 +136,7 @@ public class DetailAdapter extends BaseAdapter{
 
         }
 
-        switch (getItemViewType(position)) {
+        switch (type) {
 
             case TEXT:
 //                SpannableString image=new SpannableString(mContext.getText(R.string.good_good));
@@ -165,6 +166,8 @@ public class DetailAdapter extends BaseAdapter{
                 if(position==0){
 //                    textHolder.textTv.setText("\n");
                     textHolder.headTv.setText(msp);
+                }else{
+                    textHolder.headTv.setText("");
                 }
 
 //                SpannableString html=new SpannableString(new HtmlSpanner().fromHtml(mList.get(position).getData()));
@@ -174,9 +177,14 @@ public class DetailAdapter extends BaseAdapter{
                 SpannableString trans=new SpannableString(tran);
                 trans.setSpan(new ForegroundColorSpan(Color.argb(0x00, 0x00, 0x00, 0x00)), 0, tran.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 
-                textHolder.textTv.setText(trans);
-                textHolder.textTv.append(new HtmlSpanner().fromHtml(mList.get(position).getData()));
 
+                if(position==0){
+                    textHolder.textTv.setText(trans);
+                }else{
+                    textHolder.textTv.setText("");
+                }
+                textHolder.textTv.append(new HtmlSpanner().fromHtml(mList.get(position).getData()));
+//                textHolder.textTv.append(mList.get(position).getData());
                 textHolder.textTv.setMovementMethod(LinkMovementMethodExt.getInstance(handler, URLSpan.class));
                 break;
             case IMAGE:

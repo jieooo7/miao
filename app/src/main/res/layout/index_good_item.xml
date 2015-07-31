@@ -170,7 +170,6 @@
                android:drawablePadding="1dp"
                android:textSize="13sp"
                android:textColor="@color/new_forgot"
-               android:visibility="gone"
                />
 
 

@@ -34,6 +34,7 @@ public abstract class Base2Activity extends Activity {
     private InputMethodManager manager;
     protected Activity activity;
     public LoadingDialog loadingdialog;
+    public boolean isTouch=true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +83,7 @@ public abstract class Base2Activity extends Activity {
 //            ToastUtil.customShow(this, getResources().getText(R.string.bad_net));
             return;
         }
-        RequestManager.addRequest(request, this);
+            RequestManager.addRequest(request, this);
 
     }
 
@@ -92,6 +93,8 @@ public abstract class Base2Activity extends Activity {
             public void onErrorResponse(VolleyError error) {
 //                Toast.makeText(activity,getResources().getText(R.string.error_retry), Toast.LENGTH_LONG).show();
                 loadingdialog.dismiss();
+
+                isTouch=true;
                 if (error.networkResponse != null) {
                     if (error.networkResponse.statusCode == 401) {//重新登录
                         PreferencesUtils.putBooleanToSPMap(Base2Activity.this, PreferencesUtils.Keys.IS_LOGIN, false);
@@ -116,6 +119,7 @@ public abstract class Base2Activity extends Activity {
             public void onErrorResponse(VolleyError error) {
 //                Toast.makeText(activity,getResources().getText(R.string.error_retry), Toast.LENGTH_LONG).show();
                 loadingdialog.dismiss();
+                isTouch=true;
                 if (error.networkResponse != null) {
                     if (error.networkResponse.statusCode == 401) {//重新登录
                         PreferencesUtils.putBooleanToSPMap(Base2Activity.this, PreferencesUtils.Keys.IS_LOGIN, false);

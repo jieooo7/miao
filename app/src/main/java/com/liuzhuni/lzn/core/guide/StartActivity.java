@@ -8,7 +8,7 @@ import android.view.WindowManager;
 import com.liuzhuni.lzn.R;
 import com.liuzhuni.lzn.base.Base2Activity;
 import com.liuzhuni.lzn.config.MessageWhat;
-import com.liuzhuni.lzn.core.index_new.IndexNewActivity;
+import com.liuzhuni.lzn.core.index_new.MainActivity;
 import com.liuzhuni.lzn.utils.PreferencesUtils;
 
 public class StartActivity extends Base2Activity {
@@ -19,7 +19,7 @@ public class StartActivity extends Base2Activity {
             switch (msg.what){
                 case MessageWhat.START_UP:
                     Intent intent = new Intent();
-                    intent.setClass(StartActivity.this, IndexNewActivity.class);
+                    intent.setClass(StartActivity.this, MainActivity.class);
                     startActivity(intent);
                     finish();
                     break;

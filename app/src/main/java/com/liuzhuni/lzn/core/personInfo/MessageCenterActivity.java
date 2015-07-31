@@ -40,6 +40,8 @@ public class MessageCenterActivity extends Base2Activity {
     private int mTotal=1;
     private int mIndex=0;
 
+    private android.os.Handler handler=new android.os.Handler();
+
 
 
     @Override
@@ -110,7 +112,12 @@ public class MessageCenterActivity extends Base2Activity {
 
                         mCurrentList=indexMessageModel.getData();
                         mList.addAll(0,mCurrentList);
-                        mAdapter.notifyDataSetChanged();
+                        handler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                mAdapter.notifyDataSetChanged();
+                            }
+                        });
 
                     }
                 }

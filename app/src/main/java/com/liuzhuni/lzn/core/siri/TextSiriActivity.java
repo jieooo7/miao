@@ -468,7 +468,12 @@ public class TextSiriActivity extends Base2Activity implements XListView.IXListV
 //            mCurrentList.addAll(0, tempList);
         if (isHistory) {
             addList(tempList);
-            mAdapter.notifyDataSetChanged();
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    mAdapter.notifyDataSetChanged();
+                }
+            });
             if(mIsFirst){
                 if(isHisScroll){
                     mListView.setSelection(mCurrentList.size() - 1);
@@ -487,7 +492,12 @@ public class TextSiriActivity extends Base2Activity implements XListView.IXListV
                 mIsFirst = false;
             }
             addList(tempList);
-            mAdapter.notifyDataSetChanged();
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    mAdapter.notifyDataSetChanged();
+                }
+            });
             if(mIsPullDown){
 //                mListView.setSelection(0);
 //                mListView.smoothScrollToPosition(0);
@@ -602,7 +612,13 @@ public class TextSiriActivity extends Base2Activity implements XListView.IXListV
         }
 //            mCurrentList.addAll(0, tempList);
         addListLast(tempList);
-        mAdapter.notifyDataSetChanged();
+        mHandler.post(new Runnable() {
+            @Override
+            public void run() {
+                mAdapter.notifyDataSetChanged();
+            }
+        });
+
         mListView.setSelection(mCurrentList.size() - 1);
 //        if(mIsPullDown){
 //                mListView.setSelection(0);

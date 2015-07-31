@@ -110,6 +110,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:listSelector="@color/transparent"
+        android:scrollbars="none"
         android:divider="@color/index_text"
         android:dividerHeight="0dp"
         android:layout_marginTop="2dp"

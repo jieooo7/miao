@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -27,11 +28,14 @@ public class CommentDialog {
     public ImageView mCloseBtn;
     public EditText mEdit;
     public TextView mSubmit;
+    private Activity mContext;
+    private InputMethodManager imm;
 
 
     private Dialog mDialog;
 
     public CommentDialog(Activity context) {
+        mContext=context;
         View view = LayoutInflater.from(context).inflate(R.layout.comment_dialog, null);
         mDialog = new Dialog(context, R.style.MyDialog);
 
@@ -70,16 +74,33 @@ public class CommentDialog {
         });
 
 
+        mEdit.setFocusable(true);
+        mEdit.setFocusableInTouchMode(true);
+        mEdit.requestFocus();
+
+
+//        InputMethodManager imm = (InputMethodManager)
+//                context.getSystemService(context.INPUT_METHOD_SERVICE);
+//        imm.showSoftInput(mEdit, InputMethodManager.RESULT_SHOWN); //显示软键盘
+//        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_NOT_ALWAYS);//显示软键盘
+
+
     }
 
     public void show() {
         mDialog.show();
+//        mContext.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
+//        imm = (InputMethodManager)
+//                mContext.getSystemService(mContext.INPUT_METHOD_SERVICE);
+//        imm.showSoftInput(mEdit, InputMethodManager.RESULT_SHOWN);
+//        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_NOT_ALWAYS);//显示软键盘
     }
 
     public void dismiss() {
 
         if (mDialog.isShowing()) {
             mDialog.dismiss();
+//            imm.hideSoftInputFromWindow(mContext.getCurrentFocus().getWindowToken(), 0);
         }
     }
 

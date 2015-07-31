@@ -66,19 +66,30 @@
                 android:src="@drawable/detial_ic_comment"
 
                 />
-            <TextView
-                android:id="@+id/comment_nums"
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textSize="12sp"
-                android:textColor="@color/white"
-                android:background="@drawable/nums_back"
-                android:layout_toRightOf="@id/comment_iv"
                 android:layout_marginLeft="-8dp"
-                android:layout_marginBottom="18dp"
-                android:singleLine="true"
-                android:visibility="invisible"
-                />
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@id/comment_iv"
+                android:orientation="horizontal"
+                android:background="@color/transparent"
+                android:paddingBottom="20dp"
+                >
+
+
+
+                <TextView
+                    android:id="@+id/comment_nums"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:textColor="@color/white"
+                    android:background="@drawable/nums_back"
+                    android:singleLine="true"
+                    android:visibility="invisible"
+                    />
+            </LinearLayout>
 
 
         </RelativeLayout>
@@ -145,7 +156,7 @@
             android:id="@+id/detail_item_img"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:scaleType="centerInside"
+            android:scaleType="fitCenter"
             />
 
         <LinearLayout
@@ -224,7 +235,6 @@
         android:maxLines="2"
         android:ellipsize="end"
         />
-
 
 
 

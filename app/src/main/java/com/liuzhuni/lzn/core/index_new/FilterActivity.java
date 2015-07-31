@@ -2,6 +2,7 @@ package com.liuzhuni.lzn.core.index_new;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -44,6 +45,8 @@ public class FilterActivity extends Base2Activity {
     private FilterAdapter mAdapter;
 
     private String mTag="";
+
+    private Handler handler=new Handler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -174,7 +177,13 @@ public class FilterActivity extends Base2Activity {
             public void onResponse(BaseListModel<FilterModel> indexBaseListModel) {
                 if (indexBaseListModel.getData() != null) {
                     mList.addAll(indexBaseListModel.getData());
-                    mAdapter.notifyDataSetChanged();
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mAdapter.notifyDataSetChanged();
+                        }
+                    });
+
 
                 }
             }

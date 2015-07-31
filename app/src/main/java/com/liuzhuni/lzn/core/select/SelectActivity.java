@@ -594,7 +594,14 @@ public class SelectActivity extends Base2Activity {
                         mAdapter = new BrandAdapter(SelectActivity.this, mList.subList(0, 4));
                     }
                     mBrandList.setAdapter(mAdapter);
-                    mAdapter.notifyDataSetChanged();
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mAdapter.notifyDataSetChanged();
+                        }
+                    });
+
+
 
                 }
             }

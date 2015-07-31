@@ -15,9 +15,11 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.URLSpan;
+import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -34,19 +36,25 @@ import com.liuzhuni.lzn.base.Base2Activity;
 import com.liuzhuni.lzn.config.MessageWhat;
 import com.liuzhuni.lzn.config.UrlConfig;
 import com.liuzhuni.lzn.core.comment.CommentActivity;
+import com.liuzhuni.lzn.core.comment.model.CommentModel;
+import com.liuzhuni.lzn.core.comment.ui.CommentDialog;
 import com.liuzhuni.lzn.core.goods.ToBuyActivity;
 import com.liuzhuni.lzn.core.goods.ui.ListViewForScrollView;
 import com.liuzhuni.lzn.core.index_new.adapter.DetailAdapter;
 import com.liuzhuni.lzn.core.index_new.model.DetailContentModel;
 import com.liuzhuni.lzn.core.index_new.model.DetailModel;
 import com.liuzhuni.lzn.core.index_new.utils.MessageSpan;
+import com.liuzhuni.lzn.core.login.Loginable;
+import com.liuzhuni.lzn.core.login.TheIntent;
 import com.liuzhuni.lzn.core.model.BaseModel;
 import com.liuzhuni.lzn.utils.ToastUtil;
+import com.liuzhuni.lzn.volley.ApiParams;
 import com.liuzhuni.lzn.volley.GsonBaseRequest;
 import com.liuzhuni.lzn.volley.RequestManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.ShareSDK;
@@ -119,6 +127,9 @@ public class DetailActivity extends Base2Activity {
     private String name;
     private String copy_text;
 
+    private String mUrlReply;
+    private int mReviewNum;
+
 
     private Handler handler = new Handler() {
         public void handleMessage(Message msg) {
@@ -164,6 +175,13 @@ public class DetailActivity extends Base2Activity {
         mIsFromSelect=getIntent().getExtras().getBoolean("isSelect");
         mAdapter=new DetailAdapter(mList,this,mImageLoader,handler,mIsFromSelect);
 
+        if(mIsFromSelect){
+            mUrlReply= UrlConfig.COMMENT_SEL_REPLY;
+        }else{
+            mUrlReply=UrlConfig.COMMENT_NEWS_REPLY;
+        }
+
+
         link="http://www.liuzhuni.com/app";
         img_link="http://m.liuzhuni.com/huimapp/content/img/icon114.png";
         title=getText(R.string.share_title).toString();
@@ -181,6 +199,7 @@ public class DetailActivity extends Base2Activity {
     @Override
     protected void initUI() {
 
+
         mBackTv.setText(getText(R.string.back));
         if(mIsFromSelect){
             mTitleTv.setText(getText(R.string.select_detail));
@@ -188,11 +207,19 @@ public class DetailActivity extends Base2Activity {
             mTitleTv.setText(getText(R.string.all_news_detail));
         }
 
+        DisplayMetrics dm = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+        int screenHeight = dm.heightPixels;
+
+        RelativeLayout.LayoutParams rp= new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,(int)(screenHeight/4));
+
+        mImageIv.setLayoutParams(rp);
+
         mRightIv.setImageDrawable(getResources().getDrawable(R.drawable.ic_share));
 
 
-
         mListView.setAdapter(mAdapter);
+//        mListView.bindLinearLayout(mAdapter);
         if(mIsFromSelect){
             pullData(UrlConfig.GET_SELECT_DETAIL+mId);
         }else{
@@ -204,7 +231,8 @@ public class DetailActivity extends Base2Activity {
     @Override
     protected void onResume() {
         super.onResume();
-        mScrollview.scrollTo(0,0);
+        mListView.setFocusable(false);
+        mScrollview.smoothScrollTo(0, 0);
     }
 
     @Override
@@ -224,31 +252,115 @@ public class DetailActivity extends Base2Activity {
         shareShow();
     }
 
-    @OnClick(R.id.detail_edit)
-    public void edit(View v) {
-
-    }
     @OnClick(R.id.comment_rl)
     public void comment(View v) {
 
-        Intent intent = new Intent();
-        intent.setClass(this, CommentActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putString("id", "" + mId);
-        bundle.putString("url",mUrl);
-        bundle.putBoolean("isSelect", mIsFromSelect);
-        intent.putExtras(bundle);
-        startActivity(intent);
+        TheIntent theIntent = new TheIntent(this, new Loginable() {
+            @Override
+            public void intent() {
+
+                Intent intent = new Intent();
+                intent.setClass(DetailActivity.this, CommentActivity.class);
+                Bundle bundle = new Bundle();
+                bundle.putString("id", "" + mId);
+                bundle.putString("url",mUrl);
+                bundle.putBoolean("isSelect", mIsFromSelect);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
+        theIntent.go();
+
 
     }
+
+
+    @OnClick(R.id.detail_edit)
+    public void edit(View v) {
+
+
+        TheIntent theIntent = new TheIntent(this, new Loginable() {
+            @Override
+            public void intent() {
+
+                //评价
+                final CommentDialog dialog=new CommentDialog(DetailActivity.this);
+                dialog.mTitle.setText("发表评论");
+                dialog.mSubmit.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String text = dialog.mEdit.getText().toString();
+                        if (text.length() < 5) {
+                            ToastUtil.customShow(DetailActivity.this, "评论内容不少于5个字哦~");
+                        } else {
+                            pullCommentData(mUrlReply, mId, "0", text);
+                            dialog.dismiss();
+
+                        }
+
+                    }
+                });
+
+
+                dialog.show();
+//                dialog.mEdit.setFocusable(true);
+//                dialog.mEdit.setFocusableInTouchMode(true);
+//                dialog.mEdit.requestFocus();
+//
+//                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+//                imm.showSoftInput(dialog.mEdit, InputMethodManager.RESULT_SHOWN);
+//                imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_NOT_ALWAYS);
+//                imm.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+            }
+        });
+        theIntent.go();
+
+
+
+    }
+
+
+    protected  void pullCommentData(final String url,final String pid,final String rid,final String text) {
+        executeRequest(new GsonBaseRequest<BaseModel<CommentModel>>(Request.Method.POST, url, new TypeToken<BaseModel<CommentModel>>() {
+        }.getType(), responseComListener(), errorListener()) {
+
+            protected Map<String, String> getParams() {
+                return new ApiParams().with("productid", ""+pid).with("reviewid", rid).with("text",text);
+            }
+
+        });
+    }
+
+    protected Response.Listener<BaseModel<CommentModel>> responseComListener() {
+        return new Response.Listener<BaseModel<CommentModel>>() {
+            @Override
+            public void onResponse(BaseModel<CommentModel> indexBaseListModel) {
+                if (indexBaseListModel.getData() != null) {
+
+                    ToastUtil.show(DetailActivity.this, getResources().getText(R.string.success_comment));
+
+                    mCommenttv.setText(mReviewNum+1+"");
+                    mCommenttv.setVisibility(View.VISIBLE);
+
+
+                }
+
+            }
+        };
+
+    }
+
+
+
+
     @OnClick(R.id.detail_buy)
     public void buy(View v) {
 //        购买
         Intent intent = new Intent();
         intent.setClass(this, ToBuyActivity.class);
         Bundle bundle=new Bundle();
-        bundle.putString("url",mUrl);
-        bundle.putString("title","");
+        bundle.putString("url", mUrl);
+        bundle.putString("title", "");
         intent.putExtras(bundle);
         startActivity(intent);
     }
@@ -360,6 +472,7 @@ public class DetailActivity extends Base2Activity {
                     mMallTv.setText(model.getMall());
                     mNameTv.setText(model.getName());
                     mTimeTv.setText(model.getTime());
+                    mReviewNum=model.getReview();
                     if(model.getReview()>0){
                         mCommenttv.setText(""+model.getReview());
                         mCommenttv.setVisibility(View.VISIBLE);
@@ -370,7 +483,13 @@ public class DetailActivity extends Base2Activity {
                     mList.addAll(model.getContent());
 
 
-                    mAdapter.notifyDataSetChanged();
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mAdapter.notifyDataSetChanged();
+                        }
+                    });
+
 
                     link=model.getShareurl();
                     img_link=model.getPic();
