@@ -1,16 +1,18 @@
 package com.liuzhuni.lzn.core.index_new.adapter;
 
-import android.content.Context;
+import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.liuzhuni.lzn.R;
 import com.liuzhuni.lzn.core.index_new.model.NewsModel;
+import com.liuzhuni.lzn.utils.fileHelper.CommonUtil;
 
 import java.util.List;
 
@@ -23,11 +25,11 @@ import java.util.List;
 public class AllNewsAdapter extends BaseAdapter {
 
     private List<NewsModel> mList;
-    private Context mContext;
+    private Activity mContext;
     private ImageLoader mImageLoader;
 
 
-    public AllNewsAdapter(List<NewsModel> mList, Context mContext,ImageLoader imageLoader) {
+    public AllNewsAdapter(List<NewsModel> mList, Activity mContext,ImageLoader imageLoader) {
         this.mList = mList;
         this.mContext = mContext;
         this.mImageLoader=imageLoader;
@@ -74,9 +76,13 @@ public class AllNewsAdapter extends BaseAdapter {
         viewHolder.time.setText(mList.get(position).getTime());
         viewHolder.price.setText(mList.get(position).getTitle1());
 
-//        viewHolder.imageIv.setDefaultImageResId(R.drawable.my_touxiang);
+        RelativeLayout.LayoutParams rp= new RelativeLayout.LayoutParams(CommonUtil.getScreenWidth(mContext)/2-5,CommonUtil.getScreenWidth(mContext)/2-5);
+
+        viewHolder.imageIv.setLayoutParams(rp);
+
+        viewHolder.imageIv.setDefaultImageResId(R.drawable.publish_preload_ic);
         viewHolder.imageIv.setImageUrl(mList.get(position).getPic(),mImageLoader);
-//        viewHolder.imageIv.setErrorImageResId(R.drawable.my_touxiang);
+        viewHolder.imageIv.setErrorImageResId(R.drawable.publish_preload_ic);
 
         return convertView;
 

@@ -116,10 +116,13 @@ public class SendCodeActivity extends Base2Activity {
     protected void setListener() {
 
         //网络请求,启动线程
-        if (mIsRegister) {
-            pullCodeData(UrlConfig.SEND_CODE, mTel);
-        } else {
-            pullCodeData(UrlConfig.SEND_FOGOT_CODE, mTel);
+        if(isTouch){
+            isTouch=false;
+            if (mIsRegister) {
+                pullCodeData(UrlConfig.SEND_CODE, mTel);
+            } else {
+                pullCodeData(UrlConfig.SEND_FOGOT_CODE, mTel);
+            }
         }
     }
 
@@ -197,6 +200,7 @@ public class SendCodeActivity extends Base2Activity {
         return new Response.Listener<BaseModel>() {
             @Override
             public void onResponse(BaseModel baseModel) {
+                isTouch=true;
                 if (baseModel.getRet() != 0) {
 
                     ToastUtil.customShow(SendCodeActivity.this, baseModel.getMes());

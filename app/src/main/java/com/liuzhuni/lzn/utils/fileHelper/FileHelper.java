@@ -116,7 +116,29 @@ public class FileHelper {
 		file.delete();
 		return true;
 	}
-	
+//删除目录或者文件
+		public static boolean deleteDirectory(File file) {
+
+		if (file == null || !file.exists()) {
+			return false;
+		}
+
+		if (file.isDirectory()) {
+			File[] list = file.listFiles();
+
+			for (int i = 0; i < list.length; i++) {
+				if (list[i].isDirectory()) {
+					deleteDirectory(list[i].getAbsolutePath());
+				} else {
+					list[i].delete();
+				}
+			}
+		}
+
+		file.delete();
+		return true;
+	}
+
 	public static boolean writeFile(String filePath, InputStream inputStream) {
 
 		if (null == filePath || filePath.length() < 1) {

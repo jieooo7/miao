@@ -24,6 +24,7 @@ public class DetailModel implements Serializable{
     private boolean baicai=false;
     private boolean quanqiugou=false;
     private boolean shoumanwu=false;
+    private boolean IsCollect=false;
 
     private String url;
     private String shareurl;
@@ -42,6 +43,14 @@ public class DetailModel implements Serializable{
         this.name = name;
     }
 
+
+    public boolean isCollect() {
+        return IsCollect;
+    }
+
+    public void setCollect(boolean isCollect) {
+        IsCollect = isCollect;
+    }
 
     public String getShareurl() {
         return shareurl;

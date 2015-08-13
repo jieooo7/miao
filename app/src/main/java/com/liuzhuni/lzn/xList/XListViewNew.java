@@ -25,12 +25,20 @@ import com.liuzhuni.lzn.R;
 
 public class XListViewNew extends ListView implements OnScrollListener {
 
+
+
+    public interface HideFab {
+        public void hideFab();
+    }
+
     private float mLastY = -1; // save event y
     private Scroller mScroller; // used for scroll back
     private OnScrollListener mScrollListener; // user's scroll listener
 
     // the interface to trigger refresh and load more.
     private IXListViewListener mListViewListener;
+
+    private HideFab mHideFab;
 
     // -- header view
     private XListViewHeader mHeaderView;
@@ -57,7 +65,7 @@ public class XListViewNew extends ListView implements OnScrollListener {
     private final static int SCROLLBACK_FOOTER = 1;
 
     private final static int SCROLL_DURATION = 400; // scroll back duration
-    private final static int PULL_LOAD_MORE_DELTA = 50; // when pull up >= 50px
+    private final static int PULL_LOAD_MORE_DELTA = -1; // when pull up >= 50px
     // at bottom, trigger
     // load more.
     private final static float OFFSET_RADIO = 1.8f; // support iOS like pull
@@ -118,6 +126,12 @@ public class XListViewNew extends ListView implements OnScrollListener {
             addFooterView(mFooterView);
         }
         super.setAdapter(adapter);
+    }
+
+
+    public void setHideFab(HideFab hideFab){
+
+        mHideFab=hideFab;
     }
 
     /**
@@ -306,9 +320,7 @@ public class XListViewNew extends ListView implements OnScrollListener {
                     resetHeaderHeight();
                 } else if (getLastVisiblePosition() == mTotalItemCount - 1) {
                     // invoke load more.
-                    if (mEnablePullLoad
-                            && mFooterView.getBottomMargin() > PULL_LOAD_MORE_DELTA
-                            && !mPullLoading) {
+                    if (mEnablePullLoad&& !mPullLoading) {
                         startLoadMore();
                     }
                     resetFooterHeight();
@@ -352,7 +364,14 @@ public class XListViewNew extends ListView implements OnScrollListener {
         if (mScrollListener != null) {
             mScrollListener.onScroll(view, firstVisibleItem, visibleItemCount,
                     totalItemCount);
+
+            if(firstVisibleItem==0){
+
+                mHideFab.hideFab();
+            }
         }
+
+
     }
 
     public void setXListViewListener(IXListViewListener l) {

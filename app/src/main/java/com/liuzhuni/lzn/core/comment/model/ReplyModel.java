@@ -12,6 +12,7 @@ public class ReplyModel implements Serializable{
 
     private String usernick;
     private String text;
+    private int id;
 
 
     public ReplyModel(String userNick, String text) {
@@ -19,6 +20,14 @@ public class ReplyModel implements Serializable{
         this.text = text;
     }
 
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getUserNick() {
         return usernick;

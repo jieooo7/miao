@@ -320,6 +320,7 @@
                     android:layout_gravity="center_horizontal"
                     android:text="@string/init_range"
                     android:textColor="@color/key"
+                    android:visibility="gone"
                     android:textSize="14sp" />
 
                 <com.liuzhuni.lzn.core.select.ui.RangeSeekBar
@@ -327,8 +328,25 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="-12dp"
+                    android:visibility="gone"
                     rsb:absoluteMaxValue="51"
                     rsb:absoluteMinValue="0" />
+                <com.liuzhuni.lzn.core.goods.ui.ListViewForScrollView
+                    android:id="@+id/price_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:cacheColorHint="@color/transparent"
+                    android:divider="@color/line_below"
+                    android:dividerHeight="1px"
+                    android:listSelector="@color/transparent"
+                    android:scrollbars="none">
+
+
+                </com.liuzhuni.lzn.core.goods.ui.ListViewForScrollView>
+
+
+
+
 
 
             </LinearLayout>

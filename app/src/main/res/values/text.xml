@@ -46,6 +46,7 @@ tools:ignore="MissingTranslation" >
     <string name="tel">手机号码</string>
     <string name="email_address">邮箱地址</string>
     <string name="adress">收货地址</string>
+    <string name="city">城市</string>
 
 
 
@@ -83,8 +84,8 @@ tools:ignore="MissingTranslation" >
     <string name="index_want_buy">想买</string>
     <string name="i_want_buy_u"><u>我想买</u></string>
     <string name="i_want_buy_line">我想买____</string>
-    <string name="no_finish_list">暂无完成清单</string>
-    <string name="no_list_record">暂无清单记录</string>
+    <string name="no_finish_list">还没有完成的清单~\n有满意的推荐请告诉惠喵哦</string>
+    <string name="no_list_record">还没有内容~\n想买什么,告诉惠喵哦 </string>
     <string name="my_want_buy">我的清单</string>
     <string name="had_finish">已完成</string>
     <string name="buy_tip">您的清单降价时,惠喵会告诉您</string>
@@ -179,7 +180,7 @@ tools:ignore="MissingTranslation" >
     <string name="feed_error">多写一些嘛~~</string>
     <string name="feed_ok">反馈已收到</string>
     <string name="tel_code_error">请输入正确的手机号和验证码</string>
-    <string name="select_error">请先输入关键字</string>
+    <string name="select_error">请先输入您想购买的商品</string>
     <string name="head_image_ok">头像修改成功</string>
     <string name="head_image_error">头像未上传,请重试</string>
 
@@ -197,11 +198,15 @@ tools:ignore="MissingTranslation" >
     <string name="search_select">浏览定制</string>
     <string name="good_select">精选</string>
     <string name="all_join">全民爆料</string>
+    <string name="cheap_ch">极速白菜</string>
     <string name="about_me">我的</string>
     <string name="great_price">神价格</string>
     <string name="global_buy">全球购</string>
     <string name="slow_out">手慢无</string>
     <string name="cheap_price">白菜价</string>
+    <string name="always_top">置顶</string>
+    <string name="no_comments">还没有评论哦~</string>
+    <string name="sign_every">已连续签到1天</string>
 
 
 
@@ -223,5 +228,7 @@ tools:ignore="MissingTranslation" >
     <string name="go_to_buy">前往购买</string>
     <string name="save_tips">推荐分类至少选一个</string>
     <string name="filter_tips">首页将根据您选中的分类进行显示内容</string>
+    <string name="city_choice">选择城市后,推荐更精准哦~</string>
+    <string name="no_more_cheap">没有更多的白菜了,请保持关注哦~</string>
 
 </resources>

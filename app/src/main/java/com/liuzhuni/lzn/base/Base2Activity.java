@@ -49,6 +49,15 @@ public abstract class Base2Activity extends Activity {
 
     }
 
+    public void showLoadingDialog(){
+
+        loadingdialog.show();
+    }
+    public void DismissDialog(){
+
+        loadingdialog.dismiss();
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -101,7 +110,6 @@ public abstract class Base2Activity extends Activity {
                         PreferencesUtils.clearSPMap(Base2Activity.this, PreferencesUtils.Keys.USERINFO);
                         Intent intent = new Intent(Base2Activity.this, LoginActivity.class);
                         startActivity(intent);
-                        finish();
                     } else {
 //                        ToastUtil.customShow(Base2Activity.this, getResources().getText(R.string.error_retry));
                     }

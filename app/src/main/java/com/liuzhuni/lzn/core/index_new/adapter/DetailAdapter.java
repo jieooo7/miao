@@ -1,11 +1,14 @@
 package com.liuzhuni.lzn.core.index_new.adapter;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Handler;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.method.ArrowKeyMovementMethod;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.URLSpan;
 import android.view.LayoutInflater;
@@ -30,7 +33,7 @@ import java.util.List;
  * Date: 2015-07-15
  * Time: 14:27
  */
-public class DetailAdapter extends BaseAdapter{
+public class DetailAdapter extends BaseAdapter {
     private List<DetailContentModel> mList;
     private Context mContext;
     private ImageLoader mImageLoader;
@@ -38,16 +41,16 @@ public class DetailAdapter extends BaseAdapter{
     private boolean isPick;
     private Handler handler;
 
-    private final int TEXT=0;
-    private final int IMAGE=1;
+    private final int TEXT = 0;
+    private final int IMAGE = 1;
 
 
-    public DetailAdapter(List<DetailContentModel> mList, Context mContext, ImageLoader mImageLoader,Handler _handler,boolean pick) {
+    public DetailAdapter(List<DetailContentModel> mList, Context mContext, ImageLoader mImageLoader, Handler _handler, boolean pick) {
         this.mList = mList;
         this.mContext = mContext;
         this.mImageLoader = mImageLoader;
         this.handler = _handler;
-        this.isPick=pick;
+        this.isPick = pick;
     }
 
     @Override
@@ -82,23 +85,24 @@ public class DetailAdapter extends BaseAdapter{
 
     }
 
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
 
         ViewHolderText textHolder = null;
         ViewHolderImage imageHolder = null;
-        int type=getItemViewType(position);
-        if(convertView==null){
-            switch (type){
+        int type = getItemViewType(position);
+        if (convertView == null) {
+            switch (type) {
 
                 case TEXT:
 
                     convertView = LayoutInflater.from(mContext).inflate(
                             R.layout.detail_text_item, null);
-                    textHolder=new ViewHolderText();
-                    textHolder.textTv=(TextView)convertView.findViewById(R.id.detail_item_tv);
-                    textHolder.headTv=(TextView)convertView.findViewById(R.id.detail_head);
+                    textHolder = new ViewHolderText();
+                    textHolder.textTv = (TextView) convertView.findViewById(R.id.detail_item_tv);
+                    textHolder.headTv = (TextView) convertView.findViewById(R.id.detail_head);
                     convertView.setTag(textHolder);
 
                     break;
@@ -106,8 +110,8 @@ public class DetailAdapter extends BaseAdapter{
 
                     convertView = LayoutInflater.from(mContext).inflate(
                             R.layout.detail_image_item, null);
-                    imageHolder=new ViewHolderImage();
-                    imageHolder.imageIv=(NetworkImageView)convertView.findViewById(R.id.detail_item_img);
+                    imageHolder = new ViewHolderImage();
+                    imageHolder.imageIv = (NetworkImageView) convertView.findViewById(R.id.detail_item_img);
 
                     convertView.setTag(imageHolder);
                     break;
@@ -117,19 +121,18 @@ public class DetailAdapter extends BaseAdapter{
             }
 
 
-
-        }else{
+        } else {
 
             switch (type) {
 
                 case TEXT:
 
-                    textHolder=(ViewHolderText)convertView.getTag();
+                    textHolder = (ViewHolderText) convertView.getTag();
 
                     break;
                 case IMAGE:
 
-                    imageHolder=(ViewHolderImage)convertView.getTag();
+                    imageHolder = (ViewHolderImage) convertView.getTag();
                     break;
 
             }
@@ -153,34 +156,45 @@ public class DetailAdapter extends BaseAdapter{
 
                 String msp;
 
-                if(isPick){
+                if (isPick) {
 
-                    msp =""+mContext.getText(R.string.good_good);
-                }else{
-                    msp =""+mContext.getText(R.string.good_news);
+                    msp = "" + mContext.getText(R.string.good_good);
+                } else {
+                    msp = "" + mContext.getText(R.string.good_news);
 
                 }
 //                msp.setSpan(new AbsoluteSizeSpan(18,true), 0, msp.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 //                msp.setSpan(new BackgroundColorSpan(Color.argb(0xff, 0xcc, 0xcc, 0xcc)), 0, msp.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 //                msp.setSpan(new ForegroundColorSpan(Color.argb(0xff, 0xff, 0xff, 0xff)), 0, msp.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                if(position==0){
+                if (position == 0) {
 //                    textHolder.textTv.setText("\n");
                     textHolder.headTv.setText(msp);
-                }else{
+                } else {
                     textHolder.headTv.setText("");
                 }
 
 //                SpannableString html=new SpannableString(new HtmlSpanner().fromHtml(mList.get(position).getData()));
 ////                html.setSpan(new BackgroundColorSpan(Color.argb(0xff, 0xcc, 0xcc, 0xcc)), 0, msp.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
 //                html.setSpan(new BackgroundColorSpan(Color.argb(0xff, 0xff, 0xff, 0xff)), 0, html.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                String tran="我 "+msp;
-                SpannableString trans=new SpannableString(tran);
+                String tran = "我 " + msp;
+                SpannableString trans = new SpannableString(tran);
                 trans.setSpan(new ForegroundColorSpan(Color.argb(0x00, 0x00, 0x00, 0x00)), 0, tran.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                int sdk = Build.VERSION.SDK_INT;
 
+                if (sdk < Build.VERSION_CODES.HONEYCOMB) {
 
-                if(position==0){
+                    textHolder.textTv.setFocusableInTouchMode(true);
+                    textHolder.textTv.setFocusable(true);
+                    textHolder.textTv.setClickable(true);
+                    textHolder.textTv.setLongClickable(true);
+                    textHolder.textTv.setMovementMethod(ArrowKeyMovementMethod.getInstance());
+                } else {
+                    textHolder.textTv.setTextIsSelectable(true);
+                }
+
+                if (position == 0) {
                     textHolder.textTv.setText(trans);
-                }else{
+                } else {
                     textHolder.textTv.setText("");
                 }
                 textHolder.textTv.append(new HtmlSpanner().fromHtml(mList.get(position).getData()));
@@ -188,7 +202,7 @@ public class DetailAdapter extends BaseAdapter{
                 textHolder.textTv.setMovementMethod(LinkMovementMethodExt.getInstance(handler, URLSpan.class));
                 break;
             case IMAGE:
-                imageHolder.imageIv.setImageUrl(mList.get(position).getData(),mImageLoader);
+                imageHolder.imageIv.setImageUrl(mList.get(position).getData(), mImageLoader);
                 break;
 
         }
@@ -200,12 +214,12 @@ public class DetailAdapter extends BaseAdapter{
     }
 
 
-
     static class ViewHolderText {
         TextView textTv;
         TextView headTv;
 
     }
+
     static class ViewHolderImage {
         NetworkImageView imageIv;
 

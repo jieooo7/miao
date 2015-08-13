@@ -9,8 +9,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.liuzhuni.lzn.R;
+import com.liuzhuni.lzn.core.comment.Replyable;
+import com.liuzhuni.lzn.core.comment.model.ReplyModel;
 import com.liuzhuni.lzn.utils.log.CommonLog;
 import com.liuzhuni.lzn.utils.log.LogFactory;
+
+import java.util.List;
 
 /**
  * Created by Andrew Lee on 2015/7/20.
@@ -37,7 +41,7 @@ public class CommentLinearLayout extends LinearLayout {
     }
 
 
-    public void bindLinearLayout(BaseAdapter adapter) {
+    public void bindLinearLayout(BaseAdapter adapter, final List<ReplyModel> list,final Replyable replyable) {
 
         this.removeAllViews();
         if (adapter == null) {
@@ -70,6 +74,16 @@ public class CommentLinearLayout extends LinearLayout {
 //                tv.setBackgroundDrawable(new ColorDrawable(0xffebebeb));
 //                addView(tv);
 //            }
+
+                    final int index=i;
+                    getChildAt(index).setOnClickListener(new OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                                    replyable.replyFloor(list.get(index).getId(),list.get(index).getUserNick());
+                        }
+                    });
+
             }
         } else {
             for (int i = 0; i < count; i++) {
@@ -85,6 +99,38 @@ public class CommentLinearLayout extends LinearLayout {
             int num = count - 4;
             ((TextView) mView.findViewById(R.id.text)).setText("展开隐藏的" + num + "层");
             addView(mView, 3);
+
+
+
+            for (int i = 0; i < count + 1; i++){
+                final int index=i;
+                getChildAt(index).setOnClickListener(new OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        if(index!=3){
+
+                            if(index<3){
+                                replyable.replyFloor(list.get(index).getId(),list.get(index).getUserNick());
+                            }else{
+                                replyable.replyFloor(list.get(index-1).getId(),list.get(index-1).getUserNick());
+                            }
+                        }
+//                        else{
+//                            for (int i = 0; i < count + 1; i++) {
+//                                if (i == 3) {
+//                                    getChildAt(i).setVisibility(View.GONE);
+//                                } else {
+//                                    getChildAt(i).setVisibility(View.VISIBLE);
+//                                }
+//
+//                            }
+//
+//                        }
+                    }
+                });
+            }
+
             mView.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {

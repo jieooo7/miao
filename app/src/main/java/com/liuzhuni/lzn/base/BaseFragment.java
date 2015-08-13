@@ -47,7 +47,6 @@ public abstract class BaseFragment extends Fragment {
                         PreferencesUtils.clearSPMap(getActivity(), PreferencesUtils.Keys.USERINFO);
                         Intent intent = new Intent(getActivity(), LoginActivity.class);
                         startActivity(intent);
-                        getActivity().finish();
                     } else {
 //                        ToastUtil.customShow(Base2Activity.this, getResources().getText(R.string.error_retry));
                     }

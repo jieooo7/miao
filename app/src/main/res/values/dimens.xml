@@ -33,6 +33,7 @@
 
     <dimen name="comment_10">10dp</dimen>
     <dimen name="comment_20">18dp</dimen>
+    <dimen name="profile_18">15sp</dimen>
 
 
 </resources>

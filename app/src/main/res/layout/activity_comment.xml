@@ -117,6 +117,35 @@
         android:layout_marginBottom="2dp"
         />
 
+    <LinearLayout
+        android:id="@+id/when_no_comment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/title"
+        android:layout_above="@id/detail_line"
+        android:background="@color/all_back"
+        android:orientation="vertical"
+        android:visibility="gone"
+        >
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+
+            android:background="@color/all_back"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:textSize="18sp"
+            android:textColor="@color/comment_light"
+            android:text="@string/no_comments"
+            android:drawableLeft="@drawable/comment_ic_default"
+            android:drawablePadding="8dp"
+
+            />
+    </LinearLayout>
+
+
 
 
 

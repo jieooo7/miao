@@ -35,6 +35,7 @@ import com.liuzhuni.lzn.core.index_new.DetailActivity;
 import com.liuzhuni.lzn.core.index_new.FilterActivity;
 import com.liuzhuni.lzn.core.index_new.adapter.PickAdapter;
 import com.liuzhuni.lzn.core.index_new.model.PickModel;
+import com.liuzhuni.lzn.core.index_new.model.TopModel;
 import com.liuzhuni.lzn.core.login.LoginActivity;
 import com.liuzhuni.lzn.core.login.Loginable;
 import com.liuzhuni.lzn.core.login.TheIntent;
@@ -42,7 +43,6 @@ import com.liuzhuni.lzn.core.model.BaseListModel;
 import com.liuzhuni.lzn.core.model.BaseModel;
 import com.liuzhuni.lzn.core.select.SelectActivity;
 import com.liuzhuni.lzn.core.siri.TextSiriActivity;
-import com.liuzhuni.lzn.pinHeader.PinnedSectionListView;
 import com.liuzhuni.lzn.pinHeader.StickyLayout;
 import com.liuzhuni.lzn.utils.PreferencesUtils;
 import com.liuzhuni.lzn.utils.ToastUtil;
@@ -66,13 +66,15 @@ import java.util.Map;
  * Time: 12:00
  */
 public class FragmentIndex extends BaseFragment implements
-        StickyLayout.OnGiveUpTouchEventListener,XListViewNew.IXListViewListener,PinnedSectionListView.HideFab {
+        StickyLayout.OnGiveUpTouchEventListener,XListViewNew.IXListViewListener,XListViewNew.HideFab {
 
 
     @ViewInject(R.id.expandablelist)
-    private PinnedSectionListView pinListView;
+    private XListViewNew pinListView;
+
     @ViewInject(R.id.sticky_layout)
     private StickyLayout stickyLayout;
+
     @ViewInject(R.id.fab)
     private FloatingActionButton fab;
 
@@ -88,14 +90,25 @@ public class FragmentIndex extends BaseFragment implements
 
     @ViewInject(R.id.want_buy_ll)
     private LinearLayout mBuyLl;
+
     @ViewInject(R.id.index_rl)
     private RelativeLayout mRel;
+
+
+    @ViewInject(R.id.top_ll)
+    private LinearLayout mTopLl;
+
+    @ViewInject(R.id.top_ttle)
+    private TextView mTopTv;
+
+    private int mTopId;
 
     private Boolean isMore = true;//防止重复加载
 
 
 
-
+    private int backId=0;
+    private int forwardId=0;
 
 
     private SimpleDateFormat mDateFormat = new SimpleDateFormat("HH:mm");
@@ -135,7 +148,6 @@ public class FragmentIndex extends BaseFragment implements
 
         mImageLoader = RequestManager.getImageLoader();
         mList = new ArrayList<PickModel>();
-        mList.add(0,new PickModel(-1));
         mAdapter = new PickAdapter(getActivity(),mList,mImageLoader);
 
         mTag= PreferencesUtils.getValueFromSPMap(getActivity(), PreferencesUtils.Keys.TAG, "");
@@ -146,12 +158,14 @@ public class FragmentIndex extends BaseFragment implements
 
     protected void initUI() {
 
+
         fab.hide();
+        pinListView.setHideFab(this);
         pinListView.setPullLoadEnable(true);
         pinListView.setPullRefreshEnable(true);
         pinListView.setXListViewListener(this);
         pinListView.setAdapter(mAdapter);
-        pinListView.setHideFab(this);
+
         pullData(0,"","back");
 
         Date date = new Date();
@@ -159,6 +173,7 @@ public class FragmentIndex extends BaseFragment implements
         stickyLayout.setOnGiveUpTouchEventListener(this);
         pinListView.setAdapter(mAdapter);
         fab.attachToListView(pinListView);
+        pullTopData();
 
 
     }
@@ -186,7 +201,6 @@ public class FragmentIndex extends BaseFragment implements
         }
     }
 
-    @Override
     public void hideFab() {
         fab.hide();
     }
@@ -200,8 +214,8 @@ public class FragmentIndex extends BaseFragment implements
                 isRefresh=true;
                 if(isMore){
                     isMore = false;
-                    if(mList.size()>=2){
-                        pullData(mList.get(1).getId(),"","back");
+                    if(mList.size()>=1){
+                        pullData(backId,"","back");
                     }else{
                         pullData(0,"","back");
                     }}
@@ -222,8 +236,8 @@ public class FragmentIndex extends BaseFragment implements
                 isRefresh=false;
                 if(isMore){
                     isMore = false;
-                    if(mList.size()>=2) {
-                        pullData(mList.get(mList.size() - 1).getId(), "", "forward");
+                    if(mList.size()>=1) {
+                        pullData(forwardId, "", "forward");
                     }else{
                         pullData(0,"","back");
                     }
@@ -279,12 +293,25 @@ public class FragmentIndex extends BaseFragment implements
             public void onResponse(BaseListModel<PickModel> indexBaseListModel) {
                 if(indexBaseListModel.getRet()==0){
                     isMore = true;
+                    int tempBackId=indexBaseListModel.getBack();
+                    int tempForwardId=indexBaseListModel.getForward();
+                    if(tempBackId!=0||tempForwardId!=0){
+
+                        if(forwardId==0||tempForwardId<forwardId){
+
+                            forwardId=tempForwardId;
+                        }
+                        if(tempBackId>backId){
+
+                            backId=tempBackId;
+                        }
+                    }
 
                     if (indexBaseListModel.getData() != null) {
 
                         mCurrentList = indexBaseListModel.getData();
                         if(isRefresh){
-                            mList.addAll(1, mCurrentList);
+                            mList.addAll(0, mCurrentList);
                             pinListView.setRefreshTime(mTime);
                             Date date = new Date();
                             mTime = mDateFormat.format(date);
@@ -297,6 +324,7 @@ public class FragmentIndex extends BaseFragment implements
                         mHandler.post(new Runnable() {
                             @Override
                             public void run() {
+
                                 mAdapter.notifyDataSetChanged();
                             }
                         });
@@ -316,6 +344,67 @@ public class FragmentIndex extends BaseFragment implements
         };
 
     }
+
+
+    protected  void pullTopData() {
+        executeRequest(new GsonBaseRequest<BaseModel<TopModel>>(Request.Method.GET, UrlConfig.GET_TOP, new TypeToken<BaseModel<TopModel>>() {
+        }.getType(), responseTopListener(), errorListener()) {
+
+        });
+    }
+
+
+    private Response.Listener<BaseModel<TopModel>> responseTopListener() {
+        return new Response.Listener<BaseModel<TopModel>>() {
+            @Override
+            public void onResponse(BaseModel<TopModel> indexcountModel) {
+                if (indexcountModel.getRet() == 0&&indexcountModel.getData()!=null) {
+                    final TopModel topModel=indexcountModel.getData();
+                    mTopId=topModel.getId();
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mTopTv.setText(topModel.getTitle());
+                            mTopLl.setVisibility(View.VISIBLE);
+                        }
+                    });
+
+
+                } else {
+
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                        }
+                    });
+
+
+                }
+
+            }
+        };
+
+    }
+
+    public Response.ErrorListener errorTopListener() {
+        return new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                LinearLayout.LayoutParams rp= new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, 0);
+
+                mTopLl.setLayoutParams(rp);
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mTopLl.setVisibility(View.GONE);
+                    }
+                });
+
+            }
+        };
+    }
+
+
 
 
     protected  void pullMessageData() {
@@ -372,7 +461,6 @@ public class FragmentIndex extends BaseFragment implements
 
 //                Toast.makeText(activity, ""+position, Toast.LENGTH_LONG).show();
 
-                if (position != 1) {
                     Intent intent = new Intent();
                     intent.setClass(getActivity(), DetailActivity.class);
                     Bundle bundle = new Bundle();
@@ -380,11 +468,6 @@ public class FragmentIndex extends BaseFragment implements
                     bundle.putBoolean("isSelect", true);
                     intent.putExtras(bundle);
                     startActivity(intent);
-                } else {
-                    Intent intent = new Intent(getActivity(), FilterActivity.class);
-                    startActivityForResult(intent, REQUEST_CODE);
-                }
-
             }
 
 
@@ -401,7 +484,6 @@ public class FragmentIndex extends BaseFragment implements
             case REQUEST_CODE:
                 if(resultCode==getActivity().RESULT_OK){
                     mList.clear();
-                    mList.add(0,new PickModel(-1));
                     mTag=data.getExtras().getString("tag");
 //                    ToastUtil.customShow(this,data.getExtras().getString("tag"));
                     pullData(0,data.getExtras().getString("tag"),"back");
@@ -416,6 +498,24 @@ public class FragmentIndex extends BaseFragment implements
     public void fab(View v) {
         pinListView.setSelection(0);
         fab.hide();
+
+    }
+    @OnClick(R.id.filter_tv)
+    public void filter(View v) {
+        Intent intent = new Intent(getActivity(), FilterActivity.class);
+        startActivityForResult(intent, REQUEST_CODE);
+
+    }
+
+    @OnClick(R.id.top_ll)
+    public void top(View v) {
+        Intent intent = new Intent();
+        intent.setClass(getActivity(), DetailActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("id", "" + mTopId);
+        bundle.putBoolean("isSelect", true);
+        intent.putExtras(bundle);
+        startActivity(intent);
 
     }
 
@@ -470,14 +570,9 @@ public class FragmentIndex extends BaseFragment implements
 
         if (pinListView.getFirstVisiblePosition() == 0){
             View view0=pinListView.getChildAt(0);
-            int height=view0.getMeasuredHeight();
-            if(mList.size()>1){
-
-                View view = pinListView.getChildAt(1);
-                if (view != null && view.getTop() >= height&&stickyLayout.getHeaderHeight()==0) {
+                if (view0 != null && view0.getTop() >= 0&&stickyLayout.getHeaderHeight()==0) {
                     return true;
                 }
-            }
         }
         return false;
     }

@@ -12,7 +12,6 @@ import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.liuzhuni.lzn.R;
 import com.liuzhuni.lzn.core.index_new.model.PickModel;
-import com.liuzhuni.lzn.pinHeader.PinnedSectionListView;
 
 import java.util.List;
 
@@ -22,7 +21,7 @@ import java.util.List;
  * Date: 2015-07-13
  * Time: 09:49
  */
-public class PickAdapter extends BaseAdapter implements PinnedSectionListView.PinnedSectionListAdapter {
+public class PickAdapter extends BaseAdapter {
 
 
     private List<PickModel> mList;
@@ -30,8 +29,6 @@ public class PickAdapter extends BaseAdapter implements PinnedSectionListView.Pi
 
     private Context mContext;
 
-    private final int NORMAL =0;
-    private final int PIN =1;
 
     public PickAdapter(Context context,List<PickModel> mList, ImageLoader mImageLoader) {
         this.mList = mList;
@@ -40,10 +37,6 @@ public class PickAdapter extends BaseAdapter implements PinnedSectionListView.Pi
     }
 
 
-    @Override
-    public boolean isItemViewTypePinned(int viewType) {
-        return PIN ==viewType;
-    }
 
     @Override
     public int getCount() {
@@ -61,32 +54,13 @@ public class PickAdapter extends BaseAdapter implements PinnedSectionListView.Pi
     }
 
 
-    @Override
-    public int getViewTypeCount() {
-        return 2;
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        if (position==0) {
-            return this.PIN;
-
-        } else {
-            return this.NORMAL;
-        }
-
-    }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
 
-        ViewHolderPin pinHolder = null;
         ViewHolderImage normalHolder = null;
         if(convertView==null){
-            switch (getItemViewType(position)){
-
-                case NORMAL:
 
                     convertView = LayoutInflater.from(mContext).inflate(
                             R.layout.index_good_item, null);
@@ -105,43 +79,17 @@ public class PickAdapter extends BaseAdapter implements PinnedSectionListView.Pi
                     normalHolder.expiredTv = (ImageView) convertView.findViewById(R.id.index_item_expired);
                     convertView.setTag(normalHolder);
 
-                    break;
-                case PIN:
 
-                    convertView = LayoutInflater.from(mContext).inflate(
-                            R.layout.pin_title, null);
-                    pinHolder=new ViewHolderPin();
-
-                    convertView.setTag(pinHolder);
-                    break;
-                default:
-                    break;
-
-            }
 
 
 
         }else{
 
-            switch (getItemViewType(position)) {
-
-                case NORMAL:
 
                     normalHolder=(ViewHolderImage)convertView.getTag();
 
-                    break;
-                case PIN:
-
-                    pinHolder=(ViewHolderPin)convertView.getTag();
-                    break;
-
-            }
-
         }
 
-        switch (getItemViewType(position)) {
-
-            case NORMAL:
 
                 normalHolder.timeTv.setText(mList.get(position).getTime());
                 normalHolder.mallTv.setText(mList.get(position).getMall());
@@ -166,11 +114,6 @@ public class PickAdapter extends BaseAdapter implements PinnedSectionListView.Pi
                 normalHolder. expiredTv.setVisibility(mList.get(position).isExpired() ? View.VISIBLE : View.GONE);
 
 
-                break;
-            case PIN:
-                break;
-
-        }
 
 
         return convertView;
@@ -180,10 +123,6 @@ public class PickAdapter extends BaseAdapter implements PinnedSectionListView.Pi
 
 
 
-    static class ViewHolderPin {
-        TextView textTv;
-
-    }
     static class ViewHolderImage {
         NetworkImageView headIv;
         TextView timeTv;

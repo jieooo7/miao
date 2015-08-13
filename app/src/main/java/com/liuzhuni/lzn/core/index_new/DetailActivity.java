@@ -50,11 +50,14 @@ import com.liuzhuni.lzn.core.model.BaseModel;
 import com.liuzhuni.lzn.utils.ToastUtil;
 import com.liuzhuni.lzn.volley.ApiParams;
 import com.liuzhuni.lzn.volley.GsonBaseRequest;
+import com.liuzhuni.lzn.volley.GsonRequest;
 import com.liuzhuni.lzn.volley.RequestManager;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.ShareSDK;
@@ -72,6 +75,9 @@ public class DetailActivity extends Base2Activity {
 
     @ViewInject(R.id.title_right_iv)
     private ImageView mRightIv;
+
+    @ViewInject(R.id.title_favorites_iv)
+    private ImageView mFavoriteIv;
 
     @ViewInject(R.id.detail_item_img)
     private NetworkImageView mImageIv;
@@ -119,6 +125,7 @@ public class DetailActivity extends Base2Activity {
     private boolean mIsFromSelect;
 
     private String mUrl;
+    private boolean isClick=true;
 
     private String link;
     private String img_link;
@@ -129,6 +136,8 @@ public class DetailActivity extends Base2Activity {
 
     private String mUrlReply;
     private int mReviewNum;
+    private boolean isFavorite=false;
+    private int mFavNum=0;
 
 
     private Handler handler = new Handler() {
@@ -177,8 +186,10 @@ public class DetailActivity extends Base2Activity {
 
         if(mIsFromSelect){
             mUrlReply= UrlConfig.COMMENT_SEL_REPLY;
+            mFavNum=0;
         }else{
             mUrlReply=UrlConfig.COMMENT_NEWS_REPLY;
+            mFavNum=1;
         }
 
 
@@ -199,7 +210,7 @@ public class DetailActivity extends Base2Activity {
     @Override
     protected void initUI() {
 
-
+//        mFavoriteIv.setVisibility(View.VISIBLE);
         mBackTv.setText(getText(R.string.back));
         if(mIsFromSelect){
             mTitleTv.setText(getText(R.string.select_detail));
@@ -220,11 +231,15 @@ public class DetailActivity extends Base2Activity {
 
         mListView.setAdapter(mAdapter);
 //        mListView.bindLinearLayout(mAdapter);
+
+
         if(mIsFromSelect){
             pullData(UrlConfig.GET_SELECT_DETAIL+mId);
         }else{
             pullData(UrlConfig.GET_NEWS_DETAIL+mId);
         }
+
+        loadingdialog.show();
 
     }
 
@@ -245,11 +260,70 @@ public class DetailActivity extends Base2Activity {
 
         finish();
     }
+
+
+    @OnClick(R.id.title_favorites_iv)
+    public void favortite(View v) {
+
+        //收藏
+
+        if(isFavorite){
+            isFavorite=false;
+            mFavoriteIv.setImageDrawable(getResources().getDrawable(R.drawable.detial_ic_collect_n));
+            pullFavData(UrlConfig.CANCEL_FAV, mId,mFavNum);
+            ToastUtil.customShow(this,"取消成功");
+
+        }else{
+            isFavorite=true;
+            mFavoriteIv.setImageDrawable(getResources().getDrawable(R.drawable.detial_ic_collect_s));
+            pullFavData(UrlConfig.FAV, mId,mFavNum);
+            ToastUtil.customShow(this,"收藏成功");
+
+        }
+
+
+    }
+
+
+    protected  void pullFavData(final String url, final String id, final int num) {
+        executeRequest(new GsonRequest<BaseModel>(Request.Method.GET, url+"?id="+id+"&t="+num, BaseModel.class, responseFavListener(), errorListener(false)) {
+
+
+        });
+    }
+
+    private Response.Listener<BaseModel> responseFavListener() {
+        return new Response.Listener<BaseModel>() {
+            @Override
+            public void onResponse(BaseModel addresModel) {
+
+                //备用
+
+
+            }
+
+        };
+
+    }
+
+
+
+
     @OnClick(R.id.title_right_iv)
     public void share(View v) {
 
         //分享
-        shareShow();
+        Timer time=new Timer();
+        if(isClick){
+            isClick=false;
+            shareShow();
+        }
+        time.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                isClick=true;
+            }
+        }, 800);
     }
 
     @OnClick(R.id.comment_rl)
@@ -456,6 +530,8 @@ public class DetailActivity extends Base2Activity {
         return new Response.Listener<BaseModel<DetailModel>>() {
             @Override
             public void onResponse(BaseModel<DetailModel> indexBaseListModel) {
+
+                loadingdialog.dismiss();
                 if (indexBaseListModel.getRet() == 0 && indexBaseListModel.getData() != null) {
                     DetailModel model=indexBaseListModel.getData();
                     mImageIv.setImageUrl(model.getPic(), mImageLoader);
@@ -465,6 +541,17 @@ public class DetailActivity extends Base2Activity {
                         mExpiredTv.setVisibility(View.GONE);
                     }
                     mPriceTv.setText(model.getTitle());
+
+                    isFavorite=model.isCollect();
+                    if(isFavorite){
+
+                        mFavoriteIv.setImageDrawable(getResources().getDrawable(R.drawable.detial_ic_collect_s));
+                    }else{
+                        mFavoriteIv.setImageDrawable(getResources().getDrawable(R.drawable.detial_ic_collect_n));
+                    }
+
+
+
 
                     SpannableString ss = new SpannableString(model.getTitle1());
                     ss.setSpan(new ForegroundColorSpan(Color.argb(0xff, 0xf5, 0x5d, 0x62)),0,ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);

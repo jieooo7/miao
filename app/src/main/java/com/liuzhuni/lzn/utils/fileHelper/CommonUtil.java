@@ -1,12 +1,12 @@
 package com.liuzhuni.lzn.utils.fileHelper;
 
 
+import android.app.Activity;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;
-import android.view.Display;
-import android.view.WindowManager;
+import android.util.DisplayMetrics;
 import android.widget.Toast;
 
 import com.liuzhuni.lzn.utils.log.CommonLog;
@@ -57,16 +57,17 @@ public class CommonUtil {
 		Toast.makeText(context, tip, Toast.LENGTH_SHORT).show();
 	}
 
-	public static int getScreenWidth(Context context) {
-		WindowManager manager = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
-		Display display = manager.getDefaultDisplay();
-		return display.getWidth();
+	public static int getScreenWidth(Activity context) {
+        DisplayMetrics dm = new DisplayMetrics();
+        context.getWindowManager().getDefaultDisplay().getMetrics(dm);
+        return dm.widthPixels;
 	}
 	
-	public static int getScreenHeight(Context context) {
-		WindowManager manager = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
-		Display display = manager.getDefaultDisplay();
-		return display.getHeight();
+	public static int getScreenHeight(Activity context) {
+        DisplayMetrics dm = new DisplayMetrics();
+		context.getWindowManager().getDefaultDisplay().getMetrics(dm);
+		return dm.heightPixels;
+
 	}
 	
 }

@@ -73,6 +73,16 @@ public class UrlConfig {
 
 
 
+	public static final String GET_PROFILE=BASE_IP +"user/get";
+	public static final String FAV=BASE_IP +"product/CollectionNum";
+	public static final String CANCEL_FAV=BASE_IP +"product/CancelCollect";
+	public static final String GET_TOP=BASE_IP +"product/gettop";
+	public static final String GET_CHEAP=BASE_IP +"product/GetBaicai";
+	public static final String PRICE_RANGE=BASE_IP +"usershoplist/GetPriceRange";
+
+
+
+
 
 
 

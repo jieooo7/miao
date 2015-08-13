@@ -31,11 +31,11 @@
         android:id="@+id/finish_no_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="top|center_horizontal"
-        android:paddingTop="150dp"
+        android:gravity="center"
         android:text="@string/no_finish_list"
         android:textColor="@color/regist_text"
         android:textSize="17sp"
         android:background="@color/all_back"
+        android:visibility="invisible"
         />
 </RelativeLayout>

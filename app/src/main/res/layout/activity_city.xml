@@ -1,0 +1,83 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.liuzhuni.lzn.core.goods.ToBuyActivity">
+
+
+    <ImageView
+        android:id="@+id/to_buy_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
+        android:paddingRight="20dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/btn_close" />
+
+    <TextView
+        android:id="@+id/to_buy_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_toLeftOf="@id/to_buy_close"
+        android:text="@string/city_choice"
+        android:singleLine="true"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
+        android:gravity="center"
+        android:textColor="@color/me_info_text"
+        android:textSize="20sp" />
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/to_buy_close"
+        >
+
+        <RelativeLayout
+            android:id="@+id/city_layout"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:orientation="vertical" >
+
+            <ListView
+                android:id="@+id/city_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:cacheColorHint="@null"
+                android:listSelector="@color/transparent"
+                android:divider="@color/line_below"
+                android:dividerHeight="1px"
+                android:scrollbars="none" />
+
+            <com.liuzhuni.lzn.core.city.ui.MyLetterListView
+                android:id="@+id/cityLetterListView"
+                android:layout_width="30dp"
+                android:layout_height="match_parent"
+                android:layout_marginTop="60dp"
+                android:layout_marginBottom="50dp"
+                android:layout_alignParentRight="true"
+                android:background="@color/transparent" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/overlay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="@drawable/over_lay"
+            android:gravity="center"
+            android:textColor="@color/white"
+            android:textSize="50sp"
+            android:visibility="gone" />
+    </FrameLayout>
+
+
+
+
+</RelativeLayout>
+

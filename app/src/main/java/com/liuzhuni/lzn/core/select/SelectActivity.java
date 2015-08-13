@@ -27,9 +27,10 @@ import com.liuzhuni.lzn.core.goods.ui.ListViewForScrollView;
 import com.liuzhuni.lzn.core.login.ButtonThread;
 import com.liuzhuni.lzn.core.login.Threadable;
 import com.liuzhuni.lzn.core.model.BaseListModel;
-import com.liuzhuni.lzn.core.model.BaseModel;
 import com.liuzhuni.lzn.core.select.adapter.BrandAdapter;
+import com.liuzhuni.lzn.core.select.adapter.PriceAdapter;
 import com.liuzhuni.lzn.core.select.model.BrandModel;
+import com.liuzhuni.lzn.core.select.model.PriceModel;
 import com.liuzhuni.lzn.core.select.ui.CleanableEditText;
 import com.liuzhuni.lzn.core.select.ui.RangeSeekBar;
 import com.liuzhuni.lzn.core.siri.TextSiriActivity;
@@ -38,13 +39,14 @@ import com.liuzhuni.lzn.example.qr_codescan.MipcaActivityCapture;
 import com.liuzhuni.lzn.utils.ToastUtil;
 import com.liuzhuni.lzn.volley.ApiParams;
 import com.liuzhuni.lzn.volley.GsonBaseRequest;
-import com.liuzhuni.lzn.volley.GsonRequest;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class SelectActivity extends Base2Activity {
 
@@ -87,6 +89,8 @@ public class SelectActivity extends Base2Activity {
     private LinearLayout mRangeLv;
     @ViewInject(R.id.brand_list)
     private ListViewForScrollView mBrandList;
+    @ViewInject(R.id.price_list)
+    private ListViewForScrollView mPriceListView;
     @ViewInject(R.id.want_buy_sv)
     private ScrollView mScrollView;
 
@@ -102,8 +106,15 @@ public class SelectActivity extends Base2Activity {
     private BrandAdapter mAdapter;
     private List<BrandModel> mList = null;
 
+
+    private PriceAdapter mPriceAdapter;
+    private List<PriceModel> mPriceList = null;
+
     private boolean fromIndex = false;
     private boolean brandThreadFlag = true;
+    public static boolean sPriceFlag = true;
+
+    private boolean isClick=true;
 
 
     private Drawable mDrawableSelect;
@@ -120,9 +131,22 @@ public class SelectActivity extends Base2Activity {
                         mNoBrandIv.setImageDrawable(mDrawableSelect);
                         mSelectBrandIv.setImageDrawable(mDrawableUnSelect);
                         mBrandLv.setVisibility(View.GONE);
+
+
+
 //                        if(mList!=null){
 //                            mList.clear();
 //                        }
+                    }
+
+                    if (!mIsPrice) {
+                        mIsPrice = true;
+                        mJustCheapIv.setImageDrawable(mDrawableSelect);
+                        mSetRangeIv.setImageDrawable(mDrawableUnSelect);
+
+                        sPriceFlag = true;
+
+                        mRangeLv.setVisibility(View.GONE);
                     }
                     break;
             }
@@ -200,6 +224,7 @@ public class SelectActivity extends Base2Activity {
 
         mMiddleTv.setText(getResources().getText(R.string.i_want_buy));
         mBackTv.setText(getText(R.string.i_want_back));
+        mRightIv.setVisibility(View.GONE);
         mRightIv.setImageDrawable(getResources().getDrawable(R.drawable.ic_saoyisao));
         mScrollView.scrollTo(0, 0);
 //        mAdapter = new BrandAdapter(this, mList);
@@ -316,6 +341,15 @@ public class SelectActivity extends Base2Activity {
             }
 
         }
+        if (mPriceList != null && !mPriceList.isEmpty()) {
+            for (PriceModel brand : mPriceList) {
+                if (brand.isSelect()) {
+                    mPrice = brand.getPrice();
+                }
+
+            }
+
+        }
         if (mList != null && !mList.isEmpty() && sb.length() > 0) {//至于点击自选品牌时 才进行操作 防止崩溃
             sb.deleteCharAt(sb.lastIndexOf(","));
             id.deleteCharAt(id.lastIndexOf(","));
@@ -326,6 +360,8 @@ public class SelectActivity extends Base2Activity {
         String ids = id.toString();
         String text = mInputEt.getText().toString().trim();
         mKey = text;
+
+
         if (text.length() > 0) {
 //            loadingdialog.show();
 
@@ -347,7 +383,20 @@ public class SelectActivity extends Base2Activity {
             finish();
 //            pullSubmitData(mKey, mBrand, mPrice,ids);
         } else {
-            ToastUtil.customShow(this, getResources().getText(R.string.select_error));
+            Timer time=new Timer();
+
+            if(isClick){
+                isClick=false;
+
+                ToastUtil.customShow(this, getResources().getText(R.string.select_error));
+            }
+
+            time.schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    isClick=true; // 取消退出
+                }
+            }, 500);
         }
 
     }
@@ -423,9 +472,11 @@ public class SelectActivity extends Base2Activity {
     public void justCheap(View v) {
         //点击不限制价格 图标
         if (!mIsPrice) {
-            mIsPrice = !mIsPrice;
+            mIsPrice = true;
             mJustCheapIv.setImageDrawable(mDrawableSelect);
             mSetRangeIv.setImageDrawable(mDrawableUnSelect);
+
+            sPriceFlag = true;
 
             mRangeLv.setVisibility(View.GONE);
 
@@ -441,7 +492,7 @@ public class SelectActivity extends Base2Activity {
             return;
         }
         if (mIsPrice) {
-            mIsPrice = !mIsPrice;
+            mIsPrice = false;
 
 //            mScrollView.scrollTo(0,mScrollView.getMeasuredHeight());
 
@@ -456,7 +507,7 @@ public class SelectActivity extends Base2Activity {
                 }
             });
             //初始化 滑块
-            initRange(50);
+//            initRange(50);
 
             StringBuffer sb = new StringBuffer();
 
@@ -475,6 +526,7 @@ public class SelectActivity extends Base2Activity {
                 sb.deleteCharAt(sb.lastIndexOf(","));
             }
             String text = mInputEt.getText().toString().trim();
+            mCurrentText = text;
             pullPriceData(text, sb.toString());
         }
     }
@@ -535,7 +587,8 @@ public class SelectActivity extends Base2Activity {
     }
 
     protected synchronized void pullPriceData(final String key, final String brand) {
-        executeRequest(new GsonRequest<BaseModel>(Request.Method.POST, UrlConfig.GET_PRICE, BaseModel.class, responsePriceListener(), errorPriceListener()) {
+        executeRequest(new GsonBaseRequest<BaseListModel<PriceModel>>(Request.Method.POST, UrlConfig.PRICE_RANGE, new TypeToken<BaseListModel<PriceModel>>() {
+        }.getType(), responsePriceListener(), errorListener()) {
             protected Map<String, String> getParams() {
                 return new ApiParams().with("key", key).with("brands", brand);
             }
@@ -545,18 +598,34 @@ public class SelectActivity extends Base2Activity {
     }
 
 
-    private Response.Listener<BaseModel> responsePriceListener() {
-        return new Response.Listener<BaseModel>() {
+    private Response.Listener<BaseListModel<PriceModel>> responsePriceListener() {
+        return new Response.Listener<BaseListModel<PriceModel>>() {
             @Override
-            public void onResponse(BaseModel brandBuyListModel) {
+            public void onResponse(BaseListModel<PriceModel> brandBuyListModel) {
 
                 if (brandBuyListModel.getRet() == 0) {
-                    int max = brandBuyListModel.getL() / 10;
-                    if (max > 0) {
-                        initRange(max);
-                    } else {
-                        initRange(10);
+//                    int max = brandBuyListModel.getL() / 10;
+//                    if (max > 0) {
+//                        initRange(max);
+//                    } else {
+//                        initRange(10);
+//                    }
+
+                    if (mPriceList != null) {
+                        mPriceList.clear();
                     }
+
+                    mPriceList = brandBuyListModel.getData();
+                    mPriceAdapter = new PriceAdapter(SelectActivity.this, mPriceList);
+                    mPriceListView.setAdapter(mPriceAdapter);
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mPriceAdapter.notifyDataSetChanged();
+                        }
+                    });
+
+
                 }
 
             }
@@ -600,7 +669,6 @@ public class SelectActivity extends Base2Activity {
                             mAdapter.notifyDataSetChanged();
                         }
                     });
-
 
 
                 }

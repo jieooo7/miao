@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.android.volley.Request;
@@ -37,7 +38,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-public class CommentActivity extends Base2Activity implements XListViewNew.IXListViewListener,CommentAdapter.ReplyListener{
+public class CommentActivity extends Base2Activity implements XListViewNew.IXListViewListener,CommentAdapter.ReplyListener,Replyable{
 
 
     @ViewInject(R.id.title_middle)
@@ -48,6 +49,10 @@ public class CommentActivity extends Base2Activity implements XListViewNew.IXLis
 
     @ViewInject(R.id.comment_list)
     private XListViewNew mListView;
+
+
+    @ViewInject(R.id.when_no_comment)
+    private LinearLayout mll;
 
 
 
@@ -76,7 +81,7 @@ public class CommentActivity extends Base2Activity implements XListViewNew.IXLis
     private int mPosition;
     private String mText="";
 
-    private boolean isReviewNum=true;
+    private boolean isReviewNum=true;//保证 评论数只初始化一次
 
     public Handler mHandler = new Handler();
 
@@ -106,7 +111,7 @@ public class CommentActivity extends Base2Activity implements XListViewNew.IXLis
             mUrlGet=UrlConfig.COMMENT_NEWS;
             mUrlReply=UrlConfig.COMMENT_NEWS_REPLY;
         }
-
+        loadingdialog.show();
         pullData(mUrlGet,"0",mId,"");
 
     }
@@ -243,6 +248,8 @@ public class CommentActivity extends Base2Activity implements XListViewNew.IXLis
         return new Response.Listener<BaseListModel<CommentModel>>() {
             @Override
             public void onResponse(BaseListModel<CommentModel> indexBaseListModel) {
+
+                loadingdialog.dismiss();
                 isTouch=true;
                 isMore = true;
                 if(isReviewNum){
@@ -251,6 +258,14 @@ public class CommentActivity extends Base2Activity implements XListViewNew.IXLis
                 }
                 if(reviewNum>=1){
                     mTitleTv.setText(reviewNum+"条评论");
+                }else{
+
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                           mll.setVisibility(View.VISIBLE);
+                        }
+                    });
                 }
 
 
@@ -404,4 +419,35 @@ public class CommentActivity extends Base2Activity implements XListViewNew.IXLis
     }
 
 
+    @Override
+    public void replyFloor(int id, String name) {
+
+        isNewReply=false;
+        final int rId=id;
+        final CommentDialog dialog=new CommentDialog(this);
+        dialog.mTitle.setText("回复 "+name);
+        dialog.mEdit.setHint("回复 " + name);
+        dialog.mSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String text = dialog.mEdit.getText().toString();
+                mText=text;
+                if (text.length() < 5) {
+                    ToastUtil.customShow(CommentActivity.this, "评论内容不少于5个字哦~");
+                } else {
+                    if(isTouch){
+                        isTouch=false;
+                        pullCommentData(mUrlReply, mId, "" + rId, text);
+                    }
+                    dialog.dismiss();
+
+                }
+
+            }
+        });
+
+        dialog.show();
+
+
+    }
 }

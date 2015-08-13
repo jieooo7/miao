@@ -1,12 +1,15 @@
 package com.liuzhuni.lzn.core.goods;
 
+import android.annotation.TargetApi;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
@@ -61,6 +64,7 @@ public class ToBuyActivity extends Base2Activity {
         setListener();
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     @Override
     protected void initData() {
 
@@ -94,6 +98,11 @@ public class ToBuyActivity extends Base2Activity {
         mWebView.getSettings().setJavaScriptEnabled(true);//设置使用够执行JS脚本
         mWebView.getSettings().setBuiltInZoomControls(true);//设置使支持缩放
 
+
+        WebSettings webSettings = mWebView.getSettings();
+        webSettings.setUseWideViewPort(true);
+        webSettings.setLoadWithOverviewMode(true);
+
         mWebView.setWebViewClient(new WebViewClient(){
 
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
@@ -107,11 +116,29 @@ public class ToBuyActivity extends Base2Activity {
                 mProgressTv.setVisibility(View.VISIBLE);
             }
 
+
+
+
             @Override
             public void onPageFinished(WebView view, String url) {
                 super.onPageFinished(view, url);
 
                 mProgressTv.setVisibility(View.GONE);
+
+                if(mWebView.canGoForward()){
+
+                    mForward.setImageDrawable(getResources().getDrawable(R.drawable.btn_forward_n));
+                }else{
+                    mForward.setImageDrawable(getResources().getDrawable(R.drawable.btn_forward_not));
+                }
+
+                if(mWebView.canGoBack()){
+
+                    mBack.setImageDrawable(getResources().getDrawable(R.drawable.btn_back_n));
+                }else{
+
+                    mBack.setImageDrawable(getResources().getDrawable(R.drawable.btn_back_not));
+                }
 
             }
         });
@@ -169,6 +196,9 @@ public class ToBuyActivity extends Base2Activity {
     public void refresh(View v){
         mWebView.reload();
     }
+
+
+
     @OnClick(R.id.to_buy_browser)
     public void browser(View v){
 

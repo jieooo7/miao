@@ -1,6 +1,5 @@
 package com.liuzhuni.lzn.core.comment.adapter;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +9,7 @@ import android.widget.TextView;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.liuzhuni.lzn.R;
+import com.liuzhuni.lzn.core.comment.CommentActivity;
 import com.liuzhuni.lzn.core.comment.model.CommentModel;
 import com.liuzhuni.lzn.core.comment.ui.CommentLinearLayout;
 
@@ -25,7 +25,7 @@ public class CommentAdapter extends BaseAdapter{
 
 
     private List<CommentModel> mList;
-    private Context mContext;
+    private CommentActivity mContext;
     private ImageLoader mImageLoader;
 
 
@@ -35,7 +35,7 @@ public class CommentAdapter extends BaseAdapter{
 
     private ReplyListener mReplyListener;
 
-    public CommentAdapter(Context context, List<CommentModel> list,ImageLoader imageLoader) {
+    public CommentAdapter(CommentActivity context, List<CommentModel> list,ImageLoader imageLoader) {
         this.mList = list;
         this.mContext = context;
         this.mImageLoader=imageLoader;
@@ -88,7 +88,7 @@ public class CommentAdapter extends BaseAdapter{
         viewHolder.timeTv.setText(mList.get(position).getCreateTime());
         viewHolder.contentTv.setText(mList.get(position).getText());
         if(mList.get(position).getComment()!=null){
-            viewHolder.linear.bindLinearLayout(new ReplyAdapter(mList.get(position).getComment(),mContext));
+            viewHolder.linear.bindLinearLayout(new ReplyAdapter(mList.get(position).getComment(),mContext),mList.get(position).getComment(),mContext);
         }else{
             mList.get(position).setComment(null);
         }

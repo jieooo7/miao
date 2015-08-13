@@ -124,7 +124,7 @@ public class FragmentNews extends BaseFragment {
         mGridView.setSelector(getResources().getDrawable(R.drawable.trans));
         mGridView.setAdapter(mAdapter);
         pullData(0,"back");
-
+        loadingdialog.show();
         fab.hide();
         fab.attachToListView(mGridView);
 
@@ -233,9 +233,23 @@ public class FragmentNews extends BaseFragment {
         return new Response.Listener<BaseListModel<NewsModel>>() {
             @Override
             public void onResponse(BaseListModel<NewsModel> indexBaseListModel) {
+                loadingdialog.dismiss();
                 isMore = true;
-                backId=indexBaseListModel.getBack();
-                forwardId=indexBaseListModel.getForward();
+                int tempBackId=indexBaseListModel.getBack();
+                int tempForwardId=indexBaseListModel.getForward();
+                if(tempBackId!=0||tempForwardId!=0){
+
+                    if(forwardId==0||tempForwardId<forwardId){
+
+                        forwardId=tempForwardId;
+                    }
+                    if(tempBackId>backId){
+
+                        backId=tempBackId;
+                    }
+                }
+
+
                 if (indexBaseListModel.getData() != null) {
                     mCurrentList = indexBaseListModel.getData();
                     if(isRefresh){

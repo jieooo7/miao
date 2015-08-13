@@ -2,6 +2,7 @@
     xmlns:fab="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context="com.liuzhuni.lzn.core.index_new.IndexNewActivity">
 
 
@@ -17,7 +18,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:background="#78A524"
+            android:background="@color/white"
             android:orientation="vertical" >
 
             <RelativeLayout
@@ -25,8 +26,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
                 android:layout_below="@id/title"
-                android:paddingBottom="25dp"
-                android:paddingTop="25dp"
+                android:paddingBottom="15dp"
+                android:paddingTop="15dp"
                 android:background="@color/key"
                 >
                 <ImageView
@@ -85,6 +86,45 @@
 
 
             </RelativeLayout>
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/all_back"
+                android:paddingTop="15dp"
+                android:paddingBottom="15dp"
+                android:paddingRight="20dp"
+                android:paddingLeft="20dp"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:gravity="center_vertical"
+                    android:textSize="15sp"
+                    android:textColor="@color/index_text"
+                    android:text="@string/day_select"
+                    />
+
+                <TextView
+                    android:id="@+id/filter_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:gravity="center_vertical"
+                    android:textSize="15sp"
+                    android:textColor="@color/index_text"
+                    android:text="@string/search_select"
+                    android:drawableRight="@drawable/home_ic_setting"
+                    android:drawablePadding="8dp"
+                    />
+
+            </RelativeLayout>
+
+
+
         </LinearLayout>
 
         <LinearLayout
@@ -92,6 +132,50 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical" >
+            <LinearLayout
+                android:id="@+id/top_ll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="@color/white"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp"
+                android:paddingRight="20dp"
+                android:paddingLeft="20dp"
+                android:visibility="gone"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="13sp"
+                    android:text="@string/always_top"
+                    android:background="@color/yellow_back"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
+                    android:paddingRight="8dp"
+                    android:paddingLeft="8dp"
+                    android:layout_marginTop="-2dp"
+                    />
+                <TextView
+                    android:id="@+id/top_ttle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/me_info_text"
+                    android:textSize="17sp"
+                    android:paddingTop="2dp"
+                    android:gravity="center_vertical"
+                    android:paddingBottom="2dp"
+                    android:layout_marginLeft="7dp"
+                    android:singleLine="true"
+                    android:ellipsize="end"
+                    />
+
+
+
+            </LinearLayout>
+
 
 
 
@@ -109,7 +193,7 @@
                                 </com.liuzhuni.lzn.pulltorefresh.PullToRefreshPinListView>
                 -->
 
-                <com.liuzhuni.lzn.pinHeader.PinnedSectionListView
+                <com.liuzhuni.lzn.xList.XListViewNew
                     android:id="@+id/expandablelist"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
@@ -118,7 +202,7 @@
                     android:divider="@color/line_below"
                     android:dividerHeight="1px"
                     android:scrollbars="none">
-                </com.liuzhuni.lzn.pinHeader.PinnedSectionListView>
+                </com.liuzhuni.lzn.xList.XListViewNew>
 
                 <com.melnykov.fab.FloatingActionButton
                     android:id="@+id/fab"

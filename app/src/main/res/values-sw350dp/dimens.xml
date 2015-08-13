@@ -21,5 +21,6 @@
 
     <dimen name="comment_10">15dp</dimen>
     <dimen name="comment_20">23dp</dimen>
+    <dimen name="profile_18">18sp</dimen>
 
 </resources>

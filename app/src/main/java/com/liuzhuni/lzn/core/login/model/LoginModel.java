@@ -16,6 +16,7 @@ public class LoginModel implements Serializable{
     private int grade;
     private int unreadNum;
     private String phone;
+    private String city;
 
 
     public LoginModel(String token, String authName, String pic, String name, int grade, int unreadNum, String phone) {
@@ -26,6 +27,15 @@ public class LoginModel implements Serializable{
         this.grade = grade;
         this.unreadNum = unreadNum;
         this.phone = phone;
+    }
+
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 
     public String getToken() {

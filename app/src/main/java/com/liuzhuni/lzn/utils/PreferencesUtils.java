@@ -28,6 +28,7 @@ public class PreferencesUtils {
          */
         public static final String IS_LOGIN = "is_login";
         public static final String IS_FIRST = "is_first";
+        public static final String IS_LOC = "is_loc";
         public static final String IS_GUIDE_F = "is_guide_f";
         public static final String PUSH_SET = "push_set";
         public static final String PUSH_LOW_NOTIFY = "push_low_notify";
@@ -52,6 +53,7 @@ public class PreferencesUtils {
         public static final String AUTH = "auth";
         public static final String TOKEN = "token";
         public static final String SEX = "sex";
+        public static final String CITY = "city";
         public static final String IS_SEND_SEX = "send_sex";
 
 
@@ -70,6 +72,8 @@ public class PreferencesUtils {
         public static final String LEVEL = "level";
         public static final String MAX_ID = "max_id";
         public static final String IS_THIRD = "is_third";
+        public static final String POINTS = "points";
+        public static final String SIGN_DAYS = "sign_days";
 
 
         /**

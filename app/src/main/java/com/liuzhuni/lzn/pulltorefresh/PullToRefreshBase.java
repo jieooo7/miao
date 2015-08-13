@@ -576,6 +576,18 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
             addView(footerLayout, -1, params);
         }
     }
+
+
+    public void removeFooter(){
+        LoadingLayout footerLayout = mFooterLayout;
+        if (null != footerLayout) {
+            if (this == footerLayout.getParent()) {
+                removeView(footerLayout);
+            }
+
+        }
+
+    }
     
     /**
      * 拉动Header Layout时调用

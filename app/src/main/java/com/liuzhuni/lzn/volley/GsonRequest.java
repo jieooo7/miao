@@ -25,9 +25,9 @@ import com.liuzhuni.lzn.utils.Md5Utils;
 import com.liuzhuni.lzn.utils.PreferencesUtils;
 
 import java.io.UnsupportedEncodingException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Random;
 
 public class GsonRequest<T> extends Request<T> {
 	private final Gson mGson = new Gson();
@@ -64,19 +64,21 @@ public class GsonRequest<T> extends Request<T> {
 	public Map<String, String> getHeaders() throws AuthFailureError {
 
         Map<String, String> map=new HashMap<String, String>();
-        Random random = new Random();
-        long num=random.nextLong();
+        Date date=new Date();
+        long timeToken=date.getTime();
+        long timeTokenSec=(long) (timeToken/1000);
+
         String accessToken= PreferencesUtils.getValueFromSPMap(AppManager.getAppManager().currentActivity(), PreferencesUtils.Keys.TOKEN, "", PreferencesUtils.Keys.USERINFO);
         String authName=PreferencesUtils.getValueFromSPMap(AppManager.getAppManager().currentActivity(), PreferencesUtils.Keys.AUTH,"",PreferencesUtils.Keys.USERINFO);
         String md5Key="";
         String key="";
         if(TextUtils.isEmpty(accessToken)){
-            md5Key= Md5Utils.md5(mUrl.toLowerCase() + IMEI + num).toLowerCase();//create md5
-            key= AESHelper.encrypt(md5Key+" "+num, customKey);//aes encode
+            md5Key= Md5Utils.md5(mUrl.toLowerCase() + IMEI +timeTokenSec).toLowerCase();//create md5
+            key= AESHelper.encrypt(md5Key, customKey);//aes encode
 
         }else{
-            md5Key= Md5Utils.md5(mUrl.toLowerCase() + authName + num).toLowerCase();
-            key=AESHelper.encrypt(md5Key+" "+num,AESHelper.decrypt(accessToken,customKey));
+            md5Key= Md5Utils.md5(mUrl.toLowerCase() + authName +timeTokenSec).toLowerCase();
+            key=AESHelper.encrypt(md5Key,AESHelper.decrypt(accessToken,customKey));
         }
 //        System.out.println("authkey是:"+key);
 //        System.out.println("md5是:"+md5Key.toLowerCase());
@@ -88,6 +90,7 @@ public class GsonRequest<T> extends Request<T> {
         map.put("imei ",IMEI);
         map.put("client ",CLIENT);
         map.put("version ",VERSION);
+        map.put("timeToken ",""+timeTokenSec);
         return  map;
 	}
 

@@ -5,6 +5,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentTransaction;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -34,11 +35,13 @@ import com.liuzhuni.lzn.config.AppManager;
 import com.liuzhuni.lzn.config.Check;
 import com.liuzhuni.lzn.config.MessageWhat;
 import com.liuzhuni.lzn.config.UrlConfig;
+import com.liuzhuni.lzn.core.index_new.fragment.CheapFragment;
 import com.liuzhuni.lzn.core.index_new.fragment.FragmentIndex;
 import com.liuzhuni.lzn.core.index_new.fragment.FragmentInfo;
 import com.liuzhuni.lzn.core.index_new.fragment.FragmentNews;
 import com.liuzhuni.lzn.core.login.LoginActivity;
 import com.liuzhuni.lzn.core.model.BaseModel;
+import com.liuzhuni.lzn.core.service.CacheService;
 import com.liuzhuni.lzn.example.qr_codescan.MipcaActivityCapture;
 import com.liuzhuni.lzn.utils.PreferencesUtils;
 import com.liuzhuni.lzn.utils.ToastUtil;
@@ -71,6 +74,9 @@ public class MainActivity extends BaseFragActivity {
     @ViewInject(R.id.index_person_info)
     private TextView minfoBt;
 
+    @ViewInject(R.id.index_cheap)
+    private TextView mCheapBt;
+
     @ViewInject(R.id.container_fragment)
     private FrameLayout mFrame;
 
@@ -93,8 +99,9 @@ public class MainActivity extends BaseFragActivity {
     private FragmentIndex mFragIndex;
     private FragmentInfo mFragInfo;
     private FragmentNews mFragNews;
+    private CheapFragment mFragCheap;
 
-    public LocationClient mLocationClient;
+    public LocationClient mLocationClient=null;
     public MyLocationListener mMyLocationListener;
 
 
@@ -122,12 +129,17 @@ public class MainActivity extends BaseFragActivity {
         setContentView(R.layout.activity_main);
 
         PushManager.getInstance().initialize(this.getApplicationContext());
-        mLocationClient = new LocationClient(this.getApplicationContext());
-        mMyLocationListener = new MyLocationListener();
-        mLocationClient.registerLocationListener(mMyLocationListener);
 
-        initLoc();
+        if(!Check.isNotFirstLoc(this)){
+            PreferencesUtils.putBooleanToSPMap(MainActivity.this, PreferencesUtils.Keys.IS_LOC, true);
+            mLocationClient = new LocationClient(this.getApplicationContext());
+            mMyLocationListener = new MyLocationListener();
+            mLocationClient.registerLocationListener(mMyLocationListener);
+            initLoc();
+        }
 
+        Intent intent = new Intent(this,CacheService.class);
+        startService(intent);
         initData();
         findViewById();
         initUI();
@@ -148,6 +160,7 @@ public class MainActivity extends BaseFragActivity {
         mFragIndex=new FragmentIndex();
         mFragInfo=new FragmentInfo();
         mFragNews=new FragmentNews();
+        mFragCheap=new CheapFragment();
 
     }
 
@@ -171,7 +184,7 @@ public class MainActivity extends BaseFragActivity {
     @Override
     protected void initUI() {
 
-
+        mRightIv.setVisibility(View.GONE);
         mMiddleTv.setText(getText(R.string.the_name));
 
         sendClientId();
@@ -279,7 +292,7 @@ public class MainActivity extends BaseFragActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mLocationClient.isStarted()) {
+        if (mLocationClient!=null&&mLocationClient.isStarted()) {
 
             mLocationClient.stop();
 
@@ -314,10 +327,31 @@ public class MainActivity extends BaseFragActivity {
 
         //签到
         //扫描条码
-        Intent intent = new Intent();
-        intent.setClass(this, MipcaActivityCapture.class);
-        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(intent);
+
+        if(mState==3){
+
+            //签到
+            if (!Check.isLogin(this)) {//没有登录
+                Intent intent = new Intent(this, LoginActivity.class);
+                startActivity(intent);
+
+            } else {
+
+                if(dayFlag){
+                    dayFlag=false;
+                    pullDayData();
+                }
+
+
+            }
+
+        }else{
+
+            Intent intent = new Intent();
+            intent.setClass(this, MipcaActivityCapture.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+        }
     }
 
 
@@ -329,7 +363,8 @@ public class MainActivity extends BaseFragActivity {
 
             mMiddleTv.setText(getText(R.string.the_name));
             mLeftIv.setVisibility(View.VISIBLE);
-            mRightIv.setVisibility(View.VISIBLE);
+            mRightIv.setImageDrawable(getResources().getDrawable(R.drawable.ic_saoyisao));
+            mRightIv.setVisibility(View.GONE);
 
             Drawable mDrawable1 = getResources().getDrawable(R.drawable.ic_home_s);
             Drawable mDrawable2 = getResources().getDrawable(R.drawable.ic_publish_n);
@@ -337,6 +372,8 @@ public class MainActivity extends BaseFragActivity {
             mDrawable1.setBounds(0,0,mDrawable1.getMinimumWidth(),mDrawable1.getMinimumHeight());
             mDrawable2.setBounds(0,0,mDrawable2.getMinimumWidth(),mDrawable2.getMinimumHeight());
             mDrawable3.setBounds(0,0,mDrawable3.getMinimumWidth(),mDrawable3.getMinimumHeight());
+            Drawable mDrawable4 = getResources().getDrawable(R.drawable.ic_baicai_n);
+            mDrawable4.setBounds(0,0,mDrawable4.getMinimumWidth(),mDrawable4.getMinimumHeight());
 
             mPickBt.setCompoundDrawables(null,mDrawable1,null,null);
             mPickBt.setTextColor(getResources().getColor(R.color.red));
@@ -344,6 +381,8 @@ public class MainActivity extends BaseFragActivity {
             mNewsBt.setTextColor(getResources().getColor(R.color.gray_text_color));
             minfoBt.setCompoundDrawables(null,mDrawable3,null,null);
             minfoBt.setTextColor(getResources().getColor(R.color.gray_text_color));
+            mCheapBt.setCompoundDrawables(null,mDrawable4,null,null);
+            mCheapBt.setTextColor(getResources().getColor(R.color.gray_text_color));
 
 
             mTransaction=getSupportFragmentManager().beginTransaction();
@@ -353,6 +392,7 @@ public class MainActivity extends BaseFragActivity {
             mTransaction.show(mFragIndex);
             mTransaction.hide(mFragInfo);
             mTransaction.hide(mFragNews);
+            mTransaction.hide(mFragCheap);
             mTransaction.addToBackStack(null);
             mTransaction.commit();
         }
@@ -377,6 +417,8 @@ public class MainActivity extends BaseFragActivity {
             mDrawable1.setBounds(0,0,mDrawable1.getMinimumWidth(),mDrawable1.getMinimumHeight());
             mDrawable2.setBounds(0,0,mDrawable2.getMinimumWidth(),mDrawable2.getMinimumHeight());
             mDrawable3.setBounds(0,0,mDrawable3.getMinimumWidth(),mDrawable3.getMinimumHeight());
+            Drawable mDrawable4 = getResources().getDrawable(R.drawable.ic_baicai_n);
+            mDrawable4.setBounds(0,0,mDrawable4.getMinimumWidth(),mDrawable4.getMinimumHeight());
 
             mPickBt.setCompoundDrawables(null,mDrawable1,null,null);
             mPickBt.setTextColor(getResources().getColor(R.color.gray_text_color));
@@ -384,6 +426,8 @@ public class MainActivity extends BaseFragActivity {
             mNewsBt.setTextColor(getResources().getColor(R.color.red));
             minfoBt.setCompoundDrawables(null,mDrawable3,null,null);
             minfoBt.setTextColor(getResources().getColor(R.color.gray_text_color));
+            mCheapBt.setCompoundDrawables(null,mDrawable4,null,null);
+            mCheapBt.setTextColor(getResources().getColor(R.color.gray_text_color));
 
             mTransaction=getSupportFragmentManager().beginTransaction();
             if(!mFragNews.isAdded()){
@@ -392,6 +436,7 @@ public class MainActivity extends BaseFragActivity {
             mTransaction.show(mFragNews);
             mTransaction.hide(mFragInfo);
             mTransaction.hide(mFragIndex);
+            mTransaction.hide(mFragCheap);
             mTransaction.addToBackStack(null);
             mTransaction.commit();
 
@@ -412,14 +457,18 @@ public class MainActivity extends BaseFragActivity {
             mMiddleTv.setText(getText(R.string.me));
             mLeftIv.setVisibility(View.GONE);
             mRightIv.setVisibility(View.VISIBLE);
+            mRightIv.setImageDrawable(getResources().getDrawable(R.drawable.ic_qiandao));
 
 
             Drawable mDrawable1 = getResources().getDrawable(R.drawable.ic_home_n);
             Drawable mDrawable2 = getResources().getDrawable(R.drawable.ic_publish_n);
             Drawable mDrawable3 = getResources().getDrawable(R.drawable.ic_my_s);
+            Drawable mDrawable4 = getResources().getDrawable(R.drawable.ic_baicai_n);
+            mDrawable4.setBounds(0,0,mDrawable4.getMinimumWidth(),mDrawable4.getMinimumHeight());
             mDrawable1.setBounds(0,0,mDrawable1.getMinimumWidth(),mDrawable1.getMinimumHeight());
             mDrawable2.setBounds(0,0,mDrawable2.getMinimumWidth(),mDrawable2.getMinimumHeight());
             mDrawable3.setBounds(0,0,mDrawable3.getMinimumWidth(),mDrawable3.getMinimumHeight());
+
 
             mPickBt.setCompoundDrawables(null,mDrawable1,null,null);
             mPickBt.setTextColor(getResources().getColor(R.color.gray_text_color));
@@ -427,6 +476,8 @@ public class MainActivity extends BaseFragActivity {
             mNewsBt.setTextColor(getResources().getColor(R.color.gray_text_color));
             minfoBt.setCompoundDrawables(null,mDrawable3,null,null);
             minfoBt.setTextColor(getResources().getColor(R.color.red));
+            mCheapBt.setCompoundDrawables(null,mDrawable4,null,null);
+            mCheapBt.setTextColor(getResources().getColor(R.color.gray_text_color));
 
 
 
@@ -437,6 +488,53 @@ public class MainActivity extends BaseFragActivity {
                 mTransaction.add(R.id.container_fragment,mFragInfo);
             }
             mTransaction.show(mFragInfo);
+            mTransaction.hide(mFragNews);
+            mTransaction.hide(mFragIndex);
+            mTransaction.hide(mFragCheap);
+            mTransaction.addToBackStack(null);
+            mTransaction.commit();
+
+        }
+
+    }
+    @OnClick(R.id.index_cheap)
+    public void cheap(View v) {//极速白菜
+
+        if(mState!=4){
+            mState=4;
+
+            mMiddleTv.setText(getText(R.string.cheap_ch));
+            mLeftIv.setVisibility(View.GONE);
+            mRightIv.setVisibility(View.GONE);
+
+
+            Drawable mDrawable1 = getResources().getDrawable(R.drawable.ic_home_n);
+            Drawable mDrawable2 = getResources().getDrawable(R.drawable.ic_publish_n);
+            Drawable mDrawable3 = getResources().getDrawable(R.drawable.ic_my_n);
+            Drawable mDrawable4 = getResources().getDrawable(R.drawable.ic_baicai_s);
+            mDrawable1.setBounds(0,0,mDrawable1.getMinimumWidth(),mDrawable1.getMinimumHeight());
+            mDrawable2.setBounds(0,0,mDrawable2.getMinimumWidth(),mDrawable2.getMinimumHeight());
+            mDrawable3.setBounds(0,0,mDrawable3.getMinimumWidth(),mDrawable3.getMinimumHeight());
+            mDrawable4.setBounds(0,0,mDrawable4.getMinimumWidth(),mDrawable4.getMinimumHeight());
+
+            mPickBt.setCompoundDrawables(null,mDrawable1,null,null);
+            mPickBt.setTextColor(getResources().getColor(R.color.gray_text_color));
+            mNewsBt.setCompoundDrawables(null,mDrawable2,null,null);
+            mNewsBt.setTextColor(getResources().getColor(R.color.gray_text_color));
+            minfoBt.setCompoundDrawables(null,mDrawable3,null,null);
+            minfoBt.setTextColor(getResources().getColor(R.color.gray_text_color));
+            mCheapBt.setCompoundDrawables(null,mDrawable4,null,null);
+            mCheapBt.setTextColor(getResources().getColor(R.color.red));
+
+
+
+            mTransaction=getSupportFragmentManager().beginTransaction();
+
+            if(!mFragCheap.isAdded()){
+                mTransaction.add(R.id.container_fragment,mFragCheap);
+            }
+            mTransaction.show(mFragCheap);
+            mTransaction.hide(mFragInfo);
             mTransaction.hide(mFragNews);
             mTransaction.hide(mFragIndex);
             mTransaction.addToBackStack(null);
@@ -495,8 +593,9 @@ public class MainActivity extends BaseFragActivity {
         @Override
         public void onReceiveLocation(BDLocation bdLocation) {
 
-            if (Check.isLogin(MainActivity.this) && bdLocation.getAddrStr() != null) {
+            if (Check.isLogin(MainActivity.this)&& !TextUtils.isEmpty(bdLocation.getCity())) {
                 pullAddresData(bdLocation.getProvince(), bdLocation.getCity(), bdLocation.getDistrict());
+                PreferencesUtils.putValueToSPMap(MainActivity.this, PreferencesUtils.Keys.CITY, bdLocation.getCity(), PreferencesUtils.Keys.USERINFO);
             }
             mLocationClient.stop();
         }

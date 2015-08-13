@@ -205,7 +205,7 @@ public class TextSiriActivity extends Base2Activity implements XListView.IXListV
 
         Thread mThread = new Thread(new Runnable() {//不操作mlist则 不会使用线程  添加控制即可
             @Override
-            public void run() {
+            public void run() {  //延时处理
 
 
                 while (!mIsExit) {
@@ -253,11 +253,11 @@ public class TextSiriActivity extends Base2Activity implements XListView.IXListV
         mDbList = DatabaseOperate.getDb(db,dbBack++,addNew);
 //        ++back;
         Collections.reverse(mDbList);//反转
-        fromDb(mDbList, false, true);
+        fromDb(mDbList, false, true);// 读数据库
 
         if(getIntent()!=null){//搜索页面跳转
             if(getIntent().getExtras()!=null){
-                fromSelect=true;// from select start
+                fromSelect=true;// from select start 标志从select界面过来的
                 mBrand=getIntent().getExtras().getString("brand");
                 mKey=getIntent().getExtras().getString("key");
                 mPrice=getIntent().getExtras().getString("price");
@@ -313,6 +313,7 @@ public class TextSiriActivity extends Base2Activity implements XListView.IXListV
     @Override
     protected void initUI() {
         mMiddleTv.setText(getResources().getText(R.string.secreter));
+        mRightIv.setVisibility(View.GONE);
         mRightIv.setImageDrawable(getResources().getDrawable(R.drawable.ic_saoyisao));
     }
 
@@ -349,7 +350,7 @@ public class TextSiriActivity extends Base2Activity implements XListView.IXListV
     }
 
 
-    protected synchronized void pullHistoryData(final int id, final String way) {
+    protected synchronized void pullHistoryData(final int id, final String way) {//推送
         executeRequest(new GsonBaseRequest<BaseListModel<DbModel>>(Request.Method.GET, UrlConfig.GET_DIALOG + id + "&way=" + way, new TypeToken<BaseListModel<DbModel>>() {
         }.getType(), responseHisListener(), errorHisListener()) {
         });
@@ -401,7 +402,7 @@ public class TextSiriActivity extends Base2Activity implements XListView.IXListV
 
     }
 
-    protected void fromDb(List<DbModel> dbList, boolean isDialog, boolean isHistory) {
+    protected void fromDb(List<DbModel> dbList, boolean isDialog, boolean isHistory) {//无延时处理
 
         List<SiriModel> tempList = new ArrayList<SiriModel>();
         if(!PreferencesUtils.getBooleanFromSPMap(this, PreferencesUtils.Keys.IS_DIALOG)) {
@@ -549,7 +550,7 @@ public class TextSiriActivity extends Base2Activity implements XListView.IXListV
       mList.addAll(tempList);
 
     }
-    protected void fromDbNoDelay(List<DbModel> dbList, boolean isDialog, boolean isHistory) {
+    protected void fromDbNoDelay(List<DbModel> dbList, boolean isDialog, boolean isHistory) {//推送专用
 
         List<SiriModel> tempList = new ArrayList<SiriModel>();
         if(!PreferencesUtils.getBooleanFromSPMap(this, PreferencesUtils.Keys.IS_DIALOG)) {
@@ -572,6 +573,15 @@ public class TextSiriActivity extends Base2Activity implements XListView.IXListV
                         break;
                     case SiriAdapter.RIGHT_TEXT_CLICK:
                         if(!TextUtils.isEmpty(dbModel.getBody())){
+                            String temp=dbModel.getBody();
+
+                            if(!fromSelect&&temp.contains("神不神")){
+                                if(!TextUtils.isEmpty(TimeUtil.getInstance().timeFormat(dbModel.getDate()*1000))){
+                                    tempList.add(new SiriModel<String>(SiriAdapter.TIME, 0,TimeUtil.getInstance().timeFormat(dbModel.getDate()*1000),0));
+                                }
+                                insertDb(db,SiriAdapter.TIME, 0, dbModel.getDate(), dbModel.getBody());
+
+                            }
                             tempList.add(new SiriModel<String>(SiriAdapter.RIGHT_TEXT_CLICK, dbModel.getBody()));
                             insertDb(db,SiriAdapter.RIGHT_TEXT_CLICK,0,0,TextSiriActivity.this.getResources().getString(R.string.dialog_second));
                         }
@@ -590,6 +600,13 @@ public class TextSiriActivity extends Base2Activity implements XListView.IXListV
                     case SiriAdapter.RIGHT_GOODS:
                         ArrayList<SelectGoodsModel> goodsList = new Gson().fromJson(dbModel.getBody(), new TypeToken<ArrayList<SelectGoodsModel>>() {
                         }.getType());
+                        if(!fromSelect){
+
+//                            Date now=new Date();
+//                            long currentTime=now.getTime();
+//                            tempList.add(new SiriModel<String>(SiriAdapter.TIME, 0,TimeUtil.getInstance().timeFormat(currentTime),0));
+//                            insertDb(db,SiriAdapter.TIME, 0,(long)(currentTime/1000), "");
+                        }
                         tempList.add(new SiriModel<GoodsListModel>(SiriAdapter.RIGHT_GOODS,dbModel.getBody_id(), new GoodsListModel(goodsList),0,(int)dbModel.getDate()));
                         insertDb(db, SiriAdapter.RIGHT_GOODS, dbModel.getBody_id(), 0, dbModel.getBody());
 

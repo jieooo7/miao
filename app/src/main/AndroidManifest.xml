@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.liuzhuni.lzn"
-    android:versionCode="3"
-    android:versionName="version 1.2.3" >
+    android:versionCode="4"
+    android:versionName="version 1.2.5" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -290,6 +290,21 @@
         </activity>
         <activity
             android:name=".core.index_new.MainActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+
+        <service
+            android:name=".core.service.CacheService"
+            android:enabled="true"
+            android:exported="true" >
+        </service>
+        <service
+            android:name=".core.service.MyIntentService"
+            android:exported="false" >
+        </service>
+
+        <activity
+            android:name=".core.city.CityActivity"
             android:screenOrientation="portrait" >
         </activity>
     </application>

@@ -37,6 +37,7 @@
       <color name="news_text">#5c5c5c</color>
 
       <color name="dialog_text">#a0a0a0</color>
+      <color name="twe_percent_white">#33ffffff</color>
 
 
       <color name="gray_back_color">#f7f7f7</color>
@@ -52,6 +53,15 @@
       <color name="comment_light">#b3b3b3</color>
       <color name="comment_back">#fafafa</color>
       <color name="comment_blue">#3366cc</color>
+      <color name="city_back">#ebebeb</color>
+
+
+
+      <color name="low">#ff808c</color>
+      <color name="change_price">#ff9073</color>
+      <color name="get_coupon">#5fb4e5</color>
+      <color name="comment_best">#ffa466</color>
+      <color name="no_more">#555555</color>
 
 
 </resources>

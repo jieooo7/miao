@@ -24,6 +24,7 @@
         android:paddingLeft="25dp"
         android:paddingRight="25dp"
         android:layout_toLeftOf="@id/to_buy_close"
+        android:gravity="center"
         android:ellipsize="end"
         android:singleLine="true"
         android:paddingTop="15dp"
@@ -47,28 +48,28 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:src="@drawable/btn_houtui" />
+            android:src="@drawable/btn_back_not" />
 
         <ImageView
             android:id="@+id/to_buy_forward"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:src="@drawable/btn_qianjin" />
+            android:src="@drawable/btn_forward_not" />
 
         <ImageView
             android:id="@+id/to_buy_browser"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:src="@drawable/btn_liulanqi" />
+            android:src="@drawable/btn_browser_n" />
 
         <ImageView
             android:id="@+id/to_buy_refresh"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:src="@drawable/btn_shuaxin" />
+            android:src="@drawable/btn_refresh_n" />
 
 
     </LinearLayout>

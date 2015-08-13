@@ -152,7 +152,7 @@ public class LoginActivity extends Base2Activity {
 
         String tel = mTelEt.getText().toString().trim();
         String passwd = mPasswdPv.getText().toString();
-        if ( !TextModify.getInstance().isTel(tel) &&!TextModify.getInstance().isEmail(tel)) {
+        if (!TextModify.getInstance().isTel(tel) && !TextModify.getInstance().isEmail(tel)) {
             //邮箱手机校验
             ToastUtil.customShow(LoginActivity.this, getResources().getText(R.string.email_error));
             return;
@@ -225,6 +225,7 @@ public class LoginActivity extends Base2Activity {
                     PreferencesUtils.putValueToSPMap(LoginActivity.this, PreferencesUtils.Keys.NICKNAME, loginModel.getData().getName(), PreferencesUtils.Keys.USERINFO);
                     PreferencesUtils.putValueToSPMap(LoginActivity.this, PreferencesUtils.Keys.TEL, loginModel.getData().getPhone(), PreferencesUtils.Keys.USERINFO);
                     PreferencesUtils.putValueToSPMap(LoginActivity.this, PreferencesUtils.Keys.LEVEL, "Lv." + loginModel.getData().getGrade(), PreferencesUtils.Keys.USERINFO);
+                    PreferencesUtils.putValueToSPMap(LoginActivity.this, PreferencesUtils.Keys.CITY, loginModel.getData().getCity(), PreferencesUtils.Keys.USERINFO);
                     PreferencesUtils.putIntToSPMap(LoginActivity.this, PreferencesUtils.Keys.UN_READ, loginModel.getData().getUnreadNum(), PreferencesUtils.Keys.USERINFO);
                     if (!PreferencesUtils.getBooleanFromSPMap(LoginActivity.this, PreferencesUtils.Keys.IS_SEND_SEX, PreferencesUtils.Keys.USERINFO)) {
                         pullSexData();
@@ -244,7 +245,7 @@ public class LoginActivity extends Base2Activity {
         executeRequest(new GsonRequest<BaseModel>(Request.Method.POST, UrlConfig.SEX_SET, BaseModel.class, responseSexListener(), errorListener(false)) {
 
             protected Map<String, String> getParams() {
-                return new ApiParams().with("v", ""+PreferencesUtils.getIntFromSPMap(LoginActivity.this, PreferencesUtils.Keys.SEX, PreferencesUtils.Keys.USERINFO));
+                return new ApiParams().with("v", "" + PreferencesUtils.getIntFromSPMap(LoginActivity.this, PreferencesUtils.Keys.SEX, PreferencesUtils.Keys.USERINFO));
             }
 
         });
@@ -279,7 +280,7 @@ public class LoginActivity extends Base2Activity {
                 if (baseModel.getRet() == 0 && baseModel.getData() != null) {
                     ToastUtil.customShow(LoginActivity.this, getResources().getText(R.string.toast_login));
                     PreferencesUtils.putBooleanToSPMap(LoginActivity.this, PreferencesUtils.Keys.IS_LOGIN, true);
-                    PreferencesUtils.putBooleanToSPMap(LoginActivity.this, PreferencesUtils.Keys.IS_THIRD, true,PreferencesUtils.Keys.USERINFO);
+                    PreferencesUtils.putBooleanToSPMap(LoginActivity.this, PreferencesUtils.Keys.IS_THIRD, true, PreferencesUtils.Keys.USERINFO);
                     PreferencesUtils.putValueToSPMap(LoginActivity.this, PreferencesUtils.Keys.AUTH, baseModel.getData().getAuthName(), PreferencesUtils.Keys.USERINFO);
                     PreferencesUtils.putValueToSPMap(LoginActivity.this, PreferencesUtils.Keys.TOKEN, baseModel.getData().getToken(), PreferencesUtils.Keys.USERINFO);
                     PreferencesUtils.putValueToSPMap(LoginActivity.this, PreferencesUtils.Keys.HEAD_URL, baseModel.getData().getPic(), PreferencesUtils.Keys.USERINFO);
@@ -333,7 +334,7 @@ public class LoginActivity extends Base2Activity {
 
     @OnClick(R.id.qq_login)
     public void qq_login(View v) {
-
+        showLoadingDialog();
         ShareSDK.initSDK(this);
 
         Platform qq = ShareSDK.getPlatform(this, QQ.NAME);
@@ -343,7 +344,7 @@ public class LoginActivity extends Base2Activity {
         qq.setPlatformActionListener(new PlatformActionListener() {
             @Override
             public void onComplete(Platform platform, int action, HashMap<String, Object> res) {
-
+                DismissDialog();
                 if (action == Platform.ACTION_USER_INFOR) {
 
                     PlatformDb platDB = platform.getDb();//获取数平台数据DB
@@ -357,12 +358,14 @@ public class LoginActivity extends Base2Activity {
 
             @Override
             public void onError(Platform platform, int i, Throwable throwable) {
+                DismissDialog();
                 ToastUtil.customShow(LoginActivity.this, getResources().getText(R.string.auth_error));
 
             }
 
             @Override
             public void onCancel(Platform platform, int i) {
+                DismissDialog();
 
             }
         });
@@ -382,6 +385,7 @@ public class LoginActivity extends Base2Activity {
     @OnClick(R.id.weixin_login)
     public void weixin_login(View v) {
 
+        showLoadingDialog();
         ShareSDK.initSDK(this);
 
         Platform weixin = ShareSDK.getPlatform(this, Wechat.NAME);
@@ -392,6 +396,7 @@ public class LoginActivity extends Base2Activity {
         weixin.setPlatformActionListener(new PlatformActionListener() {
             @Override
             public void onComplete(Platform platform, int action, HashMap<String, Object> res) {
+                DismissDialog();
 
 //                        if (action == Platform.ACTION_USER_INFOR) {
 
@@ -405,11 +410,13 @@ public class LoginActivity extends Base2Activity {
 
             @Override
             public void onError(Platform platform, int i, Throwable throwable) {
+                DismissDialog();
                 ToastUtil.customShow(LoginActivity.this, getResources().getText(R.string.auth_error));
             }
 
             @Override
             public void onCancel(Platform platform, int i) {
+                DismissDialog();
 
             }
         });
@@ -423,7 +430,7 @@ public class LoginActivity extends Base2Activity {
 
     @OnClick(R.id.sina_login)
     public void sina_login(View v) {
-
+        showLoadingDialog();
         ShareSDK.initSDK(this);
 
         Platform sina = ShareSDK.getPlatform(this, SinaWeibo.NAME);
@@ -433,6 +440,7 @@ public class LoginActivity extends Base2Activity {
         sina.setPlatformActionListener(new PlatformActionListener() {
             @Override
             public void onComplete(Platform platform, int action, HashMap<String, Object> res) {
+                DismissDialog();
 
                 if (action == Platform.ACTION_USER_INFOR) {
 
@@ -447,13 +455,13 @@ public class LoginActivity extends Base2Activity {
 
             @Override
             public void onError(Platform platform, int i, Throwable throwable) {
+                DismissDialog();
                 ToastUtil.customShow(LoginActivity.this, getResources().getText(R.string.auth_error));
             }
 
             @Override
             public void onCancel(Platform platform, int i) {
-
-
+                DismissDialog();
             }
         });
 

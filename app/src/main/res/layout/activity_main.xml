@@ -45,6 +45,18 @@
             android:text="@string/all_join"
             />
         <TextView
+            android:id="@+id/index_cheap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:drawableTop="@drawable/ic_baicai_n"
+            android:drawablePadding="2dp"
+            android:textColor="@color/gray_text_color"
+            android:textSize="12sp"
+            android:text="@string/cheap_ch"
+            />
+        <TextView
             android:id="@+id/index_person_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

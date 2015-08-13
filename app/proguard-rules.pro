@@ -27,9 +27,17 @@
 -optimizations !code/simplification/arithmetic,!field/*,!class/merging/*
 -keepattributes Signature
 
+-dontwarn android.support.**
+
+-keep class android.support.v4.app.** { *; }
+
+-keep interface android.support.v4.app.** { *; }
+-keep class * extends java.lang.annotation.Annotation { *; }
 
 -keep public class * extends android.app.Fragment
 -keep public class * extends android.app.Activity
+-keep public class * extends android.support.v4.app.Fragment
+-keep public class * extends android.support.v4.app.FragmentActivity
 -keep public class * extends android.app.Application
 -keep public class * extends android.app.Service
 -keep public class * extends android.content.BroadcastReceiver
@@ -37,6 +45,11 @@
 -keep public class * extends android.app.backup.BackupAgentHelper
 -keep public class * extends android.preference.Preference
 -keep public class com.android.vending.licensing.ILicensingService
+
+
+-keepclassmembers class * extends android.support.v4.app.Fragment {
+  public *;
+}
 
 
 #忽略警告

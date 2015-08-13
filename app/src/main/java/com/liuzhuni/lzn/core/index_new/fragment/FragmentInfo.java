@@ -8,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +30,7 @@ import com.liuzhuni.lzn.R;
 import com.liuzhuni.lzn.base.BaseFragment;
 import com.liuzhuni.lzn.config.Check;
 import com.liuzhuni.lzn.config.UrlConfig;
+import com.liuzhuni.lzn.core.index_new.model.ProfileModel;
 import com.liuzhuni.lzn.core.login.LoginActivity;
 import com.liuzhuni.lzn.core.login.Loginable;
 import com.liuzhuni.lzn.core.login.TheIntent;
@@ -46,6 +48,9 @@ import com.liuzhuni.lzn.utils.ToastUtil;
 import com.liuzhuni.lzn.volley.GsonBaseRequest;
 import com.liuzhuni.lzn.volley.GsonRequest;
 import com.liuzhuni.lzn.volley.RequestManager;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.ShareSDK;
@@ -92,12 +97,20 @@ public class FragmentInfo extends BaseFragment {
     private TextView mLevel;
 
 
+    @ViewInject(R.id.cent)
+    private TextView mCents;
+    @ViewInject(R.id.sign_days)
+    private TextView mSignDays;
+
+
     private String link;
     private String img_link;
     private String title;
     private String content;
     private String name;
     private String copy_text;
+
+    private boolean isClick=true;
 
     private boolean dayFlag=true;
 
@@ -108,6 +121,8 @@ public class FragmentInfo extends BaseFragment {
     private LoginoutDialog mDialog;
 
     private ImageLoader mImageLoader;
+
+    private Handler mHandler=new Handler();
 
 
 
@@ -138,77 +153,17 @@ public class FragmentInfo extends BaseFragment {
     }
 
 
-    @OnClick(R.id.title_right_iv)
-    public void toSign(View v){
-
-        //签到
-        if(!Check.isLogin(getActivity())){//没有登录
-            Intent intent=new Intent(getActivity(),LoginActivity.class);
-            startActivity(intent);
-
-        }else{
-            if(dayFlag){
-                dayFlag=false;
-                pullDayData();
-            }
-
-
-        }
-
-    }
-
-
-    protected synchronized void pullDayData(){  //签到
-        executeRequest(new GsonRequest<BaseModel>(Request.Method.POST, UrlConfig.USER_SIGN,BaseModel.class,responseDayListener(),errorDayListener()){
-
-        });
-    }
-
-    private Response.Listener<BaseModel> responseDayListener() {
-        return new Response.Listener<BaseModel>(){
-            @Override
-            public void onResponse(BaseModel sign) {
-                dayFlag=true;
-                if(sign.getRet()==0){
-
-                    ToastUtil.customShow(getActivity(), sign.getMes());
-
-                }else{
-                    ToastUtil.customShow(getActivity(), sign.getMes());
-                }
-
-            }
-        };
-
-    }
-
-    public Response.ErrorListener errorDayListener() {
-        return new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-//                Toast.makeText(activity,getResources().getText(R.string.error_retry), Toast.LENGTH_LONG).show();
-                loadingdialog.dismiss();
-                dayFlag=true;
-                if (error.networkResponse != null) {
-                    if (error.networkResponse.statusCode == 401) {//重新登录
-                        PreferencesUtils.putBooleanToSPMap(getActivity(), PreferencesUtils.Keys.IS_LOGIN, false);
-                        PreferencesUtils.clearSPMap(getActivity(), PreferencesUtils.Keys.USERINFO);
-                        Intent intent = new Intent(getActivity(), LoginActivity.class);
-                        startActivity(intent);
-                        getActivity().finish();
-                    }
-                }
-            }
-        };
-    }
-
-
 
     @Override
     public void onResume() {
         super.onResume();
 
+
+
         mLevel.setText(PreferencesUtils.getValueFromSPMap(getActivity(), PreferencesUtils.Keys.LEVEL, getResources().getString(R.string.defalt_level), PreferencesUtils.Keys.USERINFO));
+        mCents.setText(PreferencesUtils.getValueFromSPMap(getActivity(), PreferencesUtils.Keys.POINTS, "", PreferencesUtils.Keys.USERINFO));
+        mSignDays.setText(PreferencesUtils.getValueFromSPMap(getActivity(), PreferencesUtils.Keys.SIGN_DAYS, getResources().getString(R.string.sign_every), PreferencesUtils.Keys.USERINFO));
+
 
         mMessageMv.setNum(PreferencesUtils.getIntFromSPMap(getActivity(), PreferencesUtils.Keys.UN_READ,PreferencesUtils.Keys.USERINFO));
 
@@ -231,6 +186,7 @@ public class FragmentInfo extends BaseFragment {
             mLoginoutMv.setVisibility(View.VISIBLE);
             mLine.setVisibility(View.VISIBLE);
             mLineUp.setVisibility(View.VISIBLE);
+            pullProfileData();
         }else{
             mNotLogin.setVisibility(View.VISIBLE);
             mLoginoutMv.setVisibility(View.GONE);
@@ -258,10 +214,67 @@ public class FragmentInfo extends BaseFragment {
     public void share(View v){
 
         ShareSDK.initSDK(getActivity());
-        pullShareData();
+        Timer time=new Timer();
+        if(isTouch&&isClick){
+            isClick=false;
+            isTouch=false;
+            pullShareData();
+        }
+
+        time.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                isClick=true;
+            }
+        }, 800);
     }
 
 
+    protected synchronized void pullProfileData() {
+
+        executeRequest(new GsonBaseRequest<BaseModel<ProfileModel>>(Request.Method.GET, UrlConfig.GET_PROFILE, new TypeToken<BaseModel<ProfileModel>>() {
+        }.getType(), responseProfileListener(), errorListener()) {
+
+
+        });
+    }
+
+    private Response.Listener<BaseModel<ProfileModel>> responseProfileListener() {
+        return new Response.Listener<BaseModel<ProfileModel>>() {
+            @Override
+            public void onResponse(BaseModel<ProfileModel> shareModel) {
+                if (shareModel.getRet() == 0&&shareModel.getData()!=null) {
+
+                    final ProfileModel profile=shareModel.getData();
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mLevel.setText("Lv."+profile.getGrade());
+                            mCents.setText("积分 "+profile.getJifen()+" / 金币 "+profile.getLzb());
+                            mSignDays.setText(profile.getSign());
+                            PreferencesUtils.putValueToSPMap(getActivity(), PreferencesUtils.Keys.LEVEL,"Lv."+profile.getGrade(), PreferencesUtils.Keys.USERINFO);
+                            PreferencesUtils.putValueToSPMap(getActivity(), PreferencesUtils.Keys.POINTS,"积分 "+profile.getJifen()+" / 金币 "+profile.getLzb(), PreferencesUtils.Keys.USERINFO);
+                            PreferencesUtils.putValueToSPMap(getActivity(), PreferencesUtils.Keys.SIGN_DAYS,profile.getSign(), PreferencesUtils.Keys.USERINFO);
+                        }
+                    });
+
+                }
+
+            }
+        };
+
+    }
+
+    public Response.ErrorListener errorShareListener() {
+        return new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                isTouch=true;
+                shareShow();
+
+            }
+        };
+    }
     protected synchronized void pullShareData() {
 
         executeRequest(new GsonBaseRequest<BaseModel<ShareModel>>(Request.Method.GET, UrlConfig.GET_SHARE, new TypeToken<BaseModel<ShareModel>>() {
@@ -275,6 +288,7 @@ public class FragmentInfo extends BaseFragment {
         return new Response.Listener<BaseModel<ShareModel>>() {
             @Override
             public void onResponse(BaseModel<ShareModel> shareModel) {
+                isTouch=true;
                 if (shareModel.getRet() == 0&&shareModel.getData()!=null) {
                     link=shareModel.getData().getLink();
                     img_link=shareModel.getData().getImg_link();
@@ -290,16 +304,6 @@ public class FragmentInfo extends BaseFragment {
             }
         };
 
-    }
-
-    public Response.ErrorListener errorShareListener() {
-        return new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                shareShow();
-
-            }
-        };
     }
 
 

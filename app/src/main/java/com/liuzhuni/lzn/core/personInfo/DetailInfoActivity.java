@@ -15,6 +15,8 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.android.volley.Request;
+import com.android.volley.Response;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.NetworkImageView;
 import com.google.gson.Gson;
@@ -28,6 +30,7 @@ import com.liuzhuni.lzn.base.Base2Activity;
 import com.liuzhuni.lzn.config.Check;
 import com.liuzhuni.lzn.config.MessageWhat;
 import com.liuzhuni.lzn.config.UrlConfig;
+import com.liuzhuni.lzn.core.city.CityActivity;
 import com.liuzhuni.lzn.core.model.BaseModel;
 import com.liuzhuni.lzn.core.personInfo.ui.PicDialog;
 import com.liuzhuni.lzn.utils.Md5Utils;
@@ -35,12 +38,15 @@ import com.liuzhuni.lzn.utils.PostSimulation;
 import com.liuzhuni.lzn.utils.PreferencesUtils;
 import com.liuzhuni.lzn.utils.ToastUtil;
 import com.liuzhuni.lzn.utils.fileHelper.FileManager;
+import com.liuzhuni.lzn.volley.ApiParams;
+import com.liuzhuni.lzn.volley.GsonRequest;
 import com.liuzhuni.lzn.volley.RequestManager;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public class DetailInfoActivity extends Base2Activity {
 
@@ -75,11 +81,14 @@ public class DetailInfoActivity extends Base2Activity {
 
     private PicDialog mDialog;
 
+    private String mCity="";
+
     private int mWidth;
 
     private static final int PHOTO_REQUEST_CAMERA = 1;// 拍照
     private static final int PHOTO_REQUEST_GALLERY = 2;// 从相册中选择
     private static final int PHOTO_REQUEST_CUT = 3;// 结果
+    private static final int CITY = 4;// 结果
 
     private static final String PHOTO_FILE_NAME = "temp_photo.jpg";
 
@@ -163,6 +172,9 @@ public class DetailInfoActivity extends Base2Activity {
             mTelTv.setText(getResources().getText(R.string.no_tel));
             mTelIv.setVisibility(View.VISIBLE);
         }
+
+        mCity=PreferencesUtils.getValueFromSPMap(this, PreferencesUtils.Keys.CITY, "", PreferencesUtils.Keys.USERINFO);
+        mAdressTv.setText(mCity);
     }
 
     @Override
@@ -170,6 +182,7 @@ public class DetailInfoActivity extends Base2Activity {
 
         mMiddleTv.setText(getResources().getString(R.string.me_info));
         mRightTv.setVisibility(View.GONE);
+
 
 
     }
@@ -184,6 +197,14 @@ public class DetailInfoActivity extends Base2Activity {
     public void back(View v) {
 
         finish();
+    }
+
+    @OnClick(R.id.city_rl)
+    public void city(View v) {
+        Intent intent=new Intent(this, CityActivity.class);
+
+        startActivityForResult(intent, CITY);
+
     }
 
     @OnClick(R.id.detail_head_rl)
@@ -277,6 +298,25 @@ public class DetailInfoActivity extends Base2Activity {
                 Uri uri = data.getData();
                 crop(uri);
             }
+
+        }else if(requestCode ==CITY ){
+
+            //
+            if(resultCode==RESULT_OK){
+
+                String city=data.getExtras().getString("city");
+                if(!TextUtils.isEmpty(city)){
+
+                    if(!city.equals(mCity)){
+                        //不同时   请求网络,否则不做
+                        PreferencesUtils.putValueToSPMap(DetailInfoActivity.this, PreferencesUtils.Keys.CITY, city, PreferencesUtils.Keys.USERINFO);
+                        pullAddresData("",mCity,"");
+
+
+                    }
+                }
+            }
+
 
         } else if (requestCode == PHOTO_REQUEST_CAMERA) {
                 tempFile = new File(FileManager.getSaveFilePath(),
@@ -379,6 +419,29 @@ public class DetailInfoActivity extends Base2Activity {
         return PostSimulation.getInstance().post(UrlConfig.IMG_UPLOAD,"pic",list,bitmap,null,null);
     }
 
+
+
+    protected  void pullAddresData(final String pro, final String city, final String area) {
+        executeRequest(new GsonRequest<BaseModel>(Request.Method.POST, UrlConfig.POST_ADDRES, BaseModel.class, responseAddresListener(), errorListener(false)) {
+
+            protected Map<String, String> getParams() {
+                return new ApiParams().with("Province", pro).with("City", city).with("Area", area);
+            }
+
+        });
+    }
+
+    private Response.Listener<BaseModel> responseAddresListener() {
+        return new Response.Listener<BaseModel>() {
+            @Override
+            public void onResponse(BaseModel addresModel) {
+
+                //备用
+            }
+
+        };
+
+    }
 
 
 }
