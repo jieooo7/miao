@@ -176,10 +176,13 @@ public class FilterActivity extends Base2Activity {
             @Override
             public void onResponse(BaseListModel<FilterModel> indexBaseListModel) {
                 if (indexBaseListModel.getData() != null) {
-                    mList.addAll(indexBaseListModel.getData());
+
+                    final List<FilterModel> listModel=indexBaseListModel.getData();
+
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
+                            mList.addAll(listModel);
                             mAdapter.notifyDataSetChanged();
                         }
                     });

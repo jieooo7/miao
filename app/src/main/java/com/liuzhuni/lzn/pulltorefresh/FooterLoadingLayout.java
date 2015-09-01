@@ -21,6 +21,8 @@ public class FooterLoadingLayout extends LoadingLayout {
     private ProgressBar mProgressBar;
     /** 显示的文本 */
     private TextView mHintView;
+
+    private TextView mNoMore;
     
     /**
      * 构造方法
@@ -51,7 +53,8 @@ public class FooterLoadingLayout extends LoadingLayout {
     private void init(Context context) {
         mProgressBar = (ProgressBar) findViewById(R.id.pull_to_load_footer_progressbar);
         mHintView = (TextView) findViewById(R.id.pull_to_load_footer_hint_textview);
-        
+        mNoMore = (TextView) findViewById(R.id.no_more);
+
         setState(State.RESET);
     }
     
@@ -86,18 +89,21 @@ public class FooterLoadingLayout extends LoadingLayout {
     @Override
     protected void onReset() {
         mHintView.setText(R.string.pull_to_refresh_header_hint_loading);
+        mNoMore.setVisibility(View.GONE);
     }
 
     @Override
     protected void onPullToRefresh() {
         mHintView.setVisibility(View.VISIBLE);
         mHintView.setText(R.string.pull_to_refresh_header_hint_normal2);
+        mNoMore.setVisibility(View.GONE);
     }
 
     @Override
     protected void onReleaseToRefresh() {
         mHintView.setVisibility(View.VISIBLE);
         mHintView.setText(R.string.pull_to_refresh_header_hint_ready);
+        mNoMore.setVisibility(View.GONE);
     }
 
     @Override
@@ -105,11 +111,22 @@ public class FooterLoadingLayout extends LoadingLayout {
         mProgressBar.setVisibility(View.VISIBLE);
         mHintView.setVisibility(View.VISIBLE);
         mHintView.setText(R.string.pull_to_refresh_header_hint_loading);
+        mNoMore.setVisibility(View.GONE);
     }
     
     @Override
     protected void onNoMoreData() {
         mHintView.setVisibility(View.VISIBLE);
         mHintView.setText(R.string.pushmsg_center_no_more_msg);
+        mNoMore.setVisibility(View.GONE);
+    }
+
+    @Override
+    protected void addNewView() {
+        mNoMore.setVisibility(View.VISIBLE);
+        mHintView.setVisibility(View.INVISIBLE);
+        mProgressBar.setVisibility(View.INVISIBLE);
+
+
     }
 }

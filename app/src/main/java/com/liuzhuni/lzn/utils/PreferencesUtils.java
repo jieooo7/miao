@@ -64,6 +64,7 @@ public class PreferencesUtils {
         public static final String NICKNAME = "nickName";
         public static final String CLIENTID = "clientId";
         public static final String IS_SEND_CLIENTID = "isSendclientId";
+        public static final String IS_FIRST_SHARE = "isFirstShare";
         public static final String PASSWORD = "password";
         public static final String PWD_KEY = "pwd_key";
         public static final String BUSS_PWD = "buss_pwd";
@@ -74,6 +75,7 @@ public class PreferencesUtils {
         public static final String IS_THIRD = "is_third";
         public static final String POINTS = "points";
         public static final String SIGN_DAYS = "sign_days";
+        public static final String TODAY = "today";
 
 
         /**

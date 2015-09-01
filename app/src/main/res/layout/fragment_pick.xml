@@ -1,0 +1,78 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:fab="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    tools:context="com.liuzhuni.lzn.core.index_new.IndexNewActivity">
+
+
+
+
+
+
+
+            <FrameLayout
+
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <!--
+                                <com.liuzhuni.lzn.pulltorefresh.PullToRefreshPinListView
+                                    android:id="@+id/expandablelist"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent">
+
+                                </com.liuzhuni.lzn.pulltorefresh.PullToRefreshPinListView>
+                -->
+
+                <com.liuzhuni.lzn.xList.XListViewNew
+                    android:id="@+id/expandablelist"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:cacheColorHint="@null"
+                    android:listSelector="@color/transparent"
+                    android:divider="@color/line_below"
+                    android:dividerHeight="1px"
+                    android:scrollbars="none">
+                </com.liuzhuni.lzn.xList.XListViewNew>
+
+                <com.melnykov.fab.FloatingActionButton
+                    android:id="@+id/fab"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|right"
+                    android:layout_margin="16dp"
+                    android:src="@drawable/ic_top"
+                    fab:fab_shadow="false"
+                    fab:fab_colorNormal="@color/transparent"
+                    fab:fab_colorPressed="@color/transparent"
+                    fab:fab_colorRipple="@color/transparent"
+                    />
+            </FrameLayout>
+            <!--
+                        <com.liuzhuni.lzn.pinHeader.PinnedHeaderListView
+                            android:id="@+id/expandablelist"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:cacheColorHint="@null"
+                            android:listSelector="@color/transparent"
+                            android:divider="@color/line_below"
+                            android:dividerHeight="1px"
+                            android:scrollbars="none">
+                        </com.liuzhuni.lzn.pinHeader.PinnedHeaderListView>
+                        -->
+
+    <TextView
+        android:id="@+id/no_search"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:textColor="@color/comment_light"
+        android:background="@color/all_back"
+        android:text="@string/no_more_search"
+        android:visibility="gone"
+        />
+
+
+
+</RelativeLayout>

@@ -51,4 +51,32 @@
         android:background="@drawable/num_back"
         android:layout_toLeftOf="@id/custom_view_right"
         />
+    <TextView
+        android:id="@+id/custom_view_right_tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/regist_text"
+        android:gravity="right"
+        android:layout_marginRight="13dp"
+        android:textSize="13sp"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@id/custom_view_right"
+        android:text="@string/first_share"
+        android:visibility="gone"
+        />
+    
+    <ImageView
+        android:id="@+id/red_dot"
+        android:layout_toLeftOf="@id/custom_view_right"
+        android:layout_marginRight="2dp"
+        android:layout_width="7dp"
+        android:layout_height="7dp"
+        android:src="@drawable/red_dot"
+        android:visibility="gone"
+        />
+
+
+
+
+
 </RelativeLayout>

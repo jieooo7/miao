@@ -194,7 +194,10 @@ public abstract class LoadingLayout extends FrameLayout implements ILoadingLayou
         case NO_MORE_DATA:
             onNoMoreData();
             break;
-            
+        case ADD_VIEW:
+            addNewView();
+            break;
+
         default:
             break;
         }
@@ -232,6 +235,9 @@ public abstract class LoadingLayout extends FrameLayout implements ILoadingLayou
      * 当状态设置为{@link State#REFRESHING}时调用
      */
     protected void onRefreshing() {
+
+    }
+    protected void addNewView() {
 
     }
 

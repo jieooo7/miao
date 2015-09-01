@@ -1,0 +1,148 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.liuzhuni.lzn.core.search.SearchActivity">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/key"
+        android:paddingBottom="@dimen/title_top_bottom"
+        android:paddingLeft="@dimen/title_left_right"
+        android:paddingRight="@dimen/title_left_right"
+        android:paddingTop="@dimen/title_top_bottom">
+
+
+        <ImageView
+            android:id="@+id/title_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:paddingLeft="5dp"
+            android:paddingRight="25dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp"
+            android:src="@drawable/ic_back" />
+
+
+        <TextView
+            android:id="@+id/title_right_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:paddingLeft="15dp"
+            android:paddingRight="8dp"
+            android:text="@string/search"
+            android:textColor="@color/white"
+            android:textSize="22sp" />
+
+
+        <com.liuzhuni.lzn.core.select.ui.CleanableEditText
+            android:id="@+id/search_et"
+            style="@style/edit_text"
+            android:layout_toLeftOf="@id/title_right_iv"
+            android:layout_toRightOf="@id/title_left"
+            android:drawablePadding="8dp"
+            android:drawableRight="@drawable/btn_delete"
+            android:focusable="true"
+            android:hint="@string/search_hint"
+            android:paddingBottom="8dp"
+            android:paddingLeft="10dp"
+            android:paddingRight="8dp"
+            android:paddingTop="8dp"
+            android:singleLine="true" />
+    </RelativeLayout>
+
+
+    <LinearLayout
+        android:id="@+id/block_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="10dp">
+
+        <LinearLayout
+            android:id="@+id/pick_ll"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical"
+
+            >
+
+            <TextView
+                android:id="@+id/pick_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/search_pick"
+                android:textColor="@color/key"
+                android:textSize="18sp"
+
+
+                />
+
+            <TextView
+                android:id="@+id/pick_line"
+                android:layout_width="120dp"
+                android:layout_height="2dp"
+                android:layout_marginTop="12dp"
+                android:background="@color/key" />
+
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/news_ll"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical"
+
+            >
+
+            <TextView
+                android:id="@+id/news_tv"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/all_news"
+                android:textColor="@color/index_text"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/news_line"
+                android:layout_width="120dp"
+                android:layout_height="2dp"
+                android:layout_marginTop="12dp"
+                android:background="@color/key"
+                android:visibility="gone" />
+
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/block_tv"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@color/line_color" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+         />
+
+
+</LinearLayout>

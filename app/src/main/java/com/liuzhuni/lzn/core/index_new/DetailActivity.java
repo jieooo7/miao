@@ -7,12 +7,14 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.text.style.URLSpan;
 import android.util.DisplayMetrics;
@@ -54,16 +56,19 @@ import com.liuzhuni.lzn.volley.GsonRequest;
 import com.liuzhuni.lzn.volley.RequestManager;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import cn.sharesdk.framework.Platform;
+import cn.sharesdk.framework.PlatformActionListener;
 import cn.sharesdk.framework.ShareSDK;
 import cn.sharesdk.onekeyshare.OnekeyShare;
 import cn.sharesdk.onekeyshare.ShareContentCustomizeCallback;
 import cn.sharesdk.sina.weibo.SinaWeibo;
+import cn.sharesdk.wechat.moments.WechatMoments;
 
 public class DetailActivity extends Base2Activity {
 
@@ -126,6 +131,7 @@ public class DetailActivity extends Base2Activity {
 
     private String mUrl;
     private boolean isClick=true;
+    private String mType="";
 
     private String link;
     private String img_link;
@@ -149,13 +155,23 @@ public class DetailActivity extends Base2Activity {
 
                 for (Object span : spans) {
                     if (span instanceof URLSpan) {
-                        Intent intent = new Intent(DetailActivity.this, ToBuyActivity.class);
-                        Bundle bundle = new Bundle();
 
-                        bundle.putString("url",((URLSpan) span).getURL());
-                        bundle.putString("title", "");
-                        intent.putExtras(bundle);
-                        startActivity(intent);
+                        String url=((URLSpan) span).getURL();
+                        if(url.startsWith("http")||url.startsWith("https")){
+
+                            Intent intent = new Intent(DetailActivity.this, ToBuyActivity.class);
+                            Bundle bundle = new Bundle();
+
+                            bundle.putString("url",url);
+                            bundle.putString("title", "");
+                            intent.putExtras(bundle);
+                            startActivity(intent);
+                        }else if(url.startsWith("huim")){
+                            Uri uri=Uri.parse(url);
+
+                            Intent contentIntent = new Intent(Intent.ACTION_VIEW, uri);
+                            startActivity(contentIntent);
+                        }
 
                     }
                 }
@@ -179,7 +195,6 @@ public class DetailActivity extends Base2Activity {
     protected void initData() {
         mList=new ArrayList<DetailContentModel>();
         mImageLoader= RequestManager.getImageLoader();
-
         mId=getIntent().getExtras().getString("id");
         mIsFromSelect=getIntent().getExtras().getBoolean("isSelect");
         mAdapter=new DetailAdapter(mList,this,mImageLoader,handler,mIsFromSelect);
@@ -187,9 +202,11 @@ public class DetailActivity extends Base2Activity {
         if(mIsFromSelect){
             mUrlReply= UrlConfig.COMMENT_SEL_REPLY;
             mFavNum=0;
+            mType="Choice";
         }else{
             mUrlReply=UrlConfig.COMMENT_NEWS_REPLY;
             mFavNum=1;
+            mType="broke";
         }
 
 
@@ -286,7 +303,7 @@ public class DetailActivity extends Base2Activity {
 
 
     protected  void pullFavData(final String url, final String id, final int num) {
-        executeRequest(new GsonRequest<BaseModel>(Request.Method.GET, url+"?id="+id+"&t="+num, BaseModel.class, responseFavListener(), errorListener(false)) {
+        executeRequest(new GsonRequest<BaseModel>(Request.Method.GET, url + "?id=" + id + "&t=" + num, BaseModel.class, responseFavListener(), errorListener(false)) {
 
 
         });
@@ -316,12 +333,12 @@ public class DetailActivity extends Base2Activity {
         Timer time=new Timer();
         if(isClick){
             isClick=false;
-            shareShow();
+            shareWeixin();
         }
         time.schedule(new TimerTask() {
             @Override
             public void run() {
-                isClick=true;
+                isClick = true;
             }
         }, 800);
     }
@@ -399,7 +416,7 @@ public class DetailActivity extends Base2Activity {
         }.getType(), responseComListener(), errorListener()) {
 
             protected Map<String, String> getParams() {
-                return new ApiParams().with("productid", ""+pid).with("reviewid", rid).with("text",text);
+                return new ApiParams().with("productid", "" + pid).with("reviewid", rid).with("text", text);
             }
 
         });
@@ -411,7 +428,14 @@ public class DetailActivity extends Base2Activity {
             public void onResponse(BaseModel<CommentModel> indexBaseListModel) {
                 if (indexBaseListModel.getData() != null) {
 
-                    ToastUtil.show(DetailActivity.this, getResources().getText(R.string.success_comment));
+                    if(TextUtils.isEmpty(indexBaseListModel.getMes())){
+                        ToastUtil.show(DetailActivity.this, getResources().getText(R.string.success_comment));
+
+                    }else{
+
+                        ToastUtil.show(DetailActivity.this, indexBaseListModel.getMes());
+                    }
+
 
                     mCommenttv.setText(mReviewNum+1+"");
                     mCommenttv.setVisibility(View.VISIBLE);
@@ -438,6 +462,72 @@ public class DetailActivity extends Base2Activity {
         intent.putExtras(bundle);
         startActivity(intent);
     }
+
+    protected void shareWeixin() {
+
+        ShareSDK.initSDK(this);
+        Platform.ShareParams sp = new Platform.ShareParams();
+
+        sp.setTitle(title);
+        // text是分享文本，所有平台都需要这个字段
+        sp.setText(content);
+        sp.setImageUrl(img_link);
+        // url仅在微信（包括好友和朋友圈）中使用
+        sp.setUrl(link);
+        sp.setShareType(Platform.SHARE_WEBPAGE);
+
+
+        Platform weixin = ShareSDK.getPlatform(this, WechatMoments.NAME);
+        weixin.setPlatformActionListener(new PlatformActionListener() {
+
+            public void onError(Platform platform, int action, Throwable t) {
+                // 操作失败的处理代码
+                ToastUtil.customShow(DetailActivity.this, "分享失败");
+            }
+
+            @Override
+            public void onComplete(Platform platform, int i, HashMap<String, Object> stringObjectHashMap) {
+
+                //网络请求之后
+                ToastUtil.customShow(DetailActivity.this, "分享成功");
+                pullShareSuccessData();
+
+
+            }
+
+            public void onCancel(Platform platform, int action) {
+                // 操作取消的处理代码
+            }
+
+        });
+
+        weixin.share(sp);
+
+    }
+
+
+    protected synchronized void pullShareSuccessData() {
+
+        executeRequest(new GsonRequest<BaseModel>(Request.Method.POST, UrlConfig.SUCCESS_SHARE, BaseModel.class, responseShareSuccessListener(), errorListener()) {
+            protected Map<String, String> getParams() {
+                return new ApiParams().with("type", mType).with("data", mId);
+            }
+
+
+        });
+    }
+
+    private Response.Listener<BaseModel> responseShareSuccessListener() {
+        return new Response.Listener<BaseModel>() {
+            @Override
+            public void onResponse(BaseModel shareModel) {
+
+            }
+        };
+
+    }
+
+
 
 
     protected void shareShow(){
@@ -554,8 +644,10 @@ public class DetailActivity extends Base2Activity {
 
 
                     SpannableString ss = new SpannableString(model.getTitle1());
-                    ss.setSpan(new ForegroundColorSpan(Color.argb(0xff, 0xf5, 0x5d, 0x62)),0,ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    mPriceTv.append(ss);
+                    if(ss.length()>0){
+                        ss.setSpan(new ForegroundColorSpan(Color.argb(0xff, 0xf5, 0x5d, 0x62)),0,ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                        mPriceTv.append(ss);
+                    }
                     mMallTv.setText(model.getMall());
                     mNameTv.setText(model.getName());
                     mTimeTv.setText(model.getTime());
@@ -567,12 +659,13 @@ public class DetailActivity extends Base2Activity {
                         mCommenttv.setVisibility(View.GONE);
                     }
                     mUrl=model.getUrl();
-                    mList.addAll(model.getContent());
 
+                    final List<DetailContentModel> detailModel=model.getContent();
 
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
+                            mList.addAll(detailModel);
                             mAdapter.notifyDataSetChanged();
                         }
                     });

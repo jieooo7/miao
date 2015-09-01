@@ -76,6 +76,7 @@ public class PickAdapter extends BaseAdapter {
                     normalHolder.cheapTv = (TextView) convertView.findViewById(R.id.index_item_cheap);
                     normalHolder.globalTv = (TextView) convertView.findViewById(R.id.index_item_global);
                     normalHolder.slowTv = (TextView) convertView.findViewById(R.id.index_item_slow);
+                    normalHolder.tagTopTv = (TextView) convertView.findViewById(R.id.tag_top);
                     normalHolder.expiredTv = (ImageView) convertView.findViewById(R.id.index_item_expired);
                     convertView.setTag(normalHolder);
 
@@ -91,6 +92,15 @@ public class PickAdapter extends BaseAdapter {
         }
 
 
+
+                if(mList.get(position).isTop()){
+                    normalHolder.tagTopTv.setVisibility(View.VISIBLE);
+                    normalHolder.timeTv.setVisibility(View.INVISIBLE);
+
+                }else{
+                    normalHolder.tagTopTv.setVisibility(View.INVISIBLE);
+                    normalHolder.timeTv.setVisibility(View.VISIBLE);
+                }
                 normalHolder.timeTv.setText(mList.get(position).getTime());
                 normalHolder.mallTv.setText(mList.get(position).getMall());
                 normalHolder.titleTv.setText(mList.get(position).getTitle());
@@ -136,6 +146,7 @@ public class PickAdapter extends BaseAdapter {
         TextView globalTv ;
         TextView slowTv ;
         ImageView expiredTv;
+        TextView tagTopTv;
     }
 
 

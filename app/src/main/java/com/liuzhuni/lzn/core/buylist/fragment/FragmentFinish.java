@@ -102,8 +102,31 @@ public class FragmentFinish extends BaseFragment {
     public void onResume() {
         super.onResume();
         mAdapter.notifyDataSetChanged();
+        if(mList.size()<1){
+            mNoContent.setVisibility(View.VISIBLE);
+
+        }else{
+            mNoContent.setVisibility(View.GONE);
+        }
 
     }
+
+
+//    @Override
+//    public void onHiddenChanged(boolean hidden) {
+//        super.onHiddenChanged(hidden);
+//        if(hidden){
+//
+//            mAdapter.notifyDataSetChanged();
+//            if(mList.size()<1){
+//                mNoContent.setVisibility(View.VISIBLE);
+//
+//            }else{
+//                mNoContent.setVisibility(View.GONE);
+//            }
+//        }
+//
+//    }
 
     protected void pullRefresh(){
 
@@ -117,7 +140,7 @@ public class FragmentFinish extends BaseFragment {
                 mIndex = 0;
                 pullData(mIndex, 1);
                 mPullList.onPullDownRefreshComplete();
-//					// 上拉刷新完成
+					// 上拉刷新完成
                 mPullList.onPullUpRefreshComplete();
             }
 
@@ -188,16 +211,19 @@ public class FragmentFinish extends BaseFragment {
                     mIndex++;
                     if(indexBuyListModel.getData()!=null){
                         mCurrentList=indexBuyListModel.getData();
-                        if(isUp){
-                            mList.clear();
-                            mPullList.setLastUpdatedLabel(mTime);//设置最后刷新时间
-                            Date date=new Date();
-                            mTime=mDateFormat.format(date);
-                        }
-                        mList.addAll(mCurrentList);
+
+
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
+                                if(isUp){
+                                    mList.clear();
+                                    mPullList.setLastUpdatedLabel(mTime);//设置最后刷新时间
+                                    Date date=new Date();
+                                    mTime=mDateFormat.format(date);
+                                }
+
+                                mList.addAll(mCurrentList);
                                 mAdapter.notifyDataSetChanged();
                             }
                         });
@@ -205,12 +231,19 @@ public class FragmentFinish extends BaseFragment {
                     }
                 }
 
-                if(mList.size()<1){
-                    mNoContent.setVisibility(View.VISIBLE);
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(mList.size()<1){
+                            mNoContent.setVisibility(View.VISIBLE);
 
-                }else{
-                    mNoContent.setVisibility(View.GONE);
-                }
+                        }else{
+                            mNoContent.setVisibility(View.GONE);
+                        }
+                    }
+                });
+
+
             }
 
         };

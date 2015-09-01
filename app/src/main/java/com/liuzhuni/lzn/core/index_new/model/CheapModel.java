@@ -19,6 +19,10 @@ public class CheapModel implements Serializable{
     private int id;
     private int types;
 
+    private int mallid;
+    private String tbid;
+
+
 
     public CheapModel(String title, String price, String oldprice, String img, String url, int id, int types) {
         this.title = title;
@@ -30,6 +34,22 @@ public class CheapModel implements Serializable{
         this.types = types;
     }
 
+
+    public int getMallid() {
+        return mallid;
+    }
+
+    public void setMallid(int mallid) {
+        this.mallid = mallid;
+    }
+
+    public String getTbid() {
+        return tbid;
+    }
+
+    public void setTbid(String tbid) {
+        this.tbid = tbid;
+    }
 
     public String getTitle() {
         return title;

@@ -42,6 +42,7 @@ public class LinearContent extends LinearLayout {
             View v = adapter.getView(i, null, null);
             addView(v);
 //            setDividerDrawable();
+
         }
     }
 

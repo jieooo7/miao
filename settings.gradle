@@ -1,1 +1,1 @@
-include ':app', ':HtmlSpanner-master'
+include ':app', ':HtmlSpanner-master', ':OneSDK', ':sample', ':library', ':library', ':sample'

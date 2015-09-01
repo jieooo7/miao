@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.webkit.WebChromeClient;
@@ -70,8 +71,14 @@ public class ToBuyActivity extends Base2Activity {
 
         if(getIntent()!=null){
             if( getIntent().getExtras()!=null){
-                mUrl=getIntent().getExtras().getString("url","http://www.m.liuzhuni.com/");
-                mTitle=getIntent().getExtras().getString("title","");
+                int sdk = Build.VERSION.SDK_INT;
+                if(sdk<12){
+                    mUrl=getIntent().getExtras().getString("url");
+                    mTitle=getIntent().getExtras().getString("title");
+                }else{
+                    mUrl=getIntent().getExtras().getString("url","http://www.m.liuzhuni.com/");
+                    mTitle=getIntent().getExtras().getString("title","");
+                }
             }
         }
 
@@ -98,16 +105,15 @@ public class ToBuyActivity extends Base2Activity {
         mWebView.getSettings().setJavaScriptEnabled(true);//设置使用够执行JS脚本
         mWebView.getSettings().setBuiltInZoomControls(true);//设置使支持缩放
 
-
         WebSettings webSettings = mWebView.getSettings();
         webSettings.setUseWideViewPort(true);
         webSettings.setLoadWithOverviewMode(true);
-
+//        webSettings.setUserAgentString("Mozilla/5.0 (Linux;Android 4.4.4;zh-cn;2014811 Build/KTU84P) AppleWebKit/537.36 (KHTML, like Gecko) Version/4.0 Chrome/42.0.0.0 Mobile Safari/537.36 XiaoMi/MiuiBrowser/2.1.1");
         mWebView.setWebViewClient(new WebViewClient(){
-
+            @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
-                view.loadUrl(url);// 使用当前WebView处理跳转
-                return true;
+//                view.loadUrl(url);// 使用当前WebView处理跳转
+                return super.shouldOverrideUrlLoading(view,url);
             }
 
             @Override
@@ -201,6 +207,10 @@ public class ToBuyActivity extends Base2Activity {
 
     @OnClick(R.id.to_buy_browser)
     public void browser(View v){
+
+        if(TextUtils.isEmpty(mWebView.getUrl())){
+            return;
+        }
 
         Intent intent = new Intent(Intent.ACTION_VIEW);
         intent.setData(Uri.parse(mWebView.getUrl()));

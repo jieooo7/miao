@@ -13,7 +13,6 @@ import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
 import com.liuzhuni.lzn.R;
 import com.liuzhuni.lzn.base.Base2Activity;
-import com.liuzhuni.lzn.config.UrlConfig;
 import com.liuzhuni.lzn.core.login.ButtonThread;
 import com.liuzhuni.lzn.core.login.Threadable;
 import com.liuzhuni.lzn.core.login.ui.CleanNoEditText;
@@ -143,11 +142,24 @@ public class RegistActivity extends Base2Activity {
             return;
         }
         mTel=telNo;
+
+
+        Intent intent=new Intent(RegistActivity.this,SendCodeActivity.class);
+        Bundle bundle=new Bundle();
         if(mIsRegister){
-            pullData(UrlConfig.SEND_CODE,telNo);
+            bundle.putBoolean("isRegister",true);
         }else{
-            pullData(UrlConfig.SEND_FOGOT_CODE,telNo);
+            bundle.putBoolean("isRegister",false);
         }
+        bundle.putString("tel",mTel);
+        intent.putExtras(bundle);
+        startActivity(intent);
+
+//        if(mIsRegister){
+//            pullData(UrlConfig.SEND_CODE,telNo);
+//        }else{
+//            pullData(UrlConfig.SEND_FOGOT_CODE,telNo);
+//        }
 
 
     }

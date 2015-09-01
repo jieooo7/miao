@@ -1,6 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/message_div_color"
     tools:context="com.liuzhuni.lzn.core.personInfo.MessageCenterActivity">
     <include
         android:id="@+id/title"
@@ -16,22 +17,14 @@
             android:id="@+id/message_list_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            android:layout_marginTop="27dp"
             android:cacheColorHint="@color/transparent"
             android:listSelector="@color/transparent"
-            android:divider="@null"
-            android:dividerHeight="0dp"
+            android:divider="@color/transparent"
+            android:dividerHeight="10dp"
             android:scrollbars="none"
             >
             </ListView>
 
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="8dp"
-            android:background="@color/transparent"
-            />
 
         </LinearLayout>
 

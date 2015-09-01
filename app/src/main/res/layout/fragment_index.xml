@@ -1,5 +1,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:fab="http://schemas.android.com/apk/res-auto"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
@@ -12,6 +13,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical" >
+        
+        
 
         <LinearLayout
             android:id="@+id/sticky_header"
@@ -20,7 +23,161 @@
             android:gravity="center"
             android:background="@color/white"
             android:orientation="vertical" >
+            
+            <RelativeLayout
+                android:id="@+id/index_new_message"
+                android:layout_width="match_parent"
+                android:layout_height="90dp"
+                android:background="@color/key"
+                android:paddingTop="5dp"
+                android:paddingBottom="10dp"
+                >
 
+
+                <TextView
+                    android:id="@+id/tell_me"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/sign_back"
+                    android:textColor="@color/white"
+                    android:textSize="14sp"
+                    android:drawableRight="@drawable/ic_more"
+                    android:drawablePadding="10dp"
+                    android:text="@string/tell_me"
+                    android:layout_centerInParent="true"
+                    android:singleLine="true"
+                    android:paddingLeft="50dp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:paddingRight="10dp"
+                    />
+                <com.liuzhuni.lzn.core.index_new.ui.CircleImageView
+                    android:id="@+id/tell_me_image"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    app:border_color="@color/transparent"
+                    android:layout_centerVertical="true"
+                    app:border_width="0dp"
+                    android:src="@drawable/ic_qq_n"
+                    android:layout_toLeftOf="@id/tell_me"
+                    android:layout_marginRight="-45dp"
+
+                    />
+
+                <TextView
+                    android:id="@+id/message_num"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:background="@drawable/red_dot_white"
+                    android:text="89"
+                    android:textColor="@color/white"
+                    android:textSize="12sp"
+                    android:gravity="center"
+                    android:layout_toRightOf="@id/tell_me_image"
+                    android:layout_marginLeft="32dp"
+                    android:layout_above="@id/tell_me_image"
+                    android:layout_marginBottom="-15dp"
+                    android:visibility="invisible"
+                    />
+
+
+
+
+
+
+
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/message_div_color"
+                android:padding="10dp"
+                >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="@drawable/yellow_back"
+                    android:padding="10dp"
+                    >
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:gravity="center_horizontal"
+                        android:orientation="horizontal"
+                        >
+
+
+                        <TextView
+                            android:id="@+id/to_buy"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="18sp"
+                            android:drawableLeft="@drawable/ic_woxiangmai"
+                            android:drawablePadding="10dp"
+                            android:textColor="@color/white"
+                            android:text="@string/i_want_buy"
+                            android:gravity="center"
+                            />
+                    </LinearLayout>
+
+
+                    <TextView
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="@color/white"
+                        android:layout_marginBottom="-2dp"
+                        android:layout_marginTop="-2dp"
+                        />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:orientation="horizontal"
+                    >
+                    <TextView
+                        android:id="@+id/buy_list"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="18sp"
+                        android:drawableLeft="@drawable/ic_buy_qingdan"
+                        android:drawablePadding="5dp"
+                        android:textColor="@color/white"
+                        android:gravity="center"
+                        />
+
+                    </LinearLayout>
+
+
+
+                </LinearLayout>
+
+
+
+
+            </RelativeLayout>
+
+            <com.android.volley.toolbox.NetworkImageView
+                android:id="@+id/the_gift"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scaleType="fitCenter"
+                />
+            <com.android.volley.toolbox.NetworkImageView
+                android:id="@+id/only_you"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:scaleType="fitCenter"
+                />
+
+<!--
             <RelativeLayout
                 android:id="@+id/index_rl"
                 android:layout_width="match_parent"
@@ -87,6 +244,8 @@
 
             </RelativeLayout>
 
+-->
+
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -126,6 +285,8 @@
 
 
         </LinearLayout>
+
+
 
         <LinearLayout
             android:id="@+id/sticky_content"
@@ -231,6 +392,16 @@
                         -->
         </LinearLayout>
     </com.liuzhuni.lzn.pinHeader.StickyLayout>
+
+    <com.android.volley.toolbox.NetworkImageView
+        android:id="@+id/touch_me"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:scaleType="fitCenter"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="150dp"
+        />
 
 
 

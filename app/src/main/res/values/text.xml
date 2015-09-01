@@ -4,6 +4,7 @@ xmlns:tools="http://schemas.android.com/tools"
 tools:ignore="MissingTranslation" >
 
     <string name="me">我的</string>
+    <string name="search">搜索</string>
     <string name="me_info">我的信息</string>
     <string name="index">首页</string>
     <string name="the_name">惠喵</string>
@@ -11,6 +12,7 @@ tools:ignore="MissingTranslation" >
     <string name="login">登录</string>
     <string name="regist">注册</string>
     <string name="tel_email">手机号/邮箱</string>
+    <string name="search_hint">请输入商品关键词</string>
     <string name="input_passwd">输入登录密码</string>
     <string name="can_login_tip">可用留住你账号直接登录</string>
     <string name="forget_passwd">忘记密码?</string>
@@ -34,6 +36,7 @@ tools:ignore="MissingTranslation" >
 
 
     <string name="push_set">推送设置</string>
+    <string name="me_profile">我的信息</string>
     <string name="push_accept">接收推送</string>
     <string name="message_center">消息中心</string>
     <string name="Feedback">意见反馈</string>
@@ -80,7 +83,7 @@ tools:ignore="MissingTranslation" >
     <string name="want_buy">欲购清单</string>
     <string name="i_want_buy">我想买</string>
     <string name="i_want_back">返回</string>
-    <string name="back_to_exit">再按一次退出程序</string>
+    <string name="back_to_exit">再按一次退出惠喵</string>
     <string name="index_want_buy">想买</string>
     <string name="i_want_buy_u"><u>我想买</u></string>
     <string name="i_want_buy_line">我想买____</string>
@@ -207,6 +210,12 @@ tools:ignore="MissingTranslation" >
     <string name="always_top">置顶</string>
     <string name="no_comments">还没有评论哦~</string>
     <string name="sign_every">已连续签到1天</string>
+    <string name="sign_no_every">今天还没有签到</string>
+
+
+
+
+    <string name="search_pick">超值精选</string>
 
 
 
@@ -229,6 +238,25 @@ tools:ignore="MissingTranslation" >
     <string name="save_tips">推荐分类至少选一个</string>
     <string name="filter_tips">首页将根据您选中的分类进行显示内容</string>
     <string name="city_choice">选择城市后,推荐更精准哦~</string>
+
+
     <string name="no_more_cheap">没有更多的白菜了,请保持关注哦~</string>
+    <string name="no_more_search">暂时还没有相关内容哦~</string>
+    <string name="rec_detail">推荐详情</string>
+    <string name="first_share">首次分享奖励10积分哦</string>
+    <string name="to_see">前往查看</string>
+
+
+
+
+    <string name="to_sign">签到</string>
+    <string name="to_make_cent">赚积分</string>
+    <string name="tell_me">主人~想买什么请告诉小惠喵哦^_^</string>
+
+
+
+
+
+
 
 </resources>

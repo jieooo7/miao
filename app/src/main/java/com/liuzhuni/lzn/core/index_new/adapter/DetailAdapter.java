@@ -191,7 +191,6 @@ public class DetailAdapter extends BaseAdapter {
                 } else {
                     textHolder.textTv.setTextIsSelectable(true);
                 }
-
                 if (position == 0) {
                     textHolder.textTv.setText(trans);
                 } else {

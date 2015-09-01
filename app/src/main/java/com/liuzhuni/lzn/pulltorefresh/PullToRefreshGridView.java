@@ -79,6 +79,8 @@ public class PullToRefreshGridView extends PullToRefreshBase<GridView> implement
         }
     }
 
+
+
     /**
      * 设置滑动的监听器
      * 
@@ -136,13 +138,30 @@ public class PullToRefreshGridView extends PullToRefreshBase<GridView> implement
         }
     }
 
+
+    /**
+     * firstVisibleItem 表示在当前屏幕显示的第一个listItem在整个listView里面的位置（下标从0开始）
+     * visibleItemCount表示在现时屏幕可以见到的ListItem(部分显示的ListItem也算)总数
+     * totalItemCount表示ListView的ListItem总数
+     * listView.getLastVisiblePosition()表示在现时屏幕最后一个ListItem
+     * (最后ListItem显示出来一点都算)在整个ListView的位置（下标从0开始）
+     */
+
+
+    /**
+     *scrollState有三种状态，分别是SCROLL_STATE_IDLE、SCROLL_STATE_TOUCH_SCROLL、SCROLL_STATE_FLING
+     *SCROLL_STATE_IDLE是当屏幕停止滚动时
+     *SCROLL_STATE_TOUCH_SCROLL是当用户在以触屏方式滚动屏幕并且手指仍然还在屏幕上时（The user is scrolling using touch, and their finger is still on the screen）
+     *SCROLL_STATE_FLING是当用户由于之前划动屏幕并抬起手指，屏幕产生惯性滑动时（The user had previously been scrolling using touch and had performed a fling）
+     */
+
     @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
         if (isScrollLoadEnabled() && hasMoreData()) {
             if (scrollState == OnScrollListener.SCROLL_STATE_IDLE 
-                    || scrollState == OnScrollListener.SCROLL_STATE_FLING) {
-                if (isReadyForPullUp()) {
-                    startLoading();
+                    || scrollState == OnScrollListener.SCROLL_STATE_FLING) {//没有动作 或者 快速滑动
+                if (isReadyForPullUp()) {//最后一个显示出来
+                    startLoading();//开始加载
                 }
             }
         }

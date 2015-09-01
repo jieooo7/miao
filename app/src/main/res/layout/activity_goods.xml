@@ -9,11 +9,11 @@
         android:id="@+id/top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/xiangqing_bg"
-        android:paddingBottom="8dp"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:paddingTop="8dp">
+        android:paddingLeft="@dimen/title_left_right"
+        android:paddingRight="@dimen/title_left_right"
+        android:paddingBottom="@dimen/title_top_bottom"
+        android:paddingTop="@dimen/title_top_bottom"
+        android:background="@color/key">
 
         <TextView
             android:id="@+id/goods_back"
@@ -27,6 +27,17 @@
             android:text="@string/back"
             android:textColor="@color/white"
             android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/title_middle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/rec_detail"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            />
 
 
         <ImageView

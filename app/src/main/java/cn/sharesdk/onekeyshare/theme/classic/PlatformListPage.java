@@ -8,6 +8,11 @@
 
 package cn.sharesdk.onekeyshare.theme.classic;
 
+import static com.mob.tools.utils.R.getStringRes;
+import static com.mob.tools.utils.R.getBitmapRes;
+
+import java.util.ArrayList;
+
 import android.content.res.Configuration;
 import android.graphics.drawable.ColorDrawable;
 import android.util.TypedValue;
@@ -19,14 +24,7 @@ import android.view.animation.TranslateAnimation;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
-import android.widget.TextView;
-
-import java.util.ArrayList;
-
 import cn.sharesdk.onekeyshare.PlatformListFakeActivity;
-
-import static com.mob.tools.utils.R.getBitmapRes;
-import static com.mob.tools.utils.R.getStringRes;
 
 public class PlatformListPage extends PlatformListFakeActivity implements View.OnClickListener {
 	// page container
@@ -35,7 +33,6 @@ public class PlatformListPage extends PlatformListFakeActivity implements View.O
 	private PlatformGridView grid;
 	// cancel button
 	private Button btnCancel;
-    private TextView title;
 	// sliding up animation
 	private Animation animShow;
 	// sliding down animation
@@ -76,37 +73,13 @@ public class PlatformListPage extends PlatformListFakeActivity implements View.O
 		};
 		llPage.setOrientation(LinearLayout.VERTICAL);
 		llPage.setBackgroundDrawable(new ColorDrawable(0xffffffff));
-
-
-
-
-
-
 		FrameLayout.LayoutParams lpLl = new FrameLayout.LayoutParams(
 				FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.WRAP_CONTENT);
 		lpLl.gravity = Gravity.BOTTOM;
 		llPage.setLayoutParams(lpLl);
 		flPage.addView(llPage);
 
-        //title
-        title=new TextView(getContext());
-
-        title.setTextColor(0xff9a9a9a);
-        title.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
-        title.setText("分享应用到");
-        title.setGravity(Gravity.CENTER);
-
-        LinearLayout.LayoutParams lpTitle = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-        lpTitle.gravity=Gravity.CENTER;
-        int dp_title_20 = com.mob.tools.utils.R.dipToPx(getContext(), 10);
-        lpTitle.setMargins(0,dp_title_20,0,dp_title_20);
-
-        title.setLayoutParams(lpTitle);
-
-        llPage.addView(title);
-
-        // gridview
+		// gridview
 		grid = new PlatformGridView(getContext());
 		grid.setEditPageBackground(getBackgroundView());
 		LinearLayout.LayoutParams lpWg = new LinearLayout.LayoutParams(
@@ -114,10 +87,9 @@ public class PlatformListPage extends PlatformListFakeActivity implements View.O
 		grid.setLayoutParams(lpWg);
 		llPage.addView(grid);
 
-
 		// cancel button
 		btnCancel = new Button(getContext());
-		btnCancel.setTextColor(0xff666666);
+		btnCancel.setTextColor(0xff3a65ff);
 		btnCancel.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20);
 		int resId = getStringRes(getContext(), "cancel");
 		if (resId > 0) {
@@ -129,14 +101,13 @@ public class PlatformListPage extends PlatformListFakeActivity implements View.O
 		if(resId > 0){
 			btnCancel.setBackgroundResource(resId);
 		}else {
-		    btnCancel.setBackgroundDrawable(new ColorDrawable(0xffeeeeee));
+		    btnCancel.setBackgroundDrawable(new ColorDrawable(0xffffffff));
 		}
 
 		LinearLayout.LayoutParams lpBtn = new LinearLayout.LayoutParams(
-				LinearLayout.LayoutParams.MATCH_PARENT, com.mob.tools.utils.R.dipToPx(getContext(), 55));//45
+				LinearLayout.LayoutParams.MATCH_PARENT, com.mob.tools.utils.R.dipToPx(getContext(), 45));
 		int dp_10 = com.mob.tools.utils.R.dipToPx(getContext(), 10);
-		int dp_20 = com.mob.tools.utils.R.dipToPx(getContext(), 20);
-		lpBtn.setMargins(dp_20, dp_10, dp_20, dp_10);
+		lpBtn.setMargins(dp_10, dp_10, dp_10, dp_10);
 		btnCancel.setLayoutParams(lpBtn);
 		llPage.addView(btnCancel);
 	}

@@ -27,6 +27,10 @@ public class Check {
     public static boolean isSendClientId(Context context) {
         return !PreferencesUtils.getBooleanFromSPMap(context, PreferencesUtils.Keys.IS_SEND_CLIENTID,PreferencesUtils.Keys.USERINFO);
     }
+
+    public static boolean isFirstShared(Context context) {
+        return PreferencesUtils.getBooleanFromSPMap(context, PreferencesUtils.Keys.IS_FIRST_SHARE,PreferencesUtils.Keys.USERINFO);
+    }
     public static boolean hashead(Context context) {
         return  "".equals(PreferencesUtils.getValueFromSPMap(context, PreferencesUtils.Keys.HEAD_URL,"",PreferencesUtils.Keys.USERINFO))?false:true;
     }

@@ -14,6 +14,7 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.liuzhuni.lzn.GetInfo;
 import com.liuzhuni.lzn.config.AppManager;
+import com.liuzhuni.lzn.config.UrlConfig;
 import com.liuzhuni.lzn.sec.aes.AESHelper;
 import com.liuzhuni.lzn.utils.Md5Utils;
 import com.liuzhuni.lzn.utils.PreferencesUtils;
@@ -36,7 +37,7 @@ public class GsonBaseRequest<T>  extends Request<T> {
     private final Response.Listener<T> mListener;
     private final static String IMEI=((TelephonyManager)AppManager.getAppManager().currentActivity().getSystemService(Context.TELEPHONY_SERVICE)).getDeviceId();
     private final static String CLIENT="0";
-    private final static String VERSION="3";
+    private final static String VERSION= UrlConfig.VERSION_CODE;
     private String mUrl="";
     private String customKey=new GetInfo().getKey(AppManager.getAppManager().currentActivity());
 
@@ -77,6 +78,9 @@ public class GsonBaseRequest<T>  extends Request<T> {
         map.put("client ",CLIENT);
         map.put("version ",VERSION);
         map.put("timeToken ",""+timeTokenSec);
+        if(mUrl.equals(UrlConfig.USER_SIGN)){
+            map.put("Content-Length","0");
+        }
         return  map;
     
     }

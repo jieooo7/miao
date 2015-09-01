@@ -1,6 +1,10 @@
 package com.liuzhuni.lzn.core.personInfo.adapter;
 
 import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,8 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.liuzhuni.lzn.R;
+import com.liuzhuni.lzn.core.goods.ToBuyActivity;
 import com.liuzhuni.lzn.core.personInfo.model.MessageModel;
-import com.liuzhuni.lzn.utils.DensityUtil;
 
 import java.util.List;
 
@@ -24,12 +28,12 @@ public class MessageAdapter extends BaseAdapter {
 
     private List<MessageModel> mList;
     private Context mContext;
-    private final int FIRST=0;
-    private final int OTHER=1;
+    private Handler handler;
 
-    public MessageAdapter(Context mContext,List<MessageModel> mList) {
+    public MessageAdapter(Context mContext,List<MessageModel> mList, Handler _handler) {
         this.mList = mList;
         this.mContext = mContext;
+        this.handler = _handler;
     }
 
     @Override
@@ -49,78 +53,63 @@ public class MessageAdapter extends BaseAdapter {
 
 
     @Override
-    public int getViewTypeCount() {
-        return 2;
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        if (position==0) {
-            return this.FIRST;
-
-        } else {
-            return this.OTHER;
-        }
-
-    }
-
-    @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
 
         ViewHolder viewHolder = null;
         if(convertView==null){
-            switch (getItemViewType(position)){
-
-                case FIRST:
 
                     convertView = LayoutInflater.from(mContext).inflate(
                             R.layout.message_center_top, null);
 
-                    break;
-                case OTHER:
 
-                    convertView = LayoutInflater.from(mContext).inflate(
-                            R.layout.message_center_middle, null);
-
-                    break;
-                default:
-                    break;
-
-            }
             viewHolder = new ViewHolder();
-            viewHolder.messageTv=(TextView) convertView.findViewById(R.id.message_center_tv);
-            viewHolder.yearTv=(TextView) convertView.findViewById(R.id.message_year);
-            viewHolder.monthTv=(TextView) convertView.findViewById(R.id.message_month);
-            viewHolder.line=(TextView) convertView.findViewById(R.id.message_line);
-//            if(getCount()>0){
-//                int height=viewHolder.messageTv.getHeight()+30;
-//                RelativeLayout.LayoutParams rp= new RelativeLayout.LayoutParams(DensityUtil.dip2px(mContext,2),height);
-//                viewHolder.line.setLayoutParams(rp);
-//            }
+            viewHolder.messageTv=(TextView) convertView.findViewById(R.id.content);
+            viewHolder.timeTv=(TextView) convertView.findViewById(R.id.time);
+            viewHolder.seeTv=(TextView) convertView.findViewById(R.id.to_see);
+            viewHolder.ll=(LinearLayout) convertView.findViewById(R.id.ll);
             convertView.setTag(viewHolder);
+        }else{
+            viewHolder = (ViewHolder) convertView.getTag();
+        }
+        viewHolder.messageTv.setText(mList.get(position).getMessage());
+        viewHolder.timeTv.setText(mList.get(position).getDate());
+        final String url=mList.get(position).getUrl();
+        viewHolder.seeTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                if(url.startsWith("http")||url.startsWith("https")){
+
+                    Intent intent = new Intent(mContext, ToBuyActivity.class);
+                    Bundle bundle = new Bundle();
+
+                    bundle.putString("url",url);
+                    bundle.putString("title", "");
+                    intent.putExtras(bundle);
+                    mContext.startActivity(intent);
+                }else if(url.startsWith("huim")){
+                    Uri uri=Uri.parse(url);
+
+                    Intent contentIntent = new Intent(Intent.ACTION_VIEW, uri);
+                    mContext.startActivity(contentIntent);
+                }
+            }
+        });
 
 
+        if(mList.get(position).isRead()){
+
+            viewHolder.ll.setBackgroundColor(mContext.getResources().getColor(R.color.white));
 
         }else{
 
-            viewHolder = (ViewHolder) convertView.getTag();
+            viewHolder.ll.setBackgroundColor(mContext.getResources().getColor(R.color.messgae_back));
+
         }
 
-        viewHolder.messageTv.setText(mList.get(position).getMessage());
-        viewHolder.monthTv.setText(mList.get(position).getMonth());
-        viewHolder.yearTv.setText(mList.get(position).getYear());
-        if(!mList.get(position).isRead()){
-            viewHolder.messageTv.setBackgroundResource(R.drawable.my_xiaoxi_bg_yidu);
-        }
-//        int height=viewHolder.messageTv.getHeight()+30;
-        LinearLayout.LayoutParams rp= new LinearLayout.LayoutParams(DensityUtil.dip2px(mContext, 2),viewHolder.messageTv.getMeasuredHeight()+DensityUtil.dip2px(mContext, 95));
-//        RelativeLayout.LayoutParams rp= new RelativeLayout.LayoutParams(DensityUtil.dip2px(mContext, 2),height);
-        if(viewHolder.line!=null){
-            viewHolder.line.setLayoutParams(rp);
-//            viewHolder.line.setHeight(viewHolder.messageTv.getHeight()+300);
-        }
-        //setLayoutParams(rp);
+
+
         return convertView;
 
 
@@ -129,10 +118,10 @@ public class MessageAdapter extends BaseAdapter {
 
 
     static class ViewHolder {
-        TextView monthTv;
-        TextView yearTv;
+        TextView timeTv;
         TextView messageTv;
-        TextView line;
+        TextView seeTv;
+        LinearLayout ll;
 
     }
 

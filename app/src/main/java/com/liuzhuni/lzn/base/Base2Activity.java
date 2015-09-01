@@ -58,6 +58,10 @@ public abstract class Base2Activity extends Activity {
         loadingdialog.dismiss();
     }
 
+    public InputMethodManager getInputManager(){
+        return this.manager;
+    }
+
     @Override
     protected void onResume() {
         super.onResume();

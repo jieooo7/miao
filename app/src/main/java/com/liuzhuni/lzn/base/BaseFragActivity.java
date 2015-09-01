@@ -2,10 +2,12 @@ package com.liuzhuni.lzn.base;
 
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.KeyEvent;
+import android.view.MotionEvent;
 import android.view.inputmethod.InputMethodManager;
 
 import com.android.volley.Request;
@@ -19,44 +21,70 @@ import com.liuzhuni.lzn.utils.PreferencesUtils;
 import com.liuzhuni.lzn.utils.ToastUtil;
 import com.liuzhuni.lzn.utils.fileHelper.CommonUtil;
 import com.liuzhuni.lzn.volley.RequestManager;
+import com.umeng.analytics.MobclickAgent;
 
 
 public abstract class BaseFragActivity extends FragmentActivity {
-	public static final String TAG = "BaseActivity";
-    protected Activity activity;
+    public static final String TAG = "Base2Activity";
+
     private InputMethodManager manager;
+    protected Activity activity;
     public LoadingDialog loadingdialog;
     public boolean isTouch=true;
 
-	@Override
-	protected void onCreate(Bundle savedInstanceState) {
-
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         activity = this;
-		super.onCreate(savedInstanceState);
-		AppManager.getAppManager().addActivity(this);
+
+        // 添加到Activity栈中
+
+        AppManager.getAppManager().addActivity(this);
+        manager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         loadingdialog = new LoadingDialog(this);
-	}
 
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		AppManager.getAppManager().finishActivity(this);
-	}
-	@Override
-	protected void onResume() {
-		super.onResume();
-	}
+    }
 
-	@Override
-	protected void onPause() {
-		super.onPause();
+    public void showLoadingDialog(){
 
-	}
+        loadingdialog.show();
+    }
+    public void DismissDialog(){
+
+        loadingdialog.dismiss();
+    }
+
+    public InputMethodManager getInputManager(){
+        return this.manager;
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MobclickAgent.onResume(this);
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MobclickAgent.onPause(this);
+    }
+
 
     @Override
     public void onStop() {
         super.onStop();
         RequestManager.cancelAll(this);
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        // 结束Activity
+        AppManager.getAppManager().finishActivity(this);
     }
 
 
@@ -83,7 +111,6 @@ public abstract class BaseFragActivity extends FragmentActivity {
                         PreferencesUtils.clearSPMap(BaseFragActivity.this, PreferencesUtils.Keys.USERINFO);
                         Intent intent = new Intent(BaseFragActivity.this, LoginActivity.class);
                         startActivity(intent);
-                        finish();
                     } else {
 //                        ToastUtil.customShow(Base2Activity.this, getResources().getText(R.string.error_retry));
                     }
@@ -125,6 +152,25 @@ public abstract class BaseFragActivity extends FragmentActivity {
     }
 
 
+    @Override
+    public void onBackPressed() {
+        // scrollToFinishActivity();
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        // TODO Auto-generated method stub
+        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+            if (getCurrentFocus() != null
+                    && getCurrentFocus().getWindowToken() != null) {
+                manager.hideSoftInputFromWindow(getCurrentFocus()
+                        .getWindowToken(), InputMethodManager.HIDE_NOT_ALWAYS);
+            }
+        }
+        return super.onTouchEvent(event);
+    }
+
+
     /**
      * 自定义返回键的效果
      */
@@ -138,28 +184,24 @@ public abstract class BaseFragActivity extends FragmentActivity {
 
         return true;
     }
-	/**
-	 * 
-	 * 描述：数据初始化
-	 */
-	protected abstract void initData();
 
-	/**
-	 * 
-	 * 描述：渲染界面
-	 */
-	protected abstract void findViewById();
+    /**
+     * 描述：数据初始化
+     */
+    protected abstract void initData();
 
-	/**
-	 * 
-	 * 描述：界面初始化
-	 */
-	protected abstract void initUI();
+    /**
+     * 描述：渲染界面
+     */
+    protected abstract void findViewById();
 
-	/**
-	 * 
-	 * 描述：设置监听
-	 */
-	protected abstract void setListener();
+    /**
+     * 描述：界面初始化
+     */
+    protected abstract void initUI();
 
+    /**
+     * 描述：设置监听
+     */
+    protected abstract void setListener();
 }

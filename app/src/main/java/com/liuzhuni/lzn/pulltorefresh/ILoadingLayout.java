@@ -50,6 +50,8 @@ public interface ILoadingLayout {
          * No more data
          */
         NO_MORE_DATA,
+
+        ADD_VIEW,
     }
 
     /**

@@ -204,6 +204,8 @@ public class LoginActivity extends Base2Activity {
         executeRequest(new GsonBaseRequest<BaseModel<LoginModel>>(Request.Method.POST, UrlConfig.LOGIN, new TypeToken<BaseModel<LoginModel>>() {
         }.getType(), responseLoginListener(), errorListener()) {
 
+
+
             protected Map<String, String> getParams() {
                 return new ApiParams().with("code", code);
             }

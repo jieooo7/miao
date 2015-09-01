@@ -25,6 +25,9 @@ public class MeView extends FrameLayout {
     private TextView mTextView;
     private TextView mNumTextView;
 
+    private TextView mRightTv;
+    private ImageView redDot;
+
     public MeView(Context context) {
         super(context);
     }
@@ -41,6 +44,9 @@ public class MeView extends FrameLayout {
         mTextView=(TextView) findViewById(R.id.custom_view_text_main);
         mTextView.setText(text);
         mNumTextView=(TextView) findViewById(R.id.sustom_view_num);
+        mRightTv=(TextView) findViewById(R.id.custom_view_right_tv);
+        redDot=(ImageView) findViewById(R.id.red_dot);
+
         a.recycle();
 
     }
@@ -63,6 +69,31 @@ public class MeView extends FrameLayout {
 
 
     }
+
+    public void setRightTv(String s){
+        mRightTv.setText(s);
+    }
+    public void hiddenRedDot(boolean isShow){
+
+        if(isShow){
+            redDot.setVisibility(View.VISIBLE);
+
+        }else{
+            redDot.setVisibility(View.GONE);
+        }
+
+    }
+    public void hiddenRightTv(boolean isShow){
+
+        if(isShow){
+            mRightTv.setVisibility(View.VISIBLE);
+
+        }else{
+            mRightTv.setVisibility(View.GONE);
+        }
+
+    }
+
 
 
 

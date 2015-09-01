@@ -4,12 +4,18 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
+import com.alibaba.sdk.android.AlibabaSDK;
+import com.alibaba.sdk.android.trade.ItemService;
+import com.alibaba.sdk.android.trade.callback.TradeProcessCallback;
+import com.alibaba.sdk.android.trade.model.TaokeParams;
+import com.alibaba.sdk.android.trade.model.TradeResult;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -33,6 +39,7 @@ import com.liuzhuni.lzn.volley.ApiParams;
 import com.liuzhuni.lzn.volley.GsonBaseRequest;
 import com.liuzhuni.lzn.volley.RequestManager;
 import com.melnykov.fab.FloatingActionButton;
+import com.taobao.tae.sdk.webview.TaeWebViewUiSettings;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -46,6 +53,10 @@ public class CheapFragment extends BaseFragment {
 
     @ViewInject(R.id.fab)
     private FloatingActionButton fab;
+
+
+//    @ViewInject(R.id.no_more_cheap)
+//    private TextView lastTv;
 
     @ViewInject(R.id.grid_view)
     private PullToRefreshGridView mPullGridView;
@@ -63,8 +74,8 @@ public class CheapFragment extends BaseFragment {
 
     private ImageLoader mImageLoader;
 
-    private  int backId = 0;
-    private  int forwardId = 0;
+    private int backId = 0;
+    private int forwardId = 0;
 
 
     private List<CheapModel> mList = null;
@@ -95,7 +106,7 @@ public class CheapFragment extends BaseFragment {
         mImageLoader = RequestManager.getImageLoader();
 
         mList = new ArrayList<CheapModel>();
-        mAdapter = new CheapAdapter(mList, getActivity(), mImageLoader);
+        mAdapter = new CheapAdapter(mList, getCustomActivity(), mImageLoader);
 
     }
 
@@ -111,7 +122,7 @@ public class CheapFragment extends BaseFragment {
         mGridView.setHorizontalSpacing(10);
         mGridView.setVerticalSpacing(8);
         mGridView.setCacheColorHint(Color.TRANSPARENT);
-        mGridView.setSelector(getResources().getDrawable(R.drawable.trans));
+        mGridView.setSelector(getCustomActivity().getResources().getDrawable(R.drawable.trans));
         mGridView.setAdapter(mAdapter);
         pullData(0, "back");
         loadingdialog.show();
@@ -133,6 +144,15 @@ public class CheapFragment extends BaseFragment {
                 if (!mList.isEmpty()) {
                     pullData(backId, "back");
                 }
+
+                handle.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mPullGridView.onPullUpRefreshComplete();
+//
+                        mPullGridView.onPullDownRefreshComplete();
+                    }
+                },300);
             }
 
             @Override
@@ -144,6 +164,14 @@ public class CheapFragment extends BaseFragment {
                         pullData(forwardId, "forward");
                     }
                 }
+                handle.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mPullGridView.onPullUpRefreshComplete();
+//
+                        mPullGridView.onPullDownRefreshComplete();
+                    }
+                },300);
 //                mPullGridView.onPullUpRefreshComplete();
 //
 //                mPullGridView.onPullDownRefreshComplete();
@@ -158,27 +186,59 @@ public class CheapFragment extends BaseFragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
+                String tId = mList.get(position).getTbid();
+                int type = mList.get(position).getMallid();
+
+
+                if (TextUtils.isEmpty(tId)) {
+                    Intent intent = new Intent();
+                    intent.setClass(getCustomActivity(), ToBuyActivity.class);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("url", mList.get(position).getUrl());
+                    bundle.putString("title", " ");
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+
+                } else {
+
+                    showTaokeItemDetail(tId, type);
+                }
+
+
 //                Intent intent = new Intent();
-//                intent.setClass(getActivity(), DetailActivity.class);
-//                Bundle bundle = new Bundle();
-//                bundle.putString("id", "" + mList.get(position).getId());
-//                bundle.putBoolean("isSelect", true);
+//                intent.setClass(getActivity(), ToBuyActivity.class);
+//                Bundle bundle=new Bundle();
+//                bundle.putString("url", mList.get(position).getUrl());
+//                bundle.putString("title", " ");
 //                intent.putExtras(bundle);
 //                startActivity(intent);
-
-                Intent intent = new Intent();
-                intent.setClass(getActivity(), ToBuyActivity.class);
-                Bundle bundle=new Bundle();
-                bundle.putString("url", mList.get(position).getUrl());
-                bundle.putString("title", "");
-                intent.putExtras(bundle);
-                startActivity(intent);
 
             }
         });
 
 
     }
+
+
+    public void showTaokeItemDetail(String id, int type) {
+        TaeWebViewUiSettings taeWebViewUiSettings = new TaeWebViewUiSettings();
+        TaokeParams taokeParams = new TaokeParams();
+        taokeParams.pid = "40490058";
+        taokeParams.unionId = "null";
+        ItemService itemService = AlibabaSDK.getService(ItemService.class);
+        itemService.showTaokeItemDetailByOpenItemId(getCustomActivity(), new TradeProcessCallback() {
+
+            @Override
+            public void onPaySuccess(TradeResult tradeResult) {
+
+            }
+
+            @Override
+            public void onFailure(int code, String msg) {
+            }
+        }, taeWebViewUiSettings, id, type, null, taokeParams);//1：淘宝商品;2：天猫商品。
+    }
+
 
     @OnClick(R.id.fab)
     public void fab(View v) {
@@ -197,11 +257,11 @@ public class CheapFragment extends BaseFragment {
                 loadingdialog.dismiss();
                 if (error.networkResponse != null) {
                     if (error.networkResponse.statusCode == 401) {//重新登录
-                        PreferencesUtils.putBooleanToSPMap(getActivity(), PreferencesUtils.Keys.IS_LOGIN, false);
-                        PreferencesUtils.clearSPMap(getActivity(), PreferencesUtils.Keys.USERINFO);
-                        Intent intent = new Intent(getActivity(), LoginActivity.class);
+                        PreferencesUtils.putBooleanToSPMap(getCustomActivity(), PreferencesUtils.Keys.IS_LOGIN, false);
+                        PreferencesUtils.clearSPMap(getCustomActivity(), PreferencesUtils.Keys.USERINFO);
+                        Intent intent = new Intent(getCustomActivity(), LoginActivity.class);
                         startActivity(intent);
-                        getActivity().finish();
+                        getCustomActivity().finish();
                     } else {
 //                        ToastUtil.customShow(Base2Activity.this, getResources().getText(R.string.error_retry));
                     }
@@ -222,7 +282,6 @@ public class CheapFragment extends BaseFragment {
                 return new ApiParams().with("id", "" + id).with("way", way);
             }
 
-
         });
     }
 
@@ -231,63 +290,71 @@ public class CheapFragment extends BaseFragment {
         return new Response.Listener<BaseListModel<CheapModel>>() {
             @Override
             public void onResponse(BaseListModel<CheapModel> indexBaseListModel) {
+
                 loadingdialog.dismiss();
                 isMore = true;
 
-                int tempBackId=indexBaseListModel.getBack();
-                int tempForwardId=indexBaseListModel.getForward();
-                if(tempBackId!=0||tempForwardId!=0){
-                    if(forwardId==0||tempForwardId<forwardId){//forward 为小
+                int tempBackId = indexBaseListModel.getBack();
+                int tempForwardId = indexBaseListModel.getForward();
+                if (tempBackId != 0 || tempForwardId != 0) {
+                    if (forwardId == 0 || tempForwardId < forwardId) {//forward 为小
 
-                        forwardId=tempForwardId;
+                        forwardId = tempForwardId;
                     }
-                    if(tempBackId>backId){
+                    if (tempBackId > backId) {
 
-                        backId=tempBackId;
+                        backId = tempBackId;
                     }
                 }
 
 
-
-
-                if (indexBaseListModel.getRet()==0&&indexBaseListModel.getData() != null) {
+                if (indexBaseListModel.getRet() == 0 && indexBaseListModel.getData() != null) {
                     mCurrentList = indexBaseListModel.getData();
                     if (isRefresh) {
-                        mList.addAll(0, mCurrentList);
-                    } else {
-                        mList.addAll(mCurrentList);
-                    }
-                    handle.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            mAdapter.notifyDataSetChanged();
-                        }
-                    });
 
-                    mPullGridView.onPullUpRefreshComplete();
-
-                } else {
-                    if (!isRefresh) {
-                        mPullGridView.setHasMoreData(false);
-                        mPullGridView.removeFooter();
-//                        mPullGridView.addView();
-
-                        final View view = LayoutInflater.from(getActivity()).inflate(
-                                R.layout.no_more, null);
-//                        view.getScrollY()
                         handle.post(new Runnable() {
                             @Override
                             public void run() {
-                                mPullGridView.addView(view);
+                                mList.addAll(0, mCurrentList);
+                                mAdapter.notifyDataSetChanged();
                             }
                         });
+                    } else {
+
+                        handle.post(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                mList.addAll(mCurrentList);
+                                mAdapter.notifyDataSetChanged();
+                                mGridView.smoothScrollBy(50,200);
+                            }
+                        });
+                    }
+
+
+//                    mPullGridView.onPullUpRefreshComplete();
+
+                } else {//没有更多数据时
+                    if (!isRefresh) {
+                        mPullGridView.setHasMoreData(false);
+
+                        final View view = LayoutInflater.from(getCustomActivity()).inflate(
+                                R.layout.no_more, null);
+////                        view.getScrollY()
+                        handle.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                mPullGridView.addNewView(view);
+                            }
+                        },1000);
 
 //                        ToastUtil.show(getActivity(), getResources().getText(R.string.no_more_error));
                     }
 
                 }
                 // 下拉加载完成
-                mPullGridView.onPullDownRefreshComplete();
+//                mPullGridView.onPullDownRefreshComplete();
 
                 // 上拉刷新完成
 //                mPullGridView.onPullUpRefreshComplete();

@@ -76,6 +76,8 @@
         android:textSize="15sp"
         android:textColor="@color/me_info_text"
         android:maxLines="2"
+        android:minLines="2"
+        android:lines="2"
         android:ellipsize="end"
         />
     <TextView
@@ -87,6 +89,7 @@
         android:paddingRight="10dp"
         android:textSize="14sp"
         android:textColor="@color/key"
+        android:singleLine="true"
         />
 
 

@@ -1,6 +1,11 @@
 package com.liuzhuni.lzn.core.personInfo;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
+import android.text.style.URLSpan;
 import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -13,7 +18,10 @@ import com.lidroid.xutils.view.annotation.ViewInject;
 import com.lidroid.xutils.view.annotation.event.OnClick;
 import com.liuzhuni.lzn.R;
 import com.liuzhuni.lzn.base.Base2Activity;
+import com.liuzhuni.lzn.config.MessageWhat;
 import com.liuzhuni.lzn.config.UrlConfig;
+import com.liuzhuni.lzn.core.goods.ToBuyActivity;
+import com.liuzhuni.lzn.core.index_new.utils.MessageSpan;
 import com.liuzhuni.lzn.core.model.BaseListModel;
 import com.liuzhuni.lzn.core.personInfo.adapter.MessageAdapter;
 import com.liuzhuni.lzn.core.personInfo.model.MessageModel;
@@ -40,7 +48,40 @@ public class MessageCenterActivity extends Base2Activity {
     private int mTotal=1;
     private int mIndex=0;
 
-    private android.os.Handler handler=new android.os.Handler();
+    private Handler handler = new Handler() {
+        public void handleMessage(Message msg) {
+            int what = msg.what;
+            if (what == MessageWhat.LINK) {
+                MessageSpan ms = (MessageSpan) msg.obj;
+                Object[] spans = (Object[])ms.getObj();
+
+                for (Object span : spans) {
+                    if (span instanceof URLSpan) {
+
+                        String url=((URLSpan) span).getURL();
+                        if(url.startsWith("http")||url.startsWith("https")){
+
+                            Intent intent = new Intent(MessageCenterActivity.this, ToBuyActivity.class);
+                            Bundle bundle = new Bundle();
+
+                            bundle.putString("url",url);
+                            bundle.putString("title", "");
+                            intent.putExtras(bundle);
+                            startActivity(intent);
+                        }else if(url.startsWith("huim")){
+                            Uri uri=Uri.parse(url);
+
+                            Intent contentIntent = new Intent(Intent.ACTION_VIEW, uri);
+                            startActivity(contentIntent);
+                        }
+
+                    }
+                }
+            }
+        };
+    };
+
+
 
 
 
@@ -78,7 +119,7 @@ public class MessageCenterActivity extends Base2Activity {
         mMiddleTv.setText(getResources().getString(R.string.message_center));
         mRightTv.setVisibility(View.GONE);
 
-        mAdapter=new MessageAdapter(this,mList);
+        mAdapter=new MessageAdapter(this,mList,handler);
 
         mlistView.setAdapter(mAdapter);
 
@@ -111,10 +152,11 @@ public class MessageCenterActivity extends Base2Activity {
                     if(indexMessageModel.getData()!=null){
 
                         mCurrentList=indexMessageModel.getData();
-                        mList.addAll(0,mCurrentList);
+
                         handler.post(new Runnable() {
                             @Override
                             public void run() {
+                                mList.addAll(0,mCurrentList);
                                 mAdapter.notifyDataSetChanged();
                             }
                         });

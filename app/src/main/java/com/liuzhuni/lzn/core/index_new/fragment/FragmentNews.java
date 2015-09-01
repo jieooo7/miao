@@ -105,7 +105,7 @@ public class FragmentNews extends BaseFragment {
         mImageLoader = RequestManager.getImageLoader();
 
         mList = new ArrayList<NewsModel>();
-        mAdapter = new AllNewsAdapter(mList, getActivity(), mImageLoader);
+        mAdapter = new AllNewsAdapter(mList, getCustomActivity(), mImageLoader);
 
     }
 
@@ -121,7 +121,7 @@ public class FragmentNews extends BaseFragment {
         mGridView.setHorizontalSpacing(10);
         mGridView.setVerticalSpacing(8);
         mGridView.setCacheColorHint(Color.TRANSPARENT);
-        mGridView.setSelector(getResources().getDrawable(R.drawable.trans));
+        mGridView.setSelector(getCustomActivity().getResources().getDrawable(R.drawable.trans));
         mGridView.setAdapter(mAdapter);
         pullData(0,"back");
         loadingdialog.show();
@@ -143,6 +143,15 @@ public class FragmentNews extends BaseFragment {
                 if(!mList.isEmpty()){
                     pullData(backId,"back");
                 }
+
+                handle.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mPullGridView.onPullUpRefreshComplete();
+//
+                        mPullGridView.onPullDownRefreshComplete();
+                    }
+                },300);
             }
 
             @Override
@@ -154,6 +163,15 @@ public class FragmentNews extends BaseFragment {
                         pullData(forwardId,"forward");
                     }
                 }
+
+                handle.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        mPullGridView.onPullUpRefreshComplete();
+//
+                        mPullGridView.onPullDownRefreshComplete();
+                    }
+                },300);
 //                mPullGridView.onPullUpRefreshComplete();
 //
 //                mPullGridView.onPullDownRefreshComplete();
@@ -169,13 +187,12 @@ public class FragmentNews extends BaseFragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 Intent intent = new Intent();
-                intent.setClass(getActivity(), DetailActivity.class);
+                intent.setClass(getCustomActivity(), DetailActivity.class);
                 Bundle bundle=new Bundle();
                 bundle.putString("id",""+mList.get(position).getId());
                 bundle.putBoolean("isSelect",false);
                 intent.putExtras(bundle);
                 startActivity(intent);
-
             }
         });
 
@@ -199,11 +216,11 @@ public class FragmentNews extends BaseFragment {
                 loadingdialog.dismiss();
                 if (error.networkResponse != null) {
                     if (error.networkResponse.statusCode == 401) {//重新登录
-                        PreferencesUtils.putBooleanToSPMap(getActivity(), PreferencesUtils.Keys.IS_LOGIN, false);
-                        PreferencesUtils.clearSPMap(getActivity(), PreferencesUtils.Keys.USERINFO);
-                        Intent intent = new Intent(getActivity(), LoginActivity.class);
+                        PreferencesUtils.putBooleanToSPMap(getCustomActivity(), PreferencesUtils.Keys.IS_LOGIN, false);
+                        PreferencesUtils.clearSPMap(getCustomActivity(), PreferencesUtils.Keys.USERINFO);
+                        Intent intent = new Intent(getCustomActivity(), LoginActivity.class);
                         startActivity(intent);
-                        getActivity().finish();
+                        getCustomActivity().finish();
                     } else {
 //                        ToastUtil.customShow(Base2Activity.this, getResources().getText(R.string.error_retry));
                     }
@@ -253,22 +270,32 @@ public class FragmentNews extends BaseFragment {
                 if (indexBaseListModel.getData() != null) {
                     mCurrentList = indexBaseListModel.getData();
                     if(isRefresh){
-                        mList.addAll(0, mCurrentList);
+
+                        handle.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                mList.addAll(0, mCurrentList);
+                                mAdapter.notifyDataSetChanged();
+                            }
+                        });
                     }else{
-                        mList.addAll(mCurrentList);
+
+                        handle.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                mList.addAll(mCurrentList);
+                                mAdapter.notifyDataSetChanged();
+                            }
+                        });
                     }
-                    handle.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            mAdapter.notifyDataSetChanged();
-                        }
-                    });
+
 
 
                 }else{
                     if(!isRefresh){
                         mPullGridView.setHasMoreData(false);
-                        ToastUtil.show(getActivity(), getResources().getText(R.string.no_more_error));
+                        ToastUtil.show(getCustomActivity(), "没有更多了");
+                        mPullGridView.setHasMoreData(false);
                     }
 
                 }

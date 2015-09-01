@@ -22,6 +22,7 @@ public class UrlConfig {
 	
 //	public static final String BASE_IP = "http://192.168.1.110:8058/api/";
 	public static final String BASE_IP = "http://hmapp.liuzhuni.com/api/";
+	public static final String VERSION_CODE = "5";
 	public static final String INDEX = BASE_IP +"usershoplist/get?id=";
 	public static final String SEND_CODE = BASE_IP +"reg/sentcode";
 	public static final String SEND_FOGOT_CODE = BASE_IP +"forgot/sentcode";
@@ -76,9 +77,23 @@ public class UrlConfig {
 	public static final String GET_PROFILE=BASE_IP +"user/get";
 	public static final String FAV=BASE_IP +"product/CollectionNum";
 	public static final String CANCEL_FAV=BASE_IP +"product/CancelCollect";
-	public static final String GET_TOP=BASE_IP +"product/gettop";
+	public static final String GET_TOP=BASE_IP +"product/GetProductTop";
 	public static final String GET_CHEAP=BASE_IP +"product/GetBaicai";
 	public static final String PRICE_RANGE=BASE_IP +"usershoplist/GetPriceRange";
+
+
+
+
+	public static final String SEARCH_PICK=BASE_IP +"product/SearchContent";
+	public static final String SEARCH_NEWS=BASE_IP +"product/SearchBrokeContent";
+
+
+
+	public static final String CAMPAIGN=BASE_IP +"user/GetZhuanTiList";
+
+
+	public static final String IS_SHARE=BASE_IP +"user/IsShare";
+	public static final String SUCCESS_SHARE=BASE_IP +"user/successshare";
 
 
 

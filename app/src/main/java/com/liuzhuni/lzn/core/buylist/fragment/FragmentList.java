@@ -165,21 +165,17 @@ public class FragmentList extends BaseFragment {
                     mIndex++;
                 if(indexBuyListModel.getData()!=null){
                     mCurrentList=indexBuyListModel.getData();
-                    if(isUp){
-                        mList.clear();
-                        mPullList.setLastUpdatedLabel(mTime);//设置最后刷新时间
-                        Date date=new Date();
-                        mTime=mDateFormat.format(date);
-                    }
-                    mList.addAll(mCurrentList);
-//                    if(mSize<1){
-//                        mNoContent.setVisibility(View.VISIBLE);
-//                    }else {
-//                        mNoContent.setVisibility(View.GONE);
-//                    }
+
                     handler.post(new Runnable() {
                         @Override
                         public void run() {
+                            if(isUp){
+                                mList.clear();
+                                mPullList.setLastUpdatedLabel(mTime);//设置最后刷新时间
+                                Date date=new Date();
+                                mTime=mDateFormat.format(date);
+                            }
+                            mList.addAll(mCurrentList);
                             mAdapter.notifyDataSetChanged();
                         }
                     });
@@ -196,14 +192,22 @@ public class FragmentList extends BaseFragment {
                 // 上拉刷新完成
                 mPullList.onPullUpRefreshComplete();
 
+                handler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(mList.size()<1){
 
-                if(mList.size()<1){
+                            mNoContent.setVisibility(View.VISIBLE);
+                        }else {
 
-                    mNoContent.setVisibility(View.VISIBLE);
-                }else {
+                            mNoContent.setVisibility(View.GONE);
+                        }
+                    }
+                });
 
-                    mNoContent.setVisibility(View.GONE);
-                }
+
+
+
             }
         };
 

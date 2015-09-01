@@ -4,9 +4,89 @@
     android:layout_height="match_parent"
     tools:context="com.liuzhuni.lzn.core.index_new.IndexNewActivity">
 
-    <include
-        android:id="@+id/title"
-        layout="@layout/title_index" />
+    <RelativeLayout
+        android:id="@+id/title_all"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/title_left_right"
+        android:paddingRight="@dimen/title_left_right"
+        android:paddingBottom="@dimen/title_top_bottom"
+        android:paddingTop="@dimen/title_top_bottom"
+        android:background="@color/key"
+        >
+
+
+        <ImageView
+            android:id="@+id/title_left"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:src="@drawable/ic_qiandao"
+            android:layout_centerVertical="true"
+            android:paddingRight="15dp"
+            android:paddingLeft="5dp"
+            />
+
+
+        <TextView
+            android:id="@+id/title_middle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/me"
+            android:textColor="@color/white"
+            android:textSize="22sp"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            />
+
+
+        <RelativeLayout
+            android:id="@+id/right_title_rl"
+            android:layout_width="wrap_content"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:paddingLeft="15dp"
+            android:paddingRight="8dp"
+            android:gravity="center_vertical"
+            >
+
+            <TextView
+                android:id="@+id/id_sign"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/sign_back"
+                android:textSize="19sp"
+                android:textColor="@color/white"
+                android:drawablePadding="1dp"
+                android:drawableLeft="@drawable/ic_money"
+                android:text="@string/to_sign"
+                />
+
+            <ImageView
+                android:id="@+id/red_title_dot"
+                android:layout_width="10dp"
+                android:layout_height="10dp"
+                android:src="@drawable/red_dot_white"
+                android:layout_toRightOf="@id/id_sign"
+                android:layout_marginTop="-2dp"
+                android:layout_marginLeft="-9dp"
+                />
+            <TextView
+                android:id="@+id/make_cent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/sign_back"
+                android:textSize="19sp"
+                android:textColor="@color/white"
+                android:text="@string/to_make_cent"
+                android:visibility="gone"
+                />
+
+
+
+        </RelativeLayout>
+    </RelativeLayout>
 
     <LinearLayout
         android:id="@+id/index_bottom"
@@ -56,18 +136,38 @@
             android:textSize="12sp"
             android:text="@string/cheap_ch"
             />
-        <TextView
-            android:id="@+id/index_person_info"
+
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="center_horizontal"
-            android:drawableTop="@drawable/ic_my_n"
-            android:drawablePadding="2dp"
-            android:textColor="@color/gray_text_color"
-            android:textSize="12sp"
-            android:text="@string/about_me"
-            />
+            >
+
+
+            <TextView
+                android:id="@+id/index_person_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:gravity="center_horizontal"
+                android:drawableTop="@drawable/ic_my_n"
+                android:drawablePadding="2dp"
+                android:textColor="@color/gray_text_color"
+                android:textSize="12sp"
+                android:text="@string/about_me"
+                />
+
+            <ImageView
+                android:id="@+id/red_dot"
+                android:layout_width="8dp"
+                android:layout_height="8dp"
+                android:src="@drawable/red_dot"
+                android:layout_toRightOf="@id/index_person_info"
+                android:layout_marginTop="2dp"
+                android:layout_marginLeft="2dp"
+                android:visibility="gone"
+                />
+        </RelativeLayout>
 
 
 
@@ -87,7 +187,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/index_line_bottom"
-        android:layout_below="@id/title"
+        android:layout_below="@id/title_all"
         >
 
     </FrameLayout>

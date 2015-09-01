@@ -1,5 +1,6 @@
 package com.liuzhuni.lzn.base;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 
@@ -7,6 +8,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.liuzhuni.lzn.R;
+import com.liuzhuni.lzn.config.AppManager;
 import com.liuzhuni.lzn.core.loading.LoadingDialog;
 import com.liuzhuni.lzn.core.login.LoginActivity;
 import com.liuzhuni.lzn.utils.PreferencesUtils;
@@ -16,12 +18,26 @@ import com.liuzhuni.lzn.volley.RequestManager;
 
 public abstract class BaseFragment extends Fragment {
 
-    public LoadingDialog loadingdialog=null;
-    public boolean isTouch=true;
+    public LoadingDialog loadingdialog = null;
+    public boolean isTouch = true;
+    private Activity mActivty = null;
+
+
+    public Activity getCustomActivity() {
+        if (mActivty == null) {
+
+            if (isAdded()) {
+                mActivty = super.getActivity();
+            } else {
+                mActivty = AppManager.getAppManager().currentActivity();
+            }
+        }
+        return mActivty;
+    }
 
 
     public void executeRequest(Request<?> request) {
-        if(loadingdialog==null){
+        if (loadingdialog == null) {
 
             loadingdialog = new LoadingDialog(getActivity());
         }
@@ -40,7 +56,7 @@ public abstract class BaseFragment extends Fragment {
 //                Toast.makeText(activity,getResources().getText(R.string.error_retry), Toast.LENGTH_LONG).show();
                 loadingdialog.dismiss();
 
-                isTouch=true;
+                isTouch = true;
                 if (error.networkResponse != null) {
                     if (error.networkResponse.statusCode == 401) {//重新登录
                         PreferencesUtils.putBooleanToSPMap(getActivity(), PreferencesUtils.Keys.IS_LOGIN, false);
@@ -64,7 +80,7 @@ public abstract class BaseFragment extends Fragment {
             public void onErrorResponse(VolleyError error) {
 //                Toast.makeText(activity,getResources().getText(R.string.error_retry), Toast.LENGTH_LONG).show();
                 loadingdialog.dismiss();
-                isTouch=true;
+                isTouch = true;
                 if (error.networkResponse != null) {
                     if (error.networkResponse.statusCode == 401) {//重新登录
                         PreferencesUtils.putBooleanToSPMap(getActivity(), PreferencesUtils.Keys.IS_LOGIN, false);

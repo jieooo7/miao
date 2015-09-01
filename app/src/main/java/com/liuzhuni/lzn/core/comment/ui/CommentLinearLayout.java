@@ -63,17 +63,6 @@ public class CommentLinearLayout extends LinearLayout {
             for (int i = 0; i < count; i++) {
                 View v = adapter.getView(i, null, null);
                 addView(v);
-//            setDividerDrawable();
-//            if(i<count-1){
-//
-//                TextView tv=new TextView(context);
-//                LayoutParams lpTv = new LayoutParams(
-//                        LayoutParams.MATCH_PARENT,1);
-//                lpTv.setMargins(0, DensityUtil.dip2px(context, 2),0,DensityUtil.dip2px(context,2));
-//                tv.setLayoutParams(lpTv);
-//                tv.setBackgroundDrawable(new ColorDrawable(0xffebebeb));
-//                addView(tv);
-//            }
 
                     final int index=i;
                     getChildAt(index).setOnClickListener(new OnClickListener() {
@@ -116,17 +105,6 @@ public class CommentLinearLayout extends LinearLayout {
                                 replyable.replyFloor(list.get(index-1).getId(),list.get(index-1).getUserNick());
                             }
                         }
-//                        else{
-//                            for (int i = 0; i < count + 1; i++) {
-//                                if (i == 3) {
-//                                    getChildAt(i).setVisibility(View.GONE);
-//                                } else {
-//                                    getChildAt(i).setVisibility(View.VISIBLE);
-//                                }
-//
-//                            }
-//
-//                        }
                     }
                 });
             }

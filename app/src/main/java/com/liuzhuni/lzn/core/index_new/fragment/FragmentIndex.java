@@ -1,26 +1,24 @@
 package com.liuzhuni.lzn.core.index_new.fragment;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
-import android.text.SpannableString;
-import android.text.Spanned;
-import android.text.style.AbsoluteSizeSpan;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
+import com.android.volley.toolbox.NetworkImageView;
 import com.google.gson.reflect.TypeToken;
 import com.lidroid.xutils.ViewUtils;
 import com.lidroid.xutils.view.annotation.ViewInject;
@@ -30,12 +28,14 @@ import com.liuzhuni.lzn.base.BaseFragment;
 import com.liuzhuni.lzn.config.Check;
 import com.liuzhuni.lzn.config.UrlConfig;
 import com.liuzhuni.lzn.core.buylist.BuyActivity;
+import com.liuzhuni.lzn.core.html.HtmlActivity;
 import com.liuzhuni.lzn.core.index.model.CountModel;
 import com.liuzhuni.lzn.core.index_new.DetailActivity;
 import com.liuzhuni.lzn.core.index_new.FilterActivity;
 import com.liuzhuni.lzn.core.index_new.adapter.PickAdapter;
+import com.liuzhuni.lzn.core.index_new.model.CampaignModel;
 import com.liuzhuni.lzn.core.index_new.model.PickModel;
-import com.liuzhuni.lzn.core.index_new.model.TopModel;
+import com.liuzhuni.lzn.core.index_new.ui.CircleImageView;
 import com.liuzhuni.lzn.core.login.LoginActivity;
 import com.liuzhuni.lzn.core.login.Loginable;
 import com.liuzhuni.lzn.core.login.TheIntent;
@@ -79,20 +79,6 @@ public class FragmentIndex extends BaseFragment implements
     private FloatingActionButton fab;
 
 
-    @ViewInject(R.id.index_want_buy)
-    private ImageView mWantBuyIv;
-
-    @ViewInject(R.id.index_new_message)
-    private TextView mMessageTv;
-
-    @ViewInject(R.id.index_buy_list)
-    private TextView mBuyTv;
-
-    @ViewInject(R.id.want_buy_ll)
-    private LinearLayout mBuyLl;
-
-    @ViewInject(R.id.index_rl)
-    private RelativeLayout mRel;
 
 
     @ViewInject(R.id.top_ll)
@@ -101,9 +87,40 @@ public class FragmentIndex extends BaseFragment implements
     @ViewInject(R.id.top_ttle)
     private TextView mTopTv;
 
+
+    @ViewInject(R.id.tell_me)
+    private TextView mNewMessageTv;
+
+
+    @ViewInject(R.id.tell_me_image)
+    private CircleImageView mNewMessageIv;
+
+
+    @ViewInject(R.id.message_num)
+    private TextView mNewMessageNum;
+
+
+    @ViewInject(R.id.buy_list)
+    private TextView mBuyListNum;
+
+
+    @ViewInject(R.id.the_gift)
+    private NetworkImageView mGiftNv;
+    @ViewInject(R.id.only_you)
+    private NetworkImageView mTopicNv;
+    @ViewInject(R.id.touch_me)
+    private NetworkImageView mTouchNv;
+
+
+    private String mGiftUrl="";
+    private String mTopicUrl="";
+    private String mTouchUrl="";
+
     private int mTopId;
 
     private Boolean isMore = true;//防止重复加载
+
+    private boolean hasTop=false;
 
 
 
@@ -129,6 +146,7 @@ public class FragmentIndex extends BaseFragment implements
 
     public Handler mHandler = new Handler();
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
@@ -148,23 +166,30 @@ public class FragmentIndex extends BaseFragment implements
 
         mImageLoader = RequestManager.getImageLoader();
         mList = new ArrayList<PickModel>();
-        mAdapter = new PickAdapter(getActivity(),mList,mImageLoader);
+        mAdapter = new PickAdapter(getCustomActivity(),mList,mImageLoader);
 
-        mTag= PreferencesUtils.getValueFromSPMap(getActivity(), PreferencesUtils.Keys.TAG, "");
+        mTag= PreferencesUtils.getValueFromSPMap(getCustomActivity(), PreferencesUtils.Keys.TAG, "");
 
 
     }
 
 
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+    }
+
     protected void initUI() {
 
+        if (Check.hashead(getCustomActivity())) {
+            mImageLoader.get(PreferencesUtils.getValueFromSPMap(getCustomActivity(), PreferencesUtils.Keys.HEAD_URL, "", PreferencesUtils.Keys.USERINFO),mImageLoader.getImageListener(mNewMessageIv,R.drawable.my_touxiang,R.drawable.my_touxiang));
+        }
 
         fab.hide();
         pinListView.setHideFab(this);
-        pinListView.setPullLoadEnable(true);
+        pinListView.setPullLoadEnable(false);
         pinListView.setPullRefreshEnable(true);
         pinListView.setXListViewListener(this);
-        pinListView.setAdapter(mAdapter);
 
         pullData(0,"","back");
 
@@ -185,18 +210,16 @@ public class FragmentIndex extends BaseFragment implements
 
 
 //        startNet();
-        if (!CommonUtil.checkNetState(getActivity())) {
+        if (!CommonUtil.checkNetState(getCustomActivity())) {
 
-            ToastUtil.customShow(getActivity(), getResources().getText(R.string.bad_net));
+            ToastUtil.customShow(getCustomActivity(),"当前网络不可用\n请检查您的网络设置");
         }
 
-        if (Check.isLogin(getActivity())) {
+        if (Check.isLogin(getCustomActivity())) {
             //登陆成功
             pullMessageData();
 
         } else {
-            mMessageTv.setText(getResources().getText(R.string.new_message));
-            mBuyTv.setText(getResources().getText(R.string.buy_list));
 
         }
     }
@@ -211,18 +234,19 @@ public class FragmentIndex extends BaseFragment implements
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                isRefresh=true;
-                if(isMore){
+                isRefresh = true;
+                if (isMore) {
                     isMore = false;
-                    if(mList.size()>=1){
-                        pullData(backId,"","back");
-                    }else{
-                        pullData(0,"","back");
-                    }}
+                    if (mList.size() >= 1) {
+                        pullData(backId, "", "back");
+                    } else {
+                        pullData(0, "", "back");
+                    }
+                }
 
                 pinListView.stopRefresh();
             }
-        },200);
+        }, 200);
 
     }
 
@@ -233,25 +257,25 @@ public class FragmentIndex extends BaseFragment implements
             @Override
             public void run() {
 
-                isRefresh=false;
-                if(isMore){
+                isRefresh = false;
+                if (isMore) {
                     isMore = false;
-                    if(mList.size()>=1) {
+                    if (mList.size() >= 1) {
                         pullData(forwardId, "", "forward");
-                    }else{
-                        pullData(0,"","back");
+                    } else {
+                        pullData(0, "", "back");
                     }
                 }
                 pinListView.stopLoadMore();
             }
-        },200);
+        }, 200);
 
     }
 
 
 
 
-    protected  void pullData(final int id,final String tags,final String way) {
+    protected  void pullData(final int id, final String tags, final String way) {
         executeRequest(new GsonBaseRequest<BaseListModel<PickModel>>(Request.Method.POST, UrlConfig.GET_PICK, new TypeToken<BaseListModel<PickModel>>() {
         }.getType(), responseListener(), errorMoreListener()) {
 
@@ -271,11 +295,11 @@ public class FragmentIndex extends BaseFragment implements
                 loadingdialog.dismiss();
                 if (error.networkResponse != null) {
                     if (error.networkResponse.statusCode == 401) {//重新登录
-                        PreferencesUtils.putBooleanToSPMap(getActivity(), PreferencesUtils.Keys.IS_LOGIN, false);
-                        PreferencesUtils.clearSPMap(getActivity(), PreferencesUtils.Keys.USERINFO);
-                        Intent intent = new Intent(getActivity(), LoginActivity.class);
+                        PreferencesUtils.putBooleanToSPMap(getCustomActivity(), PreferencesUtils.Keys.IS_LOGIN, false);
+                        PreferencesUtils.clearSPMap(getCustomActivity(), PreferencesUtils.Keys.USERINFO);
+                        Intent intent = new Intent(getCustomActivity(), LoginActivity.class);
                         startActivity(intent);
-                        getActivity().finish();
+                        getCustomActivity().finish();
                     } else {
 //                        ToastUtil.customShow(Base2Activity.this, getResources().getText(R.string.error_retry));
                     }
@@ -311,31 +335,54 @@ public class FragmentIndex extends BaseFragment implements
 
                         mCurrentList = indexBaseListModel.getData();
                         if(isRefresh){
-                            mList.addAll(0, mCurrentList);
+
+                            mHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if(hasTop){
+                                        mList.addAll(1, mCurrentList);
+                                    }else{
+
+                                        mList.addAll(0, mCurrentList);
+                                    }
+                                    mAdapter.notifyDataSetChanged();
+                                }
+                            });
                             pinListView.setRefreshTime(mTime);
                             Date date = new Date();
                             mTime = mDateFormat.format(date);
                         }else{
 
-                            mList.addAll(mCurrentList);
+
+                            mHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    mList.addAll(mCurrentList);
+                                    mAdapter.notifyDataSetChanged();
+                                }
+                            });
                         }
 
 
-                        mHandler.post(new Runnable() {
-                            @Override
-                            public void run() {
 
-                                mAdapter.notifyDataSetChanged();
-                            }
-                        });
 
 
                     }else{
 
                         if(!isRefresh){
-                            ToastUtil.show(getActivity(), getResources().getText(R.string.no_more_error));
+                            ToastUtil.show(getCustomActivity(), "没有更多了");
                         }
                     }
+
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {//需要在同一个线程中操作
+                            if(mList.size()>5){
+                                pinListView.setPullLoadEnable(true);
+                            }
+                        }
+                    });
+
 
                     //mlist  为空时 显示错误页面
                 }
@@ -347,40 +394,80 @@ public class FragmentIndex extends BaseFragment implements
 
 
     protected  void pullTopData() {
-        executeRequest(new GsonBaseRequest<BaseModel<TopModel>>(Request.Method.GET, UrlConfig.GET_TOP, new TypeToken<BaseModel<TopModel>>() {
+        executeRequest(new GsonBaseRequest<BaseModel<PickModel>>(Request.Method.GET, UrlConfig.GET_TOP, new TypeToken<BaseModel<PickModel>>() {
         }.getType(), responseTopListener(), errorListener()) {
+
+        });
+    }
+    protected  void pullCampaignData() {
+        executeRequest(new GsonBaseRequest<BaseListModel<CampaignModel>>(Request.Method.GET, UrlConfig.CAMPAIGN, new TypeToken<BaseModel<CampaignModel>>() {
+        }.getType(), responseCamListener(), errorListener()) {
 
         });
     }
 
 
-    private Response.Listener<BaseModel<TopModel>> responseTopListener() {
-        return new Response.Listener<BaseModel<TopModel>>() {
+
+
+    private Response.Listener<BaseListModel<CampaignModel>> responseCamListener() {
+        return new Response.Listener<BaseListModel<CampaignModel>>() {
             @Override
-            public void onResponse(BaseModel<TopModel> indexcountModel) {
-                if (indexcountModel.getRet() == 0&&indexcountModel.getData()!=null) {
-                    final TopModel topModel=indexcountModel.getData();
-                    mTopId=topModel.getId();
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            mTopTv.setText(topModel.getTitle());
-                            mTopLl.setVisibility(View.VISIBLE);
-                        }
-                    });
+            public void onResponse(BaseListModel<CampaignModel> indexcountModel) {
+                if (indexcountModel.getRet() == 0) {
 
-
-                } else {
+                    final List<CampaignModel> camModel=indexcountModel.getData();
 
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
+                            if(!TextUtils.isEmpty(camModel.get(0).getImgUrl())){
+                                mGiftNv.setImageUrl(camModel.get(0).getImgUrl(),mImageLoader);
+                                mGiftUrl=camModel.get(0).getZhuanTiUrl();
+                                mGiftNv.setVisibility(View.VISIBLE);
+
+                            }
+                            if(!TextUtils.isEmpty(camModel.get(1).getImgUrl())){
+                                mTopicNv.setImageUrl(camModel.get(1).getImgUrl(),mImageLoader);
+                                mTopicUrl=camModel.get(1).getZhuanTiUrl();
+                                mTopicNv.setVisibility(View.VISIBLE);
+
+                            }
+                            if(!TextUtils.isEmpty(camModel.get(2).getImgUrl())){
+                                mTouchNv.setImageUrl(camModel.get(2).getImgUrl(),mImageLoader);
+                                mTouchUrl=camModel.get(2).getZhuanTiUrl();
+                                mTouchNv.setVisibility(View.VISIBLE);
+
+                            }
+
+
                         }
                     });
 
 
                 }
+            }
+        };
 
+    }
+    private Response.Listener<BaseModel<PickModel>> responseTopListener() {
+        return new Response.Listener<BaseModel<PickModel>>() {
+            @Override
+            public void onResponse(BaseModel<PickModel> indexcountModel) {
+                if (indexcountModel.getRet() == 0&&indexcountModel.getData()!=null) {
+                    final PickModel topModel=indexcountModel.getData();
+                    topModel.setIsTop(true);
+                    mHandler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mList.add(0, topModel);
+                            hasTop=true;
+                            mAdapter.notifyDataSetChanged();
+
+                        }
+                    });
+
+
+                }
             }
         };
 
@@ -418,8 +505,6 @@ public class FragmentIndex extends BaseFragment implements
         return new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                mMessageTv.setText(getResources().getText(R.string.new_message));
-                mBuyTv.setText(getResources().getText(R.string.buy_list));
 
             }
         };
@@ -430,20 +515,41 @@ public class FragmentIndex extends BaseFragment implements
             @Override
             public void onResponse(BaseModel<CountModel> indexcountModel) {
                 if (indexcountModel.getRet() == 0) {
-                    SpannableString spanMessage = new SpannableString("" + indexcountModel.getData().getPushs());
-                    spanMessage.setSpan(new AbsoluteSizeSpan(TEXI_SIZE, true), 0, spanMessage.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);//第二个参数boolean dip，如果为true，表示前面的字体大小单位为dip，否则为像素，同上。
-                    mMessageTv.setText(spanMessage);
-                    mMessageTv.append(getResources().getText(R.string.new_message_enter));
 
-                    SpannableString spanBuy = new SpannableString("" + indexcountModel.getData().getShoplists());
-                    spanBuy.setSpan(new AbsoluteSizeSpan(TEXI_SIZE, true), 0, spanBuy.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                    mBuyTv.setText(spanBuy);
-                    mBuyTv.append(getResources().getText(R.string.buy_list_enter));
+                    final CountModel model=indexcountModel.getData();
+                    if(model!=null){
+
+                        mHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+
+                                if(!TextUtils.isEmpty(model.getKeyword())){
+                                    mNewMessageTv.setText(model.getKeyword());
+                                }
+                                if(model.getPushs()>0){
+
+                                    mNewMessageNum.setText(""+model.getPushs());
+                                    mNewMessageNum.setVisibility(View.VISIBLE);
+                                }else{
+                                    mNewMessageNum.setVisibility(View.INVISIBLE);
+
+                                }
+
+
+
+                                if(model.getShoplists()>0){
+                                    mBuyListNum.setText("("+model.getShoplists()+")");
+                                }
+
+
+                            }
+                        });
+                    }
+
 
 
                 } else {
-                    mMessageTv.setText(getResources().getText(R.string.new_message));
-                    mBuyTv.setText(getResources().getText(R.string.buy_list));
+
                 }
 
             }
@@ -462,7 +568,7 @@ public class FragmentIndex extends BaseFragment implements
 //                Toast.makeText(activity, ""+position, Toast.LENGTH_LONG).show();
 
                     Intent intent = new Intent();
-                    intent.setClass(getActivity(), DetailActivity.class);
+                    intent.setClass(getCustomActivity(), DetailActivity.class);
                     Bundle bundle = new Bundle();
                     bundle.putString("id", "" + mList.get(position-1).getId());
                     bundle.putBoolean("isSelect", true);
@@ -482,7 +588,7 @@ public class FragmentIndex extends BaseFragment implements
         switch (requestCode) {
 
             case REQUEST_CODE:
-                if(resultCode==getActivity().RESULT_OK){
+                if(resultCode==getCustomActivity().RESULT_OK){
                     mList.clear();
                     mTag=data.getExtras().getString("tag");
 //                    ToastUtil.customShow(this,data.getExtras().getString("tag"));
@@ -502,15 +608,45 @@ public class FragmentIndex extends BaseFragment implements
     }
     @OnClick(R.id.filter_tv)
     public void filter(View v) {
-        Intent intent = new Intent(getActivity(), FilterActivity.class);
+        Intent intent = new Intent(getCustomActivity(), FilterActivity.class);
         startActivityForResult(intent, REQUEST_CODE);
+
+    }
+    @OnClick(R.id.the_gift)
+    public void gift(View v) {
+        Intent intent = new Intent();
+        intent.setClass(getCustomActivity(), HtmlActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("url", mGiftUrl);
+        intent.putExtras(bundle);
+        startActivity(intent);
+
+    }
+    @OnClick(R.id.only_you)
+    public void topic(View v) {
+        Intent intent = new Intent();
+        intent.setClass(getCustomActivity(), HtmlActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("url", mTopicUrl);
+        intent.putExtras(bundle);
+        startActivity(intent);
+
+    }
+    @OnClick(R.id.touch_me)
+    public void touch(View v) {
+        Intent intent = new Intent();
+        intent.setClass(getCustomActivity(), HtmlActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putString("url", mTouchUrl);
+        intent.putExtras(bundle);
+        startActivity(intent);
 
     }
 
     @OnClick(R.id.top_ll)
     public void top(View v) {
         Intent intent = new Intent();
-        intent.setClass(getActivity(), DetailActivity.class);
+        intent.setClass(getCustomActivity(), DetailActivity.class);
         Bundle bundle = new Bundle();
         bundle.putString("id", "" + mTopId);
         bundle.putBoolean("isSelect", true);
@@ -523,24 +659,24 @@ public class FragmentIndex extends BaseFragment implements
     public void message(View v) {
 
         //消息
-        TheIntent theIntent = new TheIntent(getActivity(), new Loginable() {
+        TheIntent theIntent = new TheIntent(getCustomActivity(), new Loginable() {
             @Override
             public void intent() {
-                Intent intent = new Intent(getActivity(), TextSiriActivity.class);
+                Intent intent = new Intent(getCustomActivity(), TextSiriActivity.class);
                 startActivity(intent);
             }
         });
         theIntent.go();
     }
 
-    @OnClick(R.id.index_buy_list)
+    @OnClick(R.id.buy_list)
     public void buyList(View v) {
 
         //购买清单
-        TheIntent theIntent = new TheIntent(getActivity(), new Loginable() {
+        TheIntent theIntent = new TheIntent(getCustomActivity(), new Loginable() {
             @Override
             public void intent() {
-                Intent intent = new Intent(getActivity(), BuyActivity.class);
+                Intent intent = new Intent(getCustomActivity(), BuyActivity.class);
                 startActivity(intent);
             }
         });
@@ -548,13 +684,13 @@ public class FragmentIndex extends BaseFragment implements
 
     }
 
-    @OnClick(R.id.want_buy_ll)
+    @OnClick(R.id.to_buy)
     public void wantBuy(View v) {
         //想买
-        TheIntent theIntent = new TheIntent(getActivity(), new Loginable() {
+        TheIntent theIntent = new TheIntent(getCustomActivity(), new Loginable() {
             @Override
             public void intent() {
-                Intent intent = new Intent(getActivity(), SelectActivity.class);
+                Intent intent = new Intent(getCustomActivity(), SelectActivity.class);
                 Bundle bundle = new Bundle();
                 bundle.putBoolean("fromIndex", true);
                 intent.putExtras(bundle);

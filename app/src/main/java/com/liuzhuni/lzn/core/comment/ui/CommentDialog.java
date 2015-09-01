@@ -2,6 +2,7 @@ package com.liuzhuni.lzn.core.comment.ui;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
@@ -74,9 +75,9 @@ public class CommentDialog {
         });
 
 
-        mEdit.setFocusable(true);
-        mEdit.setFocusableInTouchMode(true);
-        mEdit.requestFocus();
+//        mEdit.setFocusable(true);
+//        mEdit.setFocusableInTouchMode(true);
+//        mEdit.requestFocus();
 
 
 //        InputMethodManager imm = (InputMethodManager)
@@ -89,6 +90,7 @@ public class CommentDialog {
 
     public void show() {
         mDialog.show();
+        showKeyboard(mEdit);//在view渲染完成前requestFocus没有效果,需要延迟一定的时间主动调用键盘弹出
 //        mContext.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_VISIBLE);
 //        imm = (InputMethodManager)
 //                mContext.getSystemService(mContext.INPUT_METHOD_SERVICE);
@@ -104,5 +106,16 @@ public class CommentDialog {
         }
     }
 
+    private void showKeyboard(final EditText editText) {
+        final InputMethodManager manager = (InputMethodManager)editText.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+        editText.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                editText.requestFocus();
+                manager.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
+            }
+        }, 300);
+
+    }
 
 }

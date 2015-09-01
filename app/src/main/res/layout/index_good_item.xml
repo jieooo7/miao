@@ -2,12 +2,19 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/select_info_back"
-    android:paddingTop="15dp"
-    android:paddingBottom="15dp"
-    android:paddingRight="20dp"
-    android:paddingLeft="20dp"
     android:focusable="false"
     >
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
+        android:paddingRight="20dp"
+        android:paddingLeft="20dp"
+        >
+
+
+
   <RelativeLayout
       android:id="@+id/item_image"
       android:layout_width="85dp"
@@ -185,5 +192,25 @@
 
 
 
+
+
+    </RelativeLayout>
+    <TextView
+
+        android:id="@+id/tag_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/white"
+        android:textSize="13sp"
+        android:text="@string/always_top"
+        android:background="@color/get_coupon"
+        android:paddingTop="2dp"
+        android:paddingBottom="2dp"
+        android:paddingRight="8dp"
+        android:paddingLeft="8dp"
+        android:layout_marginRight="20dp"
+        android:layout_alignParentRight="true"
+        android:visibility="invisible"
+        />
 
 </RelativeLayout>

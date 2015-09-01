@@ -19,7 +19,7 @@
         android:id="@+id/comment_reply"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
+        android:textSize="15sp"
         android:textColor="@color/html_text"
         android:layout_toLeftOf="@id/num"
         android:layout_marginRight="17dp"

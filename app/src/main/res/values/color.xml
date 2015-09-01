@@ -8,6 +8,7 @@
       <color name="transparent">@android:color/transparent</color>
       <color name="key">#f55d62</color>
       <color name="red">#f55d62</color>
+      <color name="red_deep">#eb3c4c</color>
       <color name="text_black">#46454b</color>
       <color name="text_gray">#cccccc</color>
       <color name="co_login_color">#75737f</color>
@@ -38,6 +39,7 @@
 
       <color name="dialog_text">#a0a0a0</color>
       <color name="twe_percent_white">#33ffffff</color>
+      <color name="twe_s_percent_white">#99ffffff</color>
 
 
       <color name="gray_back_color">#f7f7f7</color>
@@ -62,6 +64,12 @@
       <color name="get_coupon">#5fb4e5</color>
       <color name="comment_best">#ffa466</color>
       <color name="no_more">#555555</color>
+      <color name="line_color">#d0d0d0</color>
+
+
+      <color name="message_line_color">#d9d7e0</color>
+      <color name="message_div_color">#f7f9fa</color>
+      <color name="messgae_back">#fff5f5</color>
 
 
 </resources>

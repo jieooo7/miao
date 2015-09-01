@@ -1,9 +1,12 @@
 package com.liuzhuni.lzn.core.comment;
 
+import android.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -12,9 +15,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.google.gson.reflect.TypeToken;
-import com.lidroid.xutils.ViewUtils;
-import com.lidroid.xutils.view.annotation.ViewInject;
-import com.lidroid.xutils.view.annotation.event.OnClick;
 import com.liuzhuni.lzn.R;
 import com.liuzhuni.lzn.base.Base2Activity;
 import com.liuzhuni.lzn.config.UrlConfig;
@@ -38,22 +38,18 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
-public class CommentActivity extends Base2Activity implements XListViewNew.IXListViewListener,CommentAdapter.ReplyListener,Replyable{
+public class CommentActivity extends Base2Activity implements XListViewNew.IXListViewListener, CommentAdapter.ReplyListener, Replyable {
 
 
-    @ViewInject(R.id.title_middle)
     private TextView mTitleTv;
+    private TextView mBackTv;
+    private TextView mBuyTv;
+    private EditText mCommentTv;
 
-    @ViewInject(R.id.detail_edit)
-    private TextView mEditTv;
-
-    @ViewInject(R.id.comment_list)
     private XListViewNew mListView;
 
 
-    @ViewInject(R.id.when_no_comment)
     private LinearLayout mll;
-
 
 
     private List<CommentModel> mList;
@@ -64,7 +60,6 @@ public class CommentActivity extends Base2Activity implements XListViewNew.IXLis
     private SimpleDateFormat mDateFormat = new SimpleDateFormat("HH:mm");
     private String mTime;
     private boolean isMore = true;//防止重复加载
-
 
 
     private String mId;
@@ -79,9 +74,9 @@ public class CommentActivity extends Base2Activity implements XListViewNew.IXLis
 
     private int reviewNum = 0;
     private int mPosition;
-    private String mText="";
+    private String mText = "";
 
-    private boolean isReviewNum=true;//保证 评论数只初始化一次
+    private boolean isReviewNum = true;//保证 评论数只初始化一次
 
     public Handler mHandler = new Handler();
 
@@ -97,36 +92,44 @@ public class CommentActivity extends Base2Activity implements XListViewNew.IXLis
 
     @Override
     protected void initData() {
-        mImageLoader= RequestManager.getImageLoader();
+        mImageLoader = RequestManager.getImageLoader();
 
+        mId = getIntent().getExtras().getString("id");
+        mUrl = getIntent().getExtras().getString("url");
+        mIsFromSelect = getIntent().getExtras().getBoolean("isSelect");
 
-        mId=getIntent().getExtras().getString("id");
-        mUrl=getIntent().getExtras().getString("url");
-        mIsFromSelect=getIntent().getExtras().getBoolean("isSelect");
-
-        if(mIsFromSelect){
-            mUrlGet= UrlConfig.COMMENT_SEL;
-            mUrlReply= UrlConfig.COMMENT_SEL_REPLY;
-        }else{
-            mUrlGet=UrlConfig.COMMENT_NEWS;
-            mUrlReply=UrlConfig.COMMENT_NEWS_REPLY;
+        if (mIsFromSelect) {
+            mUrlGet = UrlConfig.COMMENT_SEL;
+            mUrlReply = UrlConfig.COMMENT_SEL_REPLY;
+        } else {
+            mUrlGet = UrlConfig.COMMENT_NEWS;
+            mUrlReply = UrlConfig.COMMENT_NEWS_REPLY;
         }
-        loadingdialog.show();
-        pullData(mUrlGet,"0",mId,"");
+
 
     }
 
     @Override
     protected void findViewById() {
-            ViewUtils.inject(this);
+
+        mTitleTv=(TextView)findViewById(R.id.title_middle);
+        mBackTv=(TextView)findViewById(R.id.title_left);
+        mBuyTv=(TextView)findViewById(R.id.title_right);
+        mCommentTv=(EditText)findViewById(R.id.detail_edit);
+
+
+        mListView=(XListViewNew)findViewById(R.id.comment_list);
+        mll=(LinearLayout)findViewById(R.id.when_no_comment);
+
     }
 
     @Override
     protected void initUI() {
 
-
-        mList=new ArrayList<CommentModel>();
-        mAdapter=new CommentAdapter(this,mList,mImageLoader);
+        loadingdialog.show();
+        pullData(mUrlGet, "0", mId, "");
+        mList = new ArrayList<CommentModel>();
+        mAdapter = new CommentAdapter(this, mList, mImageLoader);
         mAdapter.setReplyListener(this);
         mListView.setXListViewListener(this);
         mListView.setAdapter(mAdapter);
@@ -137,31 +140,51 @@ public class CommentActivity extends Base2Activity implements XListViewNew.IXLis
     @Override
     protected void setListener() {
 
+
+        mBackTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                back();
+            }
+        });
+
+
+        mBuyTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                buy();
+            }
+        });
+
+        mCommentTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                edit();
+            }
+        });
+
     }
 
 
-
-    @OnClick(R.id.title_left)
-    public void back(View v) {
+    public void back() {
 
         finish();
     }
 
-    @OnClick(R.id.detail_edit)
-    public void edit(View v) {
+    public void edit() {
 
         //评价
-        isNewReply=true;
-        final CommentDialog dialog=new CommentDialog(this);
+        isNewReply = true;
+        final CommentDialog dialog = new CommentDialog(this);
         dialog.mTitle.setText("发表评论");
-        dialog.mSubmit.setOnClickListener(new View.OnClickListener(){
+        dialog.mSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String text=dialog.mEdit.getText().toString();
-                if(text.length()<5){
+                String text = dialog.mEdit.getText().toString();
+                if (text.length() < 5) {
                     ToastUtil.customShow(CommentActivity.this, "评论内容不少于5个字哦~");
-                }else{
-                    pullCommentData(mUrlReply,mId,"0",text);
+                } else {
+                    pullCommentData(mUrlReply, mId, "0", text);
                     dialog.dismiss();
 
                 }
@@ -173,25 +196,29 @@ public class CommentActivity extends Base2Activity implements XListViewNew.IXLis
 
     }
 
+    @Override
+    public void onAttachFragment(Fragment fragment) {
+        super.onAttachFragment(fragment);
+    }
 
     @Override
     public void reply(int pos) {
 
-        isNewReply=false;
-        final CommentDialog dialog=new CommentDialog(this);
-        mPosition =pos;
-        dialog.mTitle.setText("回复 "+mList.get(mPosition).getUserNick());
+        isNewReply = false;
+        final CommentDialog dialog = new CommentDialog(this);
+        mPosition = pos;
+        dialog.mTitle.setText("回复 " + mList.get(mPosition).getUserNick());
         dialog.mEdit.setHint("回复 " + mList.get(mPosition).getUserNick());
         dialog.mSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String text = dialog.mEdit.getText().toString();
-                mText=text;
+                mText = text;
                 if (text.length() < 5) {
                     ToastUtil.customShow(CommentActivity.this, "评论内容不少于5个字哦~");
                 } else {
-                    if(isTouch){
-                        isTouch=false;
+                    if (isTouch) {
+                        isTouch = false;
                         pullCommentData(mUrlReply, mId, "" + mList.get(mPosition).getId(), text);
                     }
                     dialog.dismiss();
@@ -206,39 +233,34 @@ public class CommentActivity extends Base2Activity implements XListViewNew.IXLis
     }
 
 
-
-
-    @OnClick(R.id.title_right)
-    public void buy(View v) {
-
+    public void buy() {
         Intent intent = new Intent();
         intent.setClass(this, ToBuyActivity.class);
-        Bundle bundle=new Bundle();
-        bundle.putString("url",mUrl);
-        bundle.putString("title","");
+        Bundle bundle = new Bundle();
+        bundle.putString("url", mUrl);
+        bundle.putString("title", "");
         intent.putExtras(bundle);
         startActivity(intent);
     }
 
 
-
-
-    protected  synchronized void pullData(final String url,final String id,final String pid,final String way) {
+    protected synchronized void pullData(final String url, final String id, final String pid, final String way) {
         executeRequest(new GsonBaseRequest<BaseListModel<CommentModel>>(Request.Method.POST, url, new TypeToken<BaseListModel<CommentModel>>() {
         }.getType(), responseFilterListener(), errorMoreListener()) {
 
             protected Map<String, String> getParams() {//40455
-                return new ApiParams().with("id", id).with("productid", pid).with("way",way);
+                return new ApiParams().with("id", id).with("productid", pid).with("way", way);
             }
 
         });
     }
-    protected  void pullCommentData(final String url,final String pid,final String rid,final String text) {
+
+    protected void pullCommentData(final String url, final String pid, final String rid, final String text) {
         executeRequest(new GsonBaseRequest<BaseModel<CommentModel>>(Request.Method.POST, url, new TypeToken<BaseModel<CommentModel>>() {
         }.getType(), responseComListener(), errorListener()) {
 
             protected Map<String, String> getParams() {
-                return new ApiParams().with("productid", ""+pid).with("reviewid", rid).with("text",text);
+                return new ApiParams().with("productid", "" + pid).with("reviewid", rid).with("text", text);
             }
 
         });
@@ -250,69 +272,101 @@ public class CommentActivity extends Base2Activity implements XListViewNew.IXLis
             public void onResponse(BaseListModel<CommentModel> indexBaseListModel) {
 
                 loadingdialog.dismiss();
-                isTouch=true;
+                isTouch = true;
                 isMore = true;
-                if(isReviewNum){
-                    reviewNum=indexBaseListModel.getReview();
-                    isReviewNum=false;
+                if (isReviewNum) {
+                    reviewNum = indexBaseListModel.getReview();
+                    isReviewNum = false;
                 }
-                if(reviewNum>=1){
-                    mTitleTv.setText(reviewNum+"条评论");
-                }else{
+//                if (reviewNum >= 1) {
+//                    mTitleTv.setText(reviewNum + "条评论");
+//                } else {
+//
+//                    mHandler.post(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            mll.setVisibility(View.VISIBLE);
+//                        }
+//                    });
+//                }
 
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                           mll.setVisibility(View.VISIBLE);
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (reviewNum >= 1) {
+                            mTitleTv.setText(reviewNum + "条评论");
+                        } else {
+
+                            mll.setVisibility(View.VISIBLE);
                         }
-                    });
-                }
-
+                    }
+                });
 
                 if (indexBaseListModel.getData() != null) {
 
-                    List<CommentModel> mCurrentList = indexBaseListModel.getData();
-                    if(isRefresh){
-                        mList.addAll(0, mCurrentList);
+                    final List<CommentModel> mCurrentList = indexBaseListModel.getData();
+                    if (isRefresh) {
+
+
+                        mHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                mList.addAll(0, mCurrentList);
+                                mAdapter.notifyDataSetChanged();
+                            }
+                        });
                         mListView.setRefreshTime(mTime);
                         Date date = new Date();
                         mTime = mDateFormat.format(date);
-                    }else{
+                    } else {
 
-                        mList.addAll(mCurrentList);
+
+                        mHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                mList.addAll(mCurrentList);
+                                mAdapter.notifyDataSetChanged();
+                            }
+                        });
                     }
-                    if(mList.size()>10){
-                        mListView.setPullLoadEnable(true);
-                    }
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            mAdapter.notifyDataSetChanged();
-                        }
-                    });
+
+
 //                    ToastUtil.show(CommentActivity.this,mList.get(mList.size()-1).getComment().get(0).getText()+"");
-                }else{
+                } else {
 
-                    if(!isRefresh){
+                    if (!isRefresh) {
                         ToastUtil.show(CommentActivity.this, getResources().getText(R.string.no_more_error));
                         mListView.setPullLoadEnable(false);
                     }
                 }
 
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (mList.size() > 10) {
+                            mListView.setPullLoadEnable(true);
+                        }
+                    }
+                });
+
+
             }
         };
 
     }
+
     protected Response.Listener<BaseModel<CommentModel>> responseComListener() {
         return new Response.Listener<BaseModel<CommentModel>>() {
             @Override
             public void onResponse(BaseModel<CommentModel> indexBaseListModel) {
-                isTouch=true;
+                isTouch = true;
                 if (indexBaseListModel.getData() != null) {
 
-                    ToastUtil.show(CommentActivity.this, getResources().getText(R.string.success_comment));
+//                    ToastUtil.show(CommentActivity.this, getResources().getText(R.string.success_comment));
 
-                        mList.add(0, indexBaseListModel.getData());//只用id,其他自己构造
+                    final CommentModel model = indexBaseListModel.getData();
+
+                    //只用id,其他自己构造
 
 //                        if(mList.get(mPosition).getComment()!=null){
 //
@@ -325,17 +379,19 @@ public class CommentActivity extends Base2Activity implements XListViewNew.IXLis
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
+                            mll.setVisibility(View.GONE);
+                            mList.add(0, model);
                             mAdapter.notifyDataSetChanged();
+                            mListView.setSelection(0);
                         }
                     });
 
 
+                } else {
 
-                    mListView.setSelection(0);
-
-                }else{
-
-                    ToastUtil.customShow(CommentActivity.this,indexBaseListModel.getMes());
+                }
+                if(!TextUtils.isEmpty(indexBaseListModel.getMes())){
+                    ToastUtil.customShow(CommentActivity.this, indexBaseListModel.getMes());
                 }
 
             }
@@ -350,18 +406,19 @@ public class CommentActivity extends Base2Activity implements XListViewNew.IXLis
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                isRefresh=true;
-                if(isMore){
-                    isMore=false;
-                if(mList.size()>=1){
-                    pullData(mUrlGet,""+mList.get(0).getId(),mId,"back");
-                }else{
-                    pullData(mUrlGet,"0",mId,"back");
-                }}
+                isRefresh = true;
+                if (isMore) {
+                    isMore = false;
+                    if (mList.size() >= 1) {
+                        pullData(mUrlGet, "" + mList.get(0).getId(), mId, "back");
+                    } else {
+                        pullData(mUrlGet, "0", mId, "back");
+                    }
+                }
 
                 mListView.stopRefresh();
             }
-        },200);
+        }, 200);
 
     }
 
@@ -372,24 +429,24 @@ public class CommentActivity extends Base2Activity implements XListViewNew.IXLis
             @Override
             public void run() {
 
-                isRefresh=false;
-                if(mList.size()>=1) {
-                    int size=mList.size();
-                    if(size<reviewNum){
-                        if(isMore){
+                isRefresh = false;
+                if (mList.size() >= 1) {
+                    int size = mList.size();
+                    if (size < reviewNum) {
+                        if (isMore) {
                             isMore = false;
-                                pullData(mUrlGet,""+mList.get(size-1).getId(),mId,"forward");
+                            pullData(mUrlGet, "" + mList.get(size - 1).getId(), mId, "forward");
                         }
-                    }else{
-                        ToastUtil.show(CommentActivity.this,getResources().getText(R.string.no_more_error));
+                    } else {
+                        ToastUtil.show(CommentActivity.this, getResources().getText(R.string.no_more_error));
                         mListView.setPullLoadEnable(false);
                     }
-                }else{
-                    pullData(mUrlGet,"0",mId,"back");
+                } else {
+                    pullData(mUrlGet, "0", mId, "back");
                 }
                 mListView.stopLoadMore();
             }
-        },200);
+        }, 200);
 
     }
 
@@ -422,21 +479,21 @@ public class CommentActivity extends Base2Activity implements XListViewNew.IXLis
     @Override
     public void replyFloor(int id, String name) {
 
-        isNewReply=false;
-        final int rId=id;
-        final CommentDialog dialog=new CommentDialog(this);
-        dialog.mTitle.setText("回复 "+name);
+        isNewReply = false;
+        final int rId = id;
+        final CommentDialog dialog = new CommentDialog(this);
+        dialog.mTitle.setText("回复 " + name);
         dialog.mEdit.setHint("回复 " + name);
         dialog.mSubmit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String text = dialog.mEdit.getText().toString();
-                mText=text;
+                mText = text;
                 if (text.length() < 5) {
                     ToastUtil.customShow(CommentActivity.this, "评论内容不少于5个字哦~");
                 } else {
-                    if(isTouch){
-                        isTouch=false;
+                    if (isTouch) {
+                        isTouch = false;
                         pullCommentData(mUrlReply, mId, "" + rId, text);
                     }
                     dialog.dismiss();

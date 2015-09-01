@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.liuzhuni.lzn"
-    android:versionCode="4"
-    android:versionName="version 1.2.5" >
+    android:versionCode="5"
+    android:versionName="version 1.2.9 beta" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -28,6 +28,7 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.READ_SETTINGS" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <!-- 【可选】如果需要设置前台是否显示通知，需要设置这个权限 -->
     <uses-permission android:name="android.permission.GET_TASKS" />
@@ -76,7 +77,7 @@
                 android:value="cn.sharesdk.onekeyshare.MyAdapter" />
 
             <intent-filter>
-                <data android:scheme="1104521794" />
+                <data android:scheme="tencent100371282" />
 
                 <action android:name="android.intent.action.VIEW" />
 
@@ -149,6 +150,22 @@
         <activity
             android:name=".core.goods.ToBuyActivity"
             android:screenOrientation="portrait" >
+        </activity>
+
+        <!-- Scheme处理通知栏和外部跳转 -->
+        <activity
+            android:name="com.getui.demo.HuimScheme"
+            android:exported="true"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data android:scheme="huim" />
+            </intent-filter>
         </activity>
 
         <meta-data
@@ -305,6 +322,59 @@
 
         <activity
             android:name=".core.city.CityActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".core.search.SearchActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.alibaba.sdk.android.webview.BaseWebViewActivity"
+            android:screenOrientation="portrait" />
+
+        <receiver
+            android:name="com.alibaba.sdk.android.hotpatch.HotPatchBroadcastReceiver"
+            android:exported="false"
+            android:process=":hotpatch" >
+            <intent-filter>
+                <action android:name="com.alibaba.sdk.android.hotpatch.action.HOT_PATCH" />
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:name="com.alibaba.sdk.android.trade.ui.TradeWebViewActivity"
+            android:screenOrientation="portrait" >
+            <intent-filter>
+                <action android:name="COM_TAOBAO_TAE_SDK_TRADE_WEB_VIEW_ACTION" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.alipay.sdk.app.H5PayActivity"
+            android:configChanges="orientation|keyboardHidden|navigation"
+            android:exported="false"
+            android:screenOrientation="behind" >
+        </activity>
+        <activity
+            android:name="com.alipay.sdk.auth.AuthActivity"
+            android:configChanges="orientation|keyboardHidden|navigation"
+            android:exported="false"
+            android:screenOrientation="behind" >
+        </activity>
+        <activity
+            android:name="com.alibaba.sdk.android.login.ui.LoginWebViewActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name="com.alibaba.sdk.android.login.ui.QrLoginActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/tae_sdk_login_qr_activity_style" />
+        <activity
+            android:name=".core.index_new.utils.TaokeActivity"
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name=".core.html.HtmlActivity"
             android:screenOrientation="portrait" >
         </activity>
     </application>

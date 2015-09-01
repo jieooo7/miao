@@ -5,12 +5,11 @@ import android.content.Intent;
 import android.view.KeyEvent;
 import android.view.View;
 
-import com.mob.tools.FakeActivity;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.mob.tools.FakeActivity;
 import cn.sharesdk.framework.Platform;
 import cn.sharesdk.framework.ShareSDK;
 
@@ -183,6 +182,9 @@ public class PlatformListFakeActivity extends FakeActivity {
 	}
 
 	protected void showEditPage(Context context, List<Platform> platforms) {
+		// 编辑分享内容的统计
+		ShareSDK.logDemoEvent(3, null);
+
 		EditPageFakeActivity editPageFakeActivity;
 		String editPageClass = ((Object)this).getClass().getPackage().getName()+".EditPage";
 		try {

@@ -97,7 +97,7 @@ public class TextSiriActivity extends Base2Activity implements XListView.IXListV
 
     private boolean isHisScroll=true;  // 设置滚动,历史记录 无动作 第一次 进入 到最后
 
-    private static int position;
+    private static int position=0;
     public static int addNew=0;
 
 
@@ -105,6 +105,8 @@ public class TextSiriActivity extends Base2Activity implements XListView.IXListV
     private String mBrand;
     private String mPrice;
     private String mIds;
+
+    private boolean isSmoth=false;
 
 
 //    private Thread mThread=null;
@@ -126,49 +128,6 @@ public class TextSiriActivity extends Base2Activity implements XListView.IXListV
 
     };
 
-//    private Thread mThread = new Thread(new Runnable() {//不操作mlist则 不会使用线程  添加控制即可
-//        @Override
-//        public void run() {
-//
-//
-//            while (!mIsExit) {
-//
-//                try {
-//                    if (position < mList.size() && mList.get(position) != null) {
-//                        mThread.sleep(mList.get(position).getDelayTime());
-//                    }
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//                if (position < mList.size() && mList.get(position) != null) {
-////                    mCurrentList.add(mList.get(position));
-//                    addList(mList.get(position));
-//
-//                    mHandler.sendEmptyMessage(MessageWhat.SIRI_DELAY);
-//
-//
-////                    mHandler.postDelayed(new Runnable() {
-////                        @Override
-////                        public void run() {
-////                            addList(mList.get(position));
-////
-////                            mAdapter.notifyDataSetChanged();
-////                            mListView.setSelection(mCurrentList.size() - 1);
-////                        }
-////                    },mList.get(position).getDelayTime());
-//                }
-//            }
-//        }
-//    });
-    /**
-     * 获取对应ID
-     */
-
-    /**
-     * 延时time
-     */
-
-    public static final int DELAY = 1200;
 
     public static final int REQUEST_CODE = 1;
     private final static int SCANNIN_GREQUEST_CODE = 2;
@@ -219,20 +178,26 @@ public class TextSiriActivity extends Base2Activity implements XListView.IXListV
                     }
                     if (position < mList.size() && mList.get(position) != null) {
 //                    mCurrentList.add(mList.get(position));
+
                         addList(mList.get(position));
+                        mHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
 
-                        mHandler.sendEmptyMessage(MessageWhat.SIRI_DELAY);
+                                mAdapter.notifyDataSetChanged();
+
+                                if(isSmoth){
+                                    mListView.setSelection(mCurrentList.size() - 1);
+                                    isSmoth=false;
+                                }else{
+                                    mListView.smoothScrollToPosition(mCurrentList.size());
+                                }
+                            }
+                        });
+
+//                        mHandler.sendEmptyMessage(MessageWhat.SIRI_DELAY);
 
 
-//                    mHandler.postDelayed(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            addList(mList.get(position));
-//
-//                            mAdapter.notifyDataSetChanged();
-//                            mListView.setSelection(mCurrentList.size() - 1);
-//                        }
-//                    },mList.get(position).getDelayTime());
                     }
                 }
             }
@@ -281,12 +246,6 @@ public class TextSiriActivity extends Base2Activity implements XListView.IXListV
                 pullSubmitData(mKey, mBrand, mPrice,mIds);
 
                 //同选择返回
-//                BaseListModel<DbModel> goodsModel=(BaseListModel<DbModel>) getIntent().getExtras().getSerializable("list");
-//                Collections.reverse(goodsModel.getData());
-//                fromDbDelay(goodsModel.getData(),true,false);
-//                for (DbModel dbModel : goodsModel.getData()) {
-//                    DatabaseOperate.insert(db, dbModel);
-//                }
 
             }
         }
@@ -319,9 +278,6 @@ public class TextSiriActivity extends Base2Activity implements XListView.IXListV
 
     @Override
     protected void setListener() {
-
-//        mListView.stopRefresh();
-//        mListView.stopLoadMore();
 
     }
 
@@ -383,18 +339,8 @@ public class TextSiriActivity extends Base2Activity implements XListView.IXListV
                         Collections.reverse(historyModel.getData());
                         fromDbNoDelay(historyModel.getData(), true, false);
 
-                        //update database
-//                        for (DbModel dbModel : historyModel.getData()) {
-//                            DatabaseOperate.insert(db, dbModel);
-//
-//                        }
 
                     }
-
-                } else {
-//                    if(mCurrentList.size()>10){
-//                        ToastUtil.show(TextSiriActivity.this, getResources().getText(R.string.no_more_error));
-//                    }
 
                 }
             }
@@ -404,7 +350,7 @@ public class TextSiriActivity extends Base2Activity implements XListView.IXListV
 
     protected void fromDb(List<DbModel> dbList, boolean isDialog, boolean isHistory) {//无延时处理
 
-        List<SiriModel> tempList = new ArrayList<SiriModel>();
+        final List<SiriModel> tempList = new ArrayList<SiriModel>();
         if(!PreferencesUtils.getBooleanFromSPMap(this, PreferencesUtils.Keys.IS_DIALOG)) {
             mList.add(new SiriModel<String>(SiriAdapter.LEFT_TEXT, getResources().getString(R.string.dialog_first)));
             mList.add(new SiriModel<String>(SiriAdapter.RIGHT_TEXT_CLICK, getResources().getString(R.string.dialog_second)));
@@ -466,51 +412,48 @@ public class TextSiriActivity extends Base2Activity implements XListView.IXListV
             }
 
         }
-//            mCurrentList.addAll(0, tempList);
         if (isHistory) {
-            addList(tempList);
+
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
+                    addList(tempList);
                     mAdapter.notifyDataSetChanged();
+                    if(mIsFirst){
+                        if(isHisScroll){
+                            mListView.setSelection(mCurrentList.size() - 1);
+                            isHisScroll=false;
+                        }else{
+                            mListView.setSelection(tempList.size());
+                        }
+//                mListView.smoothScrollToPosition(mCurrentList.size() - 1);
+                    }
                 }
             });
-            if(mIsFirst){
-                if(isHisScroll){
-                    mListView.setSelection(mCurrentList.size() - 1);
-                    isHisScroll=false;
-                }else{
-                    mListView.setSelection(tempList.size());
-                }
-//                mListView.smoothScrollToPosition(mCurrentList.size() - 1);
-            }else{
-//                mListView.setSelection(0);
-//                mListView.smoothScrollToPosition(0);
-            }
+
         } else {
             if (mIsFirst) {
 //                clear();
                 mIsFirst = false;
             }
-            addList(tempList);
+
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
+                    addList(tempList);
                     mAdapter.notifyDataSetChanged();
+
+                    if(!mIsPullDown){
+                        if(isHisScroll){
+                            mListView.setSelection(mCurrentList.size() - 1);
+                            isHisScroll=false;
+                        }else{
+                            mListView.setSelection(tempList.size());
+                        }
+                    }
                 }
             });
-            if(mIsPullDown){
-//                mListView.setSelection(0);
-//                mListView.smoothScrollToPosition(0);
-            }else{
-                if(isHisScroll){
-                    mListView.setSelection(mCurrentList.size() - 1);
-                    isHisScroll=false;
-                }else{
-                    mListView.setSelection(tempList.size());
-                }
-//                mListView.smoothScrollToPosition(mCurrentList.size() - 1);
-            }
+
         }
 
     }
@@ -527,14 +470,10 @@ public class TextSiriActivity extends Base2Activity implements XListView.IXListV
         }
         if (dbList != null) {
             for (DbModel dbModel : dbList) {
-//                tempList.add(new SiriModel<String>(SiriAdapter.TIME, dbModel.getDate()));
 
                 if(!TextUtils.isEmpty(dbModel.getBody())){
-//                    tempList.add(new SiriModel<String>(SiriAdapter.RIGHT_TEXT,0, getResources().getString(R.string.dialog_third)+" ["+mKey+"]",0));
-//                    insertDb(db, SiriAdapter.RIGHT_TEXT, 0, 0, getResources().getString(R.string.dialog_third)+" ["+mKey+"]");
                     insertDb(db, SiriAdapter.TIME, 0, dbModel.getDate(), dbModel.getBody());
                     insertDb(db, SiriAdapter.RIGHT_GOODS, dbModel.getBody_id(), 0, dbModel.getBody());
-//                    insertDb(db,SiriAdapter.RIGHT_DIALOG, dbModel.getBody_id(),0,dbModel.getBody());
             }
                 if(!TextUtils.isEmpty(TimeUtil.getInstance().timeFormat(dbModel.getDate()*1000))){
                     tempList.add(new SiriModel<String>(SiriAdapter.TIME,TimeUtil.getInstance().timeFormat(dbModel.getDate()*1000)));
@@ -542,17 +481,15 @@ public class TextSiriActivity extends Base2Activity implements XListView.IXListV
                 ArrayList<SelectGoodsModel> goodsList = new Gson().fromJson(dbModel.getBody(), new TypeToken<ArrayList<SelectGoodsModel>>() {
                 }.getType());
                 tempList.add(new SiriModel<GoodsListModel>(SiriAdapter.RIGHT_GOODS,dbModel.getBody_id(), new GoodsListModel(goodsList),0,(int)dbModel.getDate()));
-//                    tempList.add(new SiriModel<Boolean>(SiriAdapter.RIGHT_DIALOG, dbModel.getBody_id(), true,3000));
             }
 
         }
-//            mCurrentList.addAll(0, tempList);
       mList.addAll(tempList);
 
     }
     protected void fromDbNoDelay(List<DbModel> dbList, boolean isDialog, boolean isHistory) {//推送专用
 
-        List<SiriModel> tempList = new ArrayList<SiriModel>();
+       final List<SiriModel> tempList = new ArrayList<SiriModel>();
         if(!PreferencesUtils.getBooleanFromSPMap(this, PreferencesUtils.Keys.IS_DIALOG)) {
             mList.add(new SiriModel<String>(SiriAdapter.LEFT_TEXT, getResources().getString(R.string.dialog_first)));
             mList.add(new SiriModel<String>(SiriAdapter.RIGHT_TEXT_CLICK, getResources().getString(R.string.dialog_second)));
@@ -600,24 +537,11 @@ public class TextSiriActivity extends Base2Activity implements XListView.IXListV
                     case SiriAdapter.RIGHT_GOODS:
                         ArrayList<SelectGoodsModel> goodsList = new Gson().fromJson(dbModel.getBody(), new TypeToken<ArrayList<SelectGoodsModel>>() {
                         }.getType());
-                        if(!fromSelect){
-
-//                            Date now=new Date();
-//                            long currentTime=now.getTime();
-//                            tempList.add(new SiriModel<String>(SiriAdapter.TIME, 0,TimeUtil.getInstance().timeFormat(currentTime),0));
-//                            insertDb(db,SiriAdapter.TIME, 0,(long)(currentTime/1000), "");
-                        }
                         tempList.add(new SiriModel<GoodsListModel>(SiriAdapter.RIGHT_GOODS,dbModel.getBody_id(), new GoodsListModel(goodsList),0,(int)dbModel.getDate()));
                         insertDb(db, SiriAdapter.RIGHT_GOODS, dbModel.getBody_id(), 0, dbModel.getBody());
 
                         break;
 
-//                    case SiriAdapter.RIGHT_DIALOG:
-//
-//                        tempList.add(new SiriModel<Boolean>(SiriAdapter.RIGHT_DIALOG, dbModel.getBody_id(), true,3000));
-//                        insertDb(db,SiriAdapter.RIGHT_DIALOG, dbModel.getBody_id(),0,dbModel.getBody());
-
-//                        break;
 
                     default:
                         break;
@@ -628,22 +552,17 @@ public class TextSiriActivity extends Base2Activity implements XListView.IXListV
 
         }
 //            mCurrentList.addAll(0, tempList);
-        addListLast(tempList);
+
         mHandler.post(new Runnable() {
             @Override
             public void run() {
+                addListLast(tempList);
                 mAdapter.notifyDataSetChanged();
+                mListView.setSelection(mCurrentList.size() - 1);
             }
         });
 
-        mListView.setSelection(mCurrentList.size() - 1);
-//        if(mIsPullDown){
-//                mListView.setSelection(0);
-//                mListView.smoothScrollToPosition(0);
-//        }else{
-//            mListView.setSelection(mCurrentList.size() - 1);
-//                mListView.smoothScrollToPosition(mCurrentList.size() - 1);
-//        }
+
 
     }
 
@@ -711,7 +630,7 @@ public class TextSiriActivity extends Base2Activity implements XListView.IXListV
                     String ids=data.getExtras().getString("id");
                     mKey=key;
 
-
+                    isSmoth=true;
                     mList.add(new SiriModel<String>(SiriAdapter.RIGHT_TEXT,0, getResources().getString(R.string.dialog_third)+" ["+mKey+"]",0));
                     insertDb(db, SiriAdapter.RIGHT_TEXT, 0, 0, getResources().getString(R.string.dialog_third)+" ["+mKey+"]");
                     mList.add(new SiriModel<String>(SiriAdapter.LEFT_TEXT, TextSiriActivity.this.getResources().getString(R.string.dialog_fou)));
@@ -719,12 +638,6 @@ public class TextSiriActivity extends Base2Activity implements XListView.IXListV
                     pullSubmitData(key, brand, price,ids);
 
 
-//                    BaseListModel<DbModel> goodsModel=(BaseListModel<DbModel>) data.getExtras().getSerializable("list");
-//                    Collections.reverse(goodsModel.getData());
-//                    fromDbDelay(goodsModel.getData(),true,false);
-//                    for (DbModel dbModel : goodsModel.getData()) {
-//                        DatabaseOperate.insert(db, dbModel);
-//                    }
                 }
 
 
@@ -734,7 +647,6 @@ public class TextSiriActivity extends Base2Activity implements XListView.IXListV
             case SCANNIN_GREQUEST_CODE:
                 if (resultCode == RESULT_OK) {
                     Bundle bundle = data.getExtras();
-//                    ToastUtil.customShow(this, bundle.getString("result"));
                     Intent intent = new Intent(this, GoodsActivity.class);
                     Bundle goodsBundle = new Bundle();
                     goodsBundle.putString("code", bundle.getString("result"));
@@ -773,9 +685,6 @@ public class TextSiriActivity extends Base2Activity implements XListView.IXListV
                     List<DbModel> model=goodsModel.getData();
                     Collections.reverse(model);
                     fromDbDelay(model,true,false);
-//                    for (DbModel dbModel : model) {
-//                        DatabaseOperate.insert(db, dbModel);
-//                    }
 
                 } else {
                     mList.add(new SiriModel<String>(SiriAdapter.LEFT_TEXT, 0,TextSiriActivity.this.getResources().getString(R.string.no_dialog_six),3000));
@@ -794,7 +703,6 @@ public class TextSiriActivity extends Base2Activity implements XListView.IXListV
         return new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-//                Toast.makeText(activity,getResources().getText(R.string.error_retry), Toast.LENGTH_LONG).show();
                 loadingdialog.dismiss();
                 mList.add(new SiriModel<String>(SiriAdapter.LEFT_TEXT, 0,TextSiriActivity.this.getResources().getString(R.string.no_dialog_six),3000));
                 insertDb(db, SiriAdapter.LEFT_TEXT,0,0,TextSiriActivity.this.getResources().getString(R.string.no_dialog_six));
@@ -815,13 +723,11 @@ public class TextSiriActivity extends Base2Activity implements XListView.IXListV
                 mIsPullDown=true;
                 if(mDbList.size()>=45){
 
-//                    ++back;
                     mDbList = DatabaseOperate.getDb(db,dbBack++,addNew);
                     Collections.reverse(mDbList);//反转
                     fromDb(mDbList, false, true);
 
 
-//                    pullHistoryData(back, "back");
                 }else{
                     ToastUtil.show(TextSiriActivity.this, getResources().getText(R.string.no_more_error));
                     mListView.stopRefresh();

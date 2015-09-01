@@ -23,6 +23,7 @@ public class PickModel implements Serializable{
     private boolean baicai=false;
     private boolean quanqiugou=false;
     private boolean shoumanwu=false;
+    private boolean isTop=false;
 
     public PickModel(int id) {
         this.id = id;
@@ -37,6 +38,14 @@ public class PickModel implements Serializable{
         this.time = time;
         this.read = read;
         this.review = review;
+    }
+
+    public boolean isTop() {
+        return isTop;
+    }
+
+    public void setIsTop(boolean isTop) {
+        this.isTop = isTop;
     }
 
     public int getId() {

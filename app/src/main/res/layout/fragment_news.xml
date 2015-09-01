@@ -18,10 +18,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/all_back"
-
-
+            android:layout_marginBottom="1px"
             >
-
 
         </com.liuzhuni.lzn.pulltorefresh.PullToRefreshGridView>
 
@@ -39,5 +37,21 @@
             fab:fab_colorRipple="@color/transparent"
             />
     </FrameLayout>
+
+    <!--
+
+    <TextView
+        android:id="@+id/no_search"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:textColor="@color/comment_light"
+        android:background="@color/all_back"
+        android:text="@string/no_more_search"
+        android:visibility="gone"
+        />
+    -->
+
 
 </RelativeLayout>

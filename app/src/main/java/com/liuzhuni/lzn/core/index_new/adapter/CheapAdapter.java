@@ -78,8 +78,11 @@ public class CheapAdapter extends BaseAdapter {
         viewHolder.title.setText(mList.get(position).getTitle());
         String oldPrice="¥"+mList.get(position).getOldprice();
         SpannableString msp=new SpannableString(oldPrice);
-        msp.setSpan(new StrikethroughSpan(), 0, oldPrice.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-        viewHolder.oldPrice.setText(msp);
+        if(oldPrice.length()>0){
+
+            msp.setSpan(new StrikethroughSpan(), 0, oldPrice.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            viewHolder.oldPrice.setText(msp);
+        }
         viewHolder.price.setText("¥" + mList.get(position).getPrice());
         switch (mList.get(position).getTypes()){
 

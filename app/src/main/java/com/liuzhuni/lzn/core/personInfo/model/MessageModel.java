@@ -12,7 +12,10 @@ public class MessageModel implements Serializable{
     private String year;
     private String month;
     private String message;
+    private String date;
+    private String url;
     private boolean isRead;
+
 
     public MessageModel(String mYear, String mMonthDay, String mMessage, boolean mIsReaded) {
         this.year = mYear;
@@ -25,6 +28,26 @@ public class MessageModel implements Serializable{
         this.month = mMonthDay;
         this.message = mMessage;
         this.isRead = true;
+    }
+
+    public String getDate() {
+        return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public void setIsRead(boolean isRead) {
+        this.isRead = isRead;
     }
 
     public String getYear() {

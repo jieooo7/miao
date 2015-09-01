@@ -11,11 +11,20 @@ import java.io.Serializable;
 public class CountModel implements Serializable{
     private int shoplists;
     private int pushs;
+    private String keyword;
 
 
     public CountModel(int shoplists, int pushs) {
         this.shoplists = shoplists;
         this.pushs = pushs;
+    }
+
+    public String getKeyword() {
+        return keyword;
+    }
+
+    public void setKeyword(String keyword) {
+        this.keyword = keyword;
     }
 
     public int getShoplists() {

@@ -3,7 +3,9 @@ package com.liuzhuni.lzn.core.service;
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+import android.util.Log;
 
+import com.liuzhuni.lzn.utils.ToastUtil;
 import com.liuzhuni.lzn.utils.fileHelper.FileHelper;
 import com.liuzhuni.lzn.utils.fileHelper.FileManager;
 
@@ -13,7 +15,7 @@ import java.util.Date;
 import java.util.List;
 
 public class CacheService extends Service {
-   private final long WEEK_TIME=7*24*60*60*1000; //一周时间
+   private final long WEEK_TIME=30*24*60*60*1000L; //一周时间
 
 
     public CacheService() {
@@ -34,7 +36,7 @@ public class CacheService extends Service {
                 deleteFile(cacheDir,fileList);
             }
         }).start();
-
+        Log.i("时间", ""+WEEK_TIME);
 
     }
 
@@ -46,13 +48,16 @@ public class CacheService extends Service {
             File[] list = cacheDir.listFiles();
             if(list!=null){
                 for(File file:list){
-                    if(currentTime-file.lastModified()>WEEK_TIME){
+                    if((currentTime-file.lastModified()-WEEK_TIME)>0){
                         fileList.add(file);
+                        Log.i("删除时间", "" + currentTime + "+++++++" + file.lastModified());
+                        Log.i("删除", (currentTime-file.lastModified()-WEEK_TIME)+"");
                     }
 
                 }
             }
             if(fileList.size()>0){
+                ToastUtil.customShow(CacheService.this,"在删除");
                 for(File file:fileList){
                     FileHelper.deleteDirectory(file);
                 }
