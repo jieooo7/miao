@@ -10,38 +10,38 @@ import java.io.Serializable;
  */
 public class CampaignModel implements Serializable{
 
-    private int OrderNum;
-    private String ImgUrl;
-    private String ZhuanTiUrl;
+    private int orderNum;
+    private String imgUrl;
+    private String zhuanTiUrl;
 
 
     public CampaignModel(int orderNum, String imgUrl, String zhuanTiUrl) {
-        OrderNum = orderNum;
-        ImgUrl = imgUrl;
-        ZhuanTiUrl = zhuanTiUrl;
+        this.orderNum = orderNum;
+        this.imgUrl = imgUrl;
+        this.zhuanTiUrl = zhuanTiUrl;
     }
 
     public int getOrderNum() {
-        return OrderNum;
+        return this.orderNum;
     }
 
     public void setOrderNum(int orderNum) {
-        OrderNum = orderNum;
+        this.orderNum = orderNum;
     }
 
     public String getImgUrl() {
-        return ImgUrl;
+        return this.imgUrl;
     }
 
     public void setImgUrl(String imgUrl) {
-        ImgUrl = imgUrl;
+        this.imgUrl = imgUrl;
     }
 
     public String getZhuanTiUrl() {
-        return ZhuanTiUrl;
+        return this.zhuanTiUrl;
     }
 
     public void setZhuanTiUrl(String zhuanTiUrl) {
-        ZhuanTiUrl = zhuanTiUrl;
+        this.zhuanTiUrl = zhuanTiUrl;
     }
 }

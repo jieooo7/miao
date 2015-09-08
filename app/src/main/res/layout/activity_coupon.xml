@@ -1,0 +1,58 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/all_back"
+    tools:context="com.liuzhuni.lzn.core.personInfo.CouponActivity">
+
+    <include
+        android:id="@+id/title"
+        layout="@layout/title" />
+
+    <TextView
+        android:id="@+id/coupon_tip"
+        android:layout_below="@id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:textSize="16sp"
+        android:textColor="@color/regist_text"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:text="@string/coupon_tip"
+        android:background="@color/white"
+        />
+
+
+    <com.liuzhuni.lzn.xList.XListViewNew
+        android:id="@+id/coupon_list"
+        android:layout_below="@id/coupon_tip"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:cacheColorHint="@null"
+        android:listSelector="@color/transparent"
+        android:divider="@color/transparent"
+        android:dividerHeight="3dp"
+        android:scrollbars="none">
+    </com.liuzhuni.lzn.xList.XListViewNew>
+
+    <TextView
+        android:id="@+id/no_coupon"
+        android:layout_below="@id/title"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:textSize="16sp"
+        android:textColor="@color/regist_text"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:text="@string/no_coupon"
+        android:background="@color/all_back"
+        android:visibility="gone"
+        />
+
+
+
+
+
+</RelativeLayout>

@@ -165,7 +165,7 @@
                 android:layout_toRightOf="@id/index_person_info"
                 android:layout_marginTop="2dp"
                 android:layout_marginLeft="2dp"
-                android:visibility="gone"
+                android:visibility="invisible"
                 />
         </RelativeLayout>
 

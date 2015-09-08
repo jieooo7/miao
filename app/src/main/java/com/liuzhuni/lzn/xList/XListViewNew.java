@@ -38,7 +38,7 @@ public class XListViewNew extends ListView implements OnScrollListener {
     // the interface to trigger refresh and load more.
     private IXListViewListener mListViewListener;
 
-    private HideFab mHideFab;
+    private HideFab mHideFab=null;
 
     // -- header view
     private XListViewHeader mHeaderView;
@@ -365,7 +365,7 @@ public class XListViewNew extends ListView implements OnScrollListener {
             mScrollListener.onScroll(view, firstVisibleItem, visibleItemCount,
                     totalItemCount);
 
-            if(firstVisibleItem==0){
+            if(firstVisibleItem==0&&mHideFab!=null){
 
                 mHideFab.hideFab();
             }

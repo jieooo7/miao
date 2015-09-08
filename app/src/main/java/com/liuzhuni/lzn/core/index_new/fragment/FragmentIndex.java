@@ -26,6 +26,7 @@ import com.lidroid.xutils.view.annotation.event.OnClick;
 import com.liuzhuni.lzn.R;
 import com.liuzhuni.lzn.base.BaseFragment;
 import com.liuzhuni.lzn.config.Check;
+import com.liuzhuni.lzn.config.TypeInt;
 import com.liuzhuni.lzn.config.UrlConfig;
 import com.liuzhuni.lzn.core.buylist.BuyActivity;
 import com.liuzhuni.lzn.core.html.HtmlActivity;
@@ -198,8 +199,8 @@ public class FragmentIndex extends BaseFragment implements
         stickyLayout.setOnGiveUpTouchEventListener(this);
         pinListView.setAdapter(mAdapter);
         fab.attachToListView(pinListView);
+        pullCampaignData();
         pullTopData();
-
 
     }
 
@@ -400,7 +401,7 @@ public class FragmentIndex extends BaseFragment implements
         });
     }
     protected  void pullCampaignData() {
-        executeRequest(new GsonBaseRequest<BaseListModel<CampaignModel>>(Request.Method.GET, UrlConfig.CAMPAIGN, new TypeToken<BaseModel<CampaignModel>>() {
+        executeRequest(new GsonBaseRequest<BaseListModel<CampaignModel>>(Request.Method.GET, UrlConfig.CAMPAIGN, new TypeToken<BaseListModel<CampaignModel>>() {
         }.getType(), responseCamListener(), errorListener()) {
 
         });
@@ -409,7 +410,7 @@ public class FragmentIndex extends BaseFragment implements
 
 
 
-    private Response.Listener<BaseListModel<CampaignModel>> responseCamListener() {
+    public Response.Listener<BaseListModel<CampaignModel>> responseCamListener() {
         return new Response.Listener<BaseListModel<CampaignModel>>() {
             @Override
             public void onResponse(BaseListModel<CampaignModel> indexcountModel) {
@@ -420,24 +421,27 @@ public class FragmentIndex extends BaseFragment implements
                     mHandler.post(new Runnable() {
                         @Override
                         public void run() {
-                            if(!TextUtils.isEmpty(camModel.get(0).getImgUrl())){
-                                mGiftNv.setImageUrl(camModel.get(0).getImgUrl(),mImageLoader);
-                                mGiftUrl=camModel.get(0).getZhuanTiUrl();
+                            if (!TextUtils.isEmpty(camModel.get(0).getImgUrl())) {
+                                mGiftNv.setImageUrl(camModel.get(0).getImgUrl(), mImageLoader);
+                                mGiftUrl = camModel.get(0).getZhuanTiUrl();
                                 mGiftNv.setVisibility(View.VISIBLE);
 
                             }
-                            if(!TextUtils.isEmpty(camModel.get(1).getImgUrl())){
-                                mTopicNv.setImageUrl(camModel.get(1).getImgUrl(),mImageLoader);
-                                mTopicUrl=camModel.get(1).getZhuanTiUrl();
+                            if (!TextUtils.isEmpty(camModel.get(1).getImgUrl())) {
+
+                                mTopicNv.setImageUrl(camModel.get(1).getImgUrl(), mImageLoader);
+                                mTopicUrl = camModel.get(1).getZhuanTiUrl();
                                 mTopicNv.setVisibility(View.VISIBLE);
 
                             }
-                            if(!TextUtils.isEmpty(camModel.get(2).getImgUrl())){
-                                mTouchNv.setImageUrl(camModel.get(2).getImgUrl(),mImageLoader);
-                                mTouchUrl=camModel.get(2).getZhuanTiUrl();
+                            if (!TextUtils.isEmpty(camModel.get(2).getImgUrl())) {
+                                mTouchNv.setImageUrl(camModel.get(2).getImgUrl(), mImageLoader);
+                                mTouchUrl = camModel.get(2).getZhuanTiUrl();
                                 mTouchNv.setVisibility(View.VISIBLE);
 
                             }
+
+                            stickyLayout.ModifyHeight();
 
 
                         }
@@ -617,7 +621,7 @@ public class FragmentIndex extends BaseFragment implements
         Intent intent = new Intent();
         intent.setClass(getCustomActivity(), HtmlActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putString("url", mGiftUrl);
+        bundle.putInt("url", TypeInt.GIFT);
         intent.putExtras(bundle);
         startActivity(intent);
 
@@ -627,7 +631,7 @@ public class FragmentIndex extends BaseFragment implements
         Intent intent = new Intent();
         intent.setClass(getCustomActivity(), HtmlActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putString("url", mTopicUrl);
+        bundle.putInt("url", TypeInt.TOPIC);
         intent.putExtras(bundle);
         startActivity(intent);
 
@@ -637,7 +641,7 @@ public class FragmentIndex extends BaseFragment implements
         Intent intent = new Intent();
         intent.setClass(getCustomActivity(), HtmlActivity.class);
         Bundle bundle = new Bundle();
-        bundle.putString("url", mTouchUrl);
+        bundle.putInt("url", TypeInt.TOUCH);
         intent.putExtras(bundle);
         startActivity(intent);
 
@@ -704,9 +708,11 @@ public class FragmentIndex extends BaseFragment implements
     public boolean giveUpTouchEvent(MotionEvent event) {//StickyLayout中content何时放弃事件处理
 
 
+//        stickyLayout.setHeaderHeight(stickyLayout.getOriginHeight(),true);
         if (pinListView.getFirstVisiblePosition() == 0){
             View view0=pinListView.getChildAt(0);
                 if (view0 != null && view0.getTop() >= 0&&stickyLayout.getHeaderHeight()==0) {
+
                     return true;
                 }
         }

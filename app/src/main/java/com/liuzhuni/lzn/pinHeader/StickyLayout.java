@@ -74,6 +74,9 @@ public class StickyLayout extends LinearLayout {
 
     private boolean mIsSticky = true;
     private boolean mInitDataSucceed = false;//init 标志位
+
+    private boolean mModify=true;
+
     private boolean mDisallowInterceptTouchEventOnHeader = true;
 
     public StickyLayout(Context context) {
@@ -116,6 +119,25 @@ public class StickyLayout extends LinearLayout {
             throw new NoSuchElementException("Did your view with id \"sticky_header\" or \"sticky_content\" exists?");
         }
     }
+
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+    }
+
+    @Override
+    protected void onVisibilityChanged(View changedView, int visibility) {
+        super.onVisibilityChanged(changedView, visibility);
+    }
+
+    public void ModifyHeight(){
+        mOriginalHeaderHeight = mHeader.getMeasuredHeight();
+        mHeaderHeight = mOriginalHeaderHeight;
+
+    }
+
+
 
     public void setOnGiveUpTouchEventListener(OnGiveUpTouchEventListener l) {
         mGiveUpTouchEventListener = l;
@@ -180,6 +202,8 @@ public class StickyLayout extends LinearLayout {
         int y = (int) event.getY();
         switch (event.getAction()) {
         case MotionEvent.ACTION_DOWN: {
+
+
             break;
         }
         case MotionEvent.ACTION_MOVE: {
@@ -267,6 +291,11 @@ public class StickyLayout extends LinearLayout {
         if (!mInitDataSucceed) {
             initData();
         }
+        if(mModify){
+            mModify=false;
+            initData();
+        }
+
 
         if (DEBUG) {
             Log.d(TAG, "setHeaderHeight height=" + height);

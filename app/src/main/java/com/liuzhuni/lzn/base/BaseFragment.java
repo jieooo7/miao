@@ -18,7 +18,7 @@ import com.liuzhuni.lzn.volley.RequestManager;
 
 public abstract class BaseFragment extends Fragment {
 
-    public LoadingDialog loadingdialog = null;
+    public LoadingDialog loadingdialog ;
     public boolean isTouch = true;
     private Activity mActivty = null;
 

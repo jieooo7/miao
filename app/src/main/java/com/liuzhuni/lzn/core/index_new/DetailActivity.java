@@ -489,7 +489,7 @@ public class DetailActivity extends Base2Activity {
             public void onComplete(Platform platform, int i, HashMap<String, Object> stringObjectHashMap) {
 
                 //网络请求之后
-                ToastUtil.customShow(DetailActivity.this, "分享成功");
+//                ToastUtil.customShow(DetailActivity.this, "分享成功");
                 pullShareSuccessData();
 
 

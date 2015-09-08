@@ -342,12 +342,12 @@ public class CheapFragment extends BaseFragment {
                         final View view = LayoutInflater.from(getCustomActivity()).inflate(
                                 R.layout.no_more, null);
 ////                        view.getScrollY()
-                        handle.postDelayed(new Runnable() {
+                        handle.post(new Runnable() {
                             @Override
                             public void run() {
                                 mPullGridView.addNewView(view);
                             }
-                        },1000);
+                        });
 
 //                        ToastUtil.show(getActivity(), getResources().getText(R.string.no_more_error));
                     }

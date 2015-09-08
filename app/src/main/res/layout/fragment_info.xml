@@ -152,6 +152,14 @@
 
             <include layout="@layout/line" />
             <com.liuzhuni.lzn.core.personInfo.ui.MeView
+                android:id="@+id/info_coupon"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:src="@drawable/my_ic_coupon"
+                android:text="@string/me_coupon" />
+
+            <include layout="@layout/line" />
+            <com.liuzhuni.lzn.core.personInfo.ui.MeView
                 android:id="@+id/info_push"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

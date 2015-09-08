@@ -285,6 +285,8 @@ public class FragmentNews extends BaseFragment {
                             public void run() {
                                 mList.addAll(mCurrentList);
                                 mAdapter.notifyDataSetChanged();
+                                mGridView.smoothScrollBy(50,200);
+
                             }
                         });
                     }
@@ -295,15 +297,9 @@ public class FragmentNews extends BaseFragment {
                     if(!isRefresh){
                         mPullGridView.setHasMoreData(false);
                         ToastUtil.show(getCustomActivity(), "没有更多了");
-                        mPullGridView.setHasMoreData(false);
                     }
 
                 }
-                // 下拉加载完成
-                mPullGridView.onPullDownRefreshComplete();
-
-                // 上拉刷新完成
-                mPullGridView.onPullUpRefreshComplete();
                 mPullGridView.setLastUpdatedLabel(mTime);//设置最后刷新时间
                 Date date = new Date();
                 mTime = mDateFormat.format(date);

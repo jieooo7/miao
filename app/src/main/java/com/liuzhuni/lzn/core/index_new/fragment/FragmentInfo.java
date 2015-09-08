@@ -39,6 +39,7 @@ import com.liuzhuni.lzn.core.login.LoginActivity;
 import com.liuzhuni.lzn.core.login.Loginable;
 import com.liuzhuni.lzn.core.login.TheIntent;
 import com.liuzhuni.lzn.core.model.BaseModel;
+import com.liuzhuni.lzn.core.personInfo.CouponActivity;
 import com.liuzhuni.lzn.core.personInfo.DetailInfoActivity;
 import com.liuzhuni.lzn.core.personInfo.FeedbackActivity;
 import com.liuzhuni.lzn.core.personInfo.HelpActivity;
@@ -84,6 +85,10 @@ public class FragmentInfo extends BaseFragment implements SignDayable {
     private MeView mMessageMv;
     @ViewInject(R.id.info_share)
     private MeView mShareMv;
+
+    @ViewInject(R.id.info_coupon)
+    private MeView mCouponMv;
+
     @ViewInject(R.id.info_feedback)
     private MeView mFeedbackMv;
     @ViewInject(R.id.info_help)
@@ -172,11 +177,11 @@ public class FragmentInfo extends BaseFragment implements SignDayable {
             mShareMv.hiddenRightTv(false);
         }
 
-        checkShareed();
+        checkShared();
     }
 
 
-    private void checkShareed() {
+    private void checkShared() {
 
         pullShareCheckData();
     }
@@ -207,6 +212,12 @@ public class FragmentInfo extends BaseFragment implements SignDayable {
 
 
         mMessageMv.setNum(PreferencesUtils.getIntFromSPMap(getCustomActivity(), PreferencesUtils.Keys.UN_READ, PreferencesUtils.Keys.USERINFO));
+        if(PreferencesUtils.getIntFromSPMap(getCustomActivity(), PreferencesUtils.Keys.UN_READ, PreferencesUtils.Keys.USERINFO)>0){
+            if(shareListener!=null){
+                shareListener.shared();
+            }
+        }
+
 
         mHeadImage.setDefaultImageResId(R.drawable.my_touxiang);
 //        mHeadImage.setImageDrawable(getResources().getDrawable(R.drawable.my_touxiang));
@@ -251,7 +262,7 @@ public class FragmentInfo extends BaseFragment implements SignDayable {
                 public void run() {
                     mLevel.setText(PreferencesUtils.getValueFromSPMap(getCustomActivity(), PreferencesUtils.Keys.LEVEL, getString(R.string.defalt_level), PreferencesUtils.Keys.USERINFO));
                     mCents.setText(PreferencesUtils.getValueFromSPMap(getCustomActivity(), PreferencesUtils.Keys.POINTS, "", PreferencesUtils.Keys.USERINFO));
-                    mSignDays.setText(PreferencesUtils.getValueFromSPMap(getCustomActivity(), PreferencesUtils.Keys.SIGN_DAYS, getString(R.string.sign_every), PreferencesUtils.Keys.USERINFO));
+                    mSignDays.setText(PreferencesUtils.getValueFromSPMap(getCustomActivity(), PreferencesUtils.Keys.SIGN_DAYS, getString(R.string.sign_no_every), PreferencesUtils.Keys.USERINFO));
 
 
                 }
@@ -301,7 +312,7 @@ public class FragmentInfo extends BaseFragment implements SignDayable {
 
         executeRequest(new GsonRequest<BaseModel>(Request.Method.POST, UrlConfig.SUCCESS_SHARE, BaseModel.class, responseShareSuccessListener(), errorListener()) {
             protected Map<String, String> getParams() {
-                return new ApiParams().with("type", "app").with("data","");
+                return new ApiParams().with("type", "app").with("data", "");
             }
 
 
@@ -316,9 +327,6 @@ public class FragmentInfo extends BaseFragment implements SignDayable {
                     ToastUtil.customShow(getCustomActivity(), shareModel.getMes());
                     mShareMv.hiddenRedDot(false);
                     mShareMv.hiddenRightTv(false);
-                    if (shareListener != null) {
-                        shareListener.shared();
-                    }
                     PreferencesUtils.putBooleanToSPMap(getCustomActivity(), PreferencesUtils.Keys.IS_FIRST_SHARE, true, PreferencesUtils.Keys.USERINFO);
 
                 }
@@ -563,6 +571,23 @@ public class FragmentInfo extends BaseFragment implements SignDayable {
             @Override
             public void intent() {
                 Intent intent = new Intent(getCustomActivity(), MessageCenterActivity.class);
+                startActivity(intent);
+            }
+        });
+        theIntent.go();
+
+
+    }
+
+    @OnClick(R.id.info_coupon)
+    public void coupon(View v) {
+
+        //消息中心
+
+        TheIntent theIntent = new TheIntent(getCustomActivity(), new Loginable() {
+            @Override
+            public void intent() {
+                Intent intent = new Intent(getCustomActivity(), CouponActivity.class);
                 startActivity(intent);
             }
         });

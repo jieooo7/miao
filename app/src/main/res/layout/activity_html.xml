@@ -3,13 +3,83 @@
     android:layout_height="match_parent"
     tools:context="com.liuzhuni.lzn.core.html.HtmlActivity">
 
-    <WebView
+
+    <RelativeLayout
+        android:id="@+id/top"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/title_left_right"
+        android:paddingRight="@dimen/title_left_right"
+        android:paddingBottom="@dimen/title_top_bottom"
+        android:paddingTop="@dimen/title_top_bottom"
+        android:background="@color/white">
+
+        <TextView
+            android:id="@+id/goods_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:drawableLeft="@drawable/broswer_ic_back"
+            android:drawablePadding="2dp"
+            android:paddingTop="2dp"
+            android:text="@string/back"
+            android:textColor="@color/index_text"
+            android:textSize="20sp" />
+        <TextView
+            android:id="@+id/goods_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/goods_back"
+            android:layout_marginLeft="5dp"
+            android:layout_centerVertical="true"
+            android:paddingTop="2dp"
+            android:text="@string/close_browser"
+            android:textColor="@color/index_text"
+            android:visibility="gone"
+            android:textSize="20sp" />
+
+
+
+        <TextView
+            android:id="@+id/title_middle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/me_info_text"
+            android:textSize="22sp"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:maxLength="8"
+            />
+
+
+        <ImageView
+            android:id="@+id/goods_share"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="right"
+            android:layout_marginRight="3dp"
+            android:src="@drawable/ic_share"
+            android:visibility="gone" />
+
+
+    </RelativeLayout>
+
+
+
+
+    <com.liuzhuni.lzn.pulltorefresh.PullToRefreshWebView
         android:id="@+id/h5_webview"
+        android:layout_below="@id/top"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         >
 
-    </WebView>
+
+
+    </com.liuzhuni.lzn.pulltorefresh.PullToRefreshWebView>
 
 
 

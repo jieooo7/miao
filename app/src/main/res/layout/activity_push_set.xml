@@ -21,7 +21,7 @@
         <include layout="@layout/line"/>
 
         <RelativeLayout
-            style="@style/detail_text_layout"
+            style="@style/detail_push_layout"
             >
 
 
@@ -51,15 +51,25 @@
         <include layout="@layout/line"/>
 
         <RelativeLayout
-            style="@style/detail_text_layout"
+            style="@style/detail_push_layout"
             >
 
 
             <TextView
+                android:id="@+id/low_price"
                 style="@style/detail_text"
                 android:text="@string/noti_low"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
+                />
+            <TextView
+                style="@style/detail_text_gray"
+                android:layout_below="@id/low_price"
+                android:text="@string/noti_push"
+                android:layout_alignParentLeft="true"
+                android:textSize="12dp"
+
+                android:layout_marginTop="15dp"
                 />
 
             <com.liuzhuni.lzn.core.personInfo.ui.switch_button.SwitchButton
@@ -74,15 +84,25 @@
         <include layout="@layout/line"/>
 
         <RelativeLayout
-            style="@style/detail_text_layout"
+            style="@style/detail_push_layout"
             >
 
 
             <TextView
+                android:id="@+id/special_push"
                 style="@style/detail_text"
                 android:text="@string/recom"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
+                />
+            <TextView
+                style="@style/detail_text_gray"
+                android:layout_below="@id/special_push"
+                android:text="@string/special_push"
+                android:layout_alignParentLeft="true"
+                android:textSize="12dp"
+
+                android:layout_marginTop="15dp"
                 />
 
             <com.liuzhuni.lzn.core.personInfo.ui.switch_button.SwitchButton
@@ -104,15 +124,25 @@
         <include layout="@layout/line"/>
 
         <RelativeLayout
-            style="@style/detail_text_layout"
+            style="@style/detail_push_layout"
             >
 
 
             <TextView
+                android:id="@+id/time_push"
                 style="@style/detail_text"
                 android:text="@string/quiet_time"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
+                />
+            <TextView
+                style="@style/detail_text_gray"
+                android:layout_below="@id/time_push"
+                android:text="@string/quiet_tip"
+                android:layout_alignParentLeft="true"
+                android:textSize="12dp"
+
+                android:layout_marginTop="15dp"
                 />
 
             <com.liuzhuni.lzn.core.personInfo.ui.switch_button.SwitchButton
@@ -126,14 +156,7 @@
         </RelativeLayout>
         <include layout="@layout/line"/>
 
-        <TextView
-            style="@style/detail_text_gray"
-            android:text="@string/quiet_tip"
-            android:textSize="14dp"
-            android:layout_marginLeft="30dp"
 
-            android:layout_marginTop="5dp"
-            />
 
 
         </LinearLayout>

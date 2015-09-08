@@ -233,9 +233,9 @@ public class PullToRefreshGridView extends PullToRefreshBase<GridView> implement
          */
         if (lastVisiblePosition >= lastItemPosition - 1) {
             final int childIndex = lastVisiblePosition - mGridView.getFirstVisiblePosition();
-            final int childCount = mGridView.getChildCount();
+            final int childCount = mGridView.getChildCount();//当前显示的数量
             final int index = Math.min(childIndex, childCount - 1);
-            final View lastVisibleChild = mGridView.getChildAt(index);
+            final View lastVisibleChild = mGridView.getChildAt(index);//当前显示的位置
             if (lastVisibleChild != null) {
                 return lastVisibleChild.getBottom() <= mGridView.getBottom();
             }

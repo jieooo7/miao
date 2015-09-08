@@ -37,7 +37,9 @@ import com.liuzhuni.lzn.base.BaseFragActivity;
 import com.liuzhuni.lzn.config.AppManager;
 import com.liuzhuni.lzn.config.Check;
 import com.liuzhuni.lzn.config.MessageWhat;
+import com.liuzhuni.lzn.config.TypeInt;
 import com.liuzhuni.lzn.config.UrlConfig;
+import com.liuzhuni.lzn.core.html.HtmlActivity;
 import com.liuzhuni.lzn.core.index_new.fragment.CheapFragment;
 import com.liuzhuni.lzn.core.index_new.fragment.FragmentIndex;
 import com.liuzhuni.lzn.core.index_new.fragment.FragmentInfo;
@@ -397,6 +399,13 @@ public class MainActivity extends BaseFragActivity implements Shareable {
         } else {
 
             //赚积分
+            Intent intent = new Intent(this, HtmlActivity.class);
+            Bundle bundle=new Bundle();
+            bundle.putInt("url", TypeInt.MAKE_CENT);
+            intent.putExtras(bundle);
+
+
+            startActivity(intent);
 
         }
 
@@ -421,7 +430,6 @@ public class MainActivity extends BaseFragActivity implements Shareable {
             mState=1;
 
             relAll.setVisibility(View.VISIBLE);
-            redDot.setVisibility(View.INVISIBLE);
 
             mMiddleTv.setText(getText(R.string.the_name));
             mLeftIv.setVisibility(View.VISIBLE);
@@ -469,7 +477,6 @@ public class MainActivity extends BaseFragActivity implements Shareable {
 
         if(mState!=2){
             mState=2;
-            redDot.setVisibility(View.INVISIBLE);
 
             relAll.setVisibility(View.VISIBLE);
 
@@ -520,11 +527,6 @@ public class MainActivity extends BaseFragActivity implements Shareable {
 
         if(mState!=3){
             mState=3;
-            if(!Check.isFirstShared(this)){
-                redDot.setVisibility(View.VISIBLE);
-            }else{
-                redDot.setVisibility(View.INVISIBLE);
-            }
 
             relAll.setVisibility(View.GONE);
 
@@ -578,7 +580,6 @@ public class MainActivity extends BaseFragActivity implements Shareable {
             mState=4;
 
 
-            redDot.setVisibility(View.INVISIBLE);
             relAll.setVisibility(View.VISIBLE);
             mMiddleTv.setText(getText(R.string.cheap_ch));
             mLeftIv.setVisibility(View.GONE);
@@ -667,6 +668,14 @@ public class MainActivity extends BaseFragActivity implements Shareable {
                 String time = mDateFormat.format(date);
                 PreferencesUtils.putValueToSPMap(MainActivity.this, PreferencesUtils.Keys.TODAY, time, PreferencesUtils.Keys.USERINFO);
 
+                Intent intent = new Intent(MainActivity.this, HtmlActivity.class);
+                Bundle bundle=new Bundle();
+                bundle.putInt("url", TypeInt.SIGN);
+                intent.putExtras(bundle);
+
+
+                startActivity(intent);
+
 
 
             }
@@ -717,7 +726,7 @@ public class MainActivity extends BaseFragActivity implements Shareable {
 
     @Override
     public void shared() {
-        redDot.setVisibility(View.INVISIBLE);
+        redDot.setVisibility(View.VISIBLE);
     }
 
 

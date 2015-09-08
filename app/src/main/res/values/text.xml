@@ -10,6 +10,7 @@ tools:ignore="MissingTranslation" >
     <string name="the_name">惠喵</string>
     <string name="back">返回</string>
     <string name="login">登录</string>
+    <string name="close_browser">关闭</string>
     <string name="regist">注册</string>
     <string name="tel_email">手机号/邮箱</string>
     <string name="search_hint">请输入商品关键词</string>
@@ -37,6 +38,7 @@ tools:ignore="MissingTranslation" >
 
     <string name="push_set">推送设置</string>
     <string name="me_profile">我的信息</string>
+    <string name="me_coupon">我的优惠券</string>
     <string name="push_accept">接收推送</string>
     <string name="message_center">消息中心</string>
     <string name="Feedback">意见反馈</string>
@@ -64,9 +66,11 @@ tools:ignore="MissingTranslation" >
     <string name="had_noti_low">已加入降价提醒</string>
     <string name="to_buy">前往购买</string>
     <string name="share_app">分享app</string>
-    <string name="recom">神价推荐</string>
+    <string name="recom">特色推荐</string>
     <string name="quiet_time">安静时段</string>
     <string name="quiet_tip">22:00到7:00不接收推送</string>
+    <string name="special_push">首页手慢无、白菜价、神价格的推送</string>
+    <string name="noti_push">欲购清单的降价提醒</string>
 
 
 
@@ -245,6 +249,15 @@ tools:ignore="MissingTranslation" >
     <string name="rec_detail">推荐详情</string>
     <string name="first_share">首次分享奖励10积分哦</string>
     <string name="to_see">前往查看</string>
+
+
+
+
+    <string name="coupon_tip">长按券号/密码复制使用</string>
+    <string name="no_coupon">还没有优惠券哦~</string>
+    <string name="coupon_num">"券号 : "</string>
+    <string name="coupon_passwd">"密码 : "</string>
+    <string name="coupon_title">我的优惠券</string>
 
 
 

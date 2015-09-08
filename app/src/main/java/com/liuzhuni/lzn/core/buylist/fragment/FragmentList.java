@@ -234,13 +234,8 @@ public class FragmentList extends BaseFragment {
                         Intent intent=new Intent(getActivity(),LoginActivity.class);
                         startActivity(intent);
                         getActivity().finish();
-                    }else{
-//                        ToastUtil.customShow(getActivity(), getResources().getText(R.string.error_retry));
                     }
-                }else{
-//                    ToastUtil.customShow(getActivity(), getResources().getText(R.string.bad_net));
                 }
-//                RequestManager.cancelAll(this);
             }
         };
     }

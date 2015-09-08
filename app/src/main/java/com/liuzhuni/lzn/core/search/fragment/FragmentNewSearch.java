@@ -32,7 +32,6 @@ import com.liuzhuni.lzn.core.search.Searchable;
 import com.liuzhuni.lzn.pulltorefresh.PullToRefreshBase;
 import com.liuzhuni.lzn.pulltorefresh.PullToRefreshGridView;
 import com.liuzhuni.lzn.utils.PreferencesUtils;
-import com.liuzhuni.lzn.utils.ToastUtil;
 import com.liuzhuni.lzn.volley.ApiParams;
 import com.liuzhuni.lzn.volley.GsonBaseRequest;
 import com.liuzhuni.lzn.volley.RequestManager;
@@ -163,6 +162,19 @@ public class FragmentNewSearch extends BaseFragment implements Searchable {
                         if(mList.size()>=1) {
                             if(mCurrentPage<mTotalPage-1){
                                 pullData(++mCurrentPage, mWord);
+                            }else{
+                                mPullGridView.setHasMoreData(false);
+
+                                final View view = LayoutInflater.from(getCustomActivity()).inflate(
+                                        R.layout.no_more, null);
+                                ((TextView)view.findViewById(R.id.no_more_tv)).setText("没有更多了");
+                                handle.post(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        mPullGridView.addNewView(view);
+                                    }
+                                });
+
                             }
                         }else{
                             pullData(0,mWord);
@@ -233,17 +245,6 @@ public class FragmentNewSearch extends BaseFragment implements Searchable {
 //                    ToastUtil.customShow(Base2Activity.this, getResources().getText(R.string.bad_net));
                 }
 
-                handle.post(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        if(mList.size()>0){
-                            mTextTip.setVisibility(View.GONE);
-                        }else{
-                            mTextTip.setVisibility(View.VISIBLE);
-                        }
-                    }
-                });
 //                RequestManager.cancelAll(this);
             }
         };
@@ -294,6 +295,7 @@ public class FragmentNewSearch extends BaseFragment implements Searchable {
                             public void run() {
                                 mList.addAll(mCurrentList);
                                 mAdapter.notifyDataSetChanged();
+                                mGridView.smoothScrollBy(50,200);
                             }
                         });
                     }
@@ -303,44 +305,22 @@ public class FragmentNewSearch extends BaseFragment implements Searchable {
                 }else{
                     if(!isRefresh){
                         mPullGridView.setHasMoreData(false);
-                        ToastUtil.show(getCustomActivity(), getCustomActivity().getResources().getText(R.string.no_more_error));
-                        mPullGridView.setHasMoreData(false);
+//                        ToastUtil.show(getCustomActivity(), getCustomActivity().getResources().getText(R.string.no_more_error));
+
+                        final View view = LayoutInflater.from(getCustomActivity()).inflate(
+                                R.layout.no_more, null);
+                        ((TextView)view.findViewById(R.id.no_more_tv)).setText("没有更多了");
+////                        view.getScrollY()
+                        handle.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                mPullGridView.addNewView(view);
+                            }
+                        });
                     }
 
-//                    if(mList.size()>0){
-//                        handle.postDelayed(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                mTextTip.setVisibility(View.GONE);
-//                            }
-//                        },500);
-//
-//                    }else{
-//                        handle.postDelayed(new Runnable() {
-//                            @Override
-//                            public void run() {
-//                                mTextTip.setVisibility(View.VISIBLE);
-//                            }
-//                        },500);
-//                    }
 
                 }
-                handle.post(new Runnable() {
-                    @Override
-                    public void run() {
-
-                        if(mList.size()>0){
-                            mTextTip.setVisibility(View.GONE);
-                        }else{
-                            mTextTip.setVisibility(View.VISIBLE);
-                        }
-                    }
-                });
-                // 下拉加载完成
-                mPullGridView.onPullDownRefreshComplete();
-
-                // 上拉刷新完成
-                mPullGridView.onPullUpRefreshComplete();
                 mPullGridView.setLastUpdatedLabel(mTime);//设置最后刷新时间
                 Date date = new Date();
                 mTime = mDateFormat.format(date);

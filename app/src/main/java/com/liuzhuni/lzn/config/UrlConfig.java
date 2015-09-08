@@ -20,8 +20,8 @@ package com.liuzhuni.lzn.config;
 
 public class UrlConfig {
 	
-//	public static final String BASE_IP = "http://192.168.1.110:8058/api/";
-	public static final String BASE_IP = "http://hmapp.liuzhuni.com/api/";
+	public static final String BASE_IP = "http://192.168.1.110:8058/api/";
+//	public static final String BASE_IP = "http://hmapp.liuzhuni.com/api/";
 	public static final String VERSION_CODE = "5";
 	public static final String INDEX = BASE_IP +"usershoplist/get?id=";
 	public static final String SEND_CODE = BASE_IP +"reg/sentcode";
@@ -94,6 +94,9 @@ public class UrlConfig {
 
 	public static final String IS_SHARE=BASE_IP +"user/IsShare";
 	public static final String SUCCESS_SHARE=BASE_IP +"user/successshare";
+	public static final String GET_COUPON=BASE_IP +"user/getcoupon";
+
+	public static final String GET_HTML=BASE_IP +"other/transit";
 
 
 

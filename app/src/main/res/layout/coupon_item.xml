@@ -1,0 +1,132 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:therepeat="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    tools:context="com.liuzhuni.lzn.core.personInfo.CouponActivity">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <com.liuzhuni.lzn.core.personInfo.ui.RepeatImage
+            android:id="@+id/top_ri"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            therepeat:src="@drawable/my_coupon_bg"
+            />
+
+        <TextView
+            android:id="@+id/coupon_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:textColor="@color/me_info_text"
+            android:textSize="18sp"
+
+            />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/coupon_num"
+                android:textColor="@color/regist_text"
+                android:textSize="16sp"
+
+                />
+
+            <TextView
+                android:id="@+id/coupon_num"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/index_text"
+                android:textSize="16sp"
+
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:orientation="horizontal"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/coupon_passwd"
+                android:textColor="@color/regist_text"
+                android:textSize="16sp"
+
+                />
+
+            <TextView
+                android:id="@+id/coupon_passwd"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/index_text"
+                android:textSize="16sp"
+
+                />
+        </LinearLayout>
+
+        <com.liuzhuni.lzn.core.personInfo.ui.RepeatImage
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            therepeat:spacing="15dp"
+            therepeat:src="@drawable/coupon_dot" />
+
+
+        <TextView
+            android:id="@+id/coupon_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:textColor="@color/regist_text"
+            android:textSize="15sp"
+
+            />
+
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="1px"
+            android:layout_marginTop="5dp"
+            android:background="@color/text_gray"
+
+            />
+
+    </LinearLayout>
+
+
+    <ImageView
+        android:id="@+id/go"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/my_coupon_ic_go" />
+
+</RelativeLayout>

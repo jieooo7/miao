@@ -377,6 +377,10 @@
             android:name=".core.html.HtmlActivity"
             android:screenOrientation="portrait" >
         </activity>
+        <activity
+            android:name=".core.personInfo.CouponActivity"
+            android:screenOrientation="portrait" >
+        </activity>
     </application>
 
 </manifest>

@@ -171,5 +171,6 @@ public class ThreePicView extends ImageView {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         canvas.drawBitmap(mBitmap,0,0,mPaint);
+
     }
 }

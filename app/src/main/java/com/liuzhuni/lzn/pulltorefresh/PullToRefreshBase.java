@@ -739,7 +739,7 @@ public abstract class PullToRefreshBase<T extends View> extends LinearLayout imp
 
         int scrollY = Math.abs(getScrollYValue());
         if (isPullLoadEnabled() && !isPullLoading()) {
-            if (scrollY > mFooterHeight) {
+            if (scrollY > mFooterHeight/2) {//当state=release_to_refresh时 启动startloading 加载数据
                 mPullUpState = State.RELEASE_TO_REFRESH;
             } else {
                 mPullUpState = State.PULL_TO_REFRESH;
